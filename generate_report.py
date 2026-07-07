@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 import utils
 import webbrowser
 import os
+import sys
 import json
 
 def generate_html_report():
@@ -40,6 +41,12 @@ def generate_html_report():
     print("Fetching Defensive Ratings...")
     def_ratings = utils.get_team_defensive_ratings()
 
+    # Counting stats that get a separate TOT (= AVG x GP for the period) view.
+    # MIN / FG% / FT% are intentionally excluded: the old FANTASY-SUP page shows
+    # them unchanged in TOT mode (rates and minutes-per-game don't sum meaningfully).
+    # Shared by process_week_grid (data) and generate_html (rendering) below.
+    tot_metrics = ['PTS', 'REB', 'AST', '3PM', 'STL', 'BLK']
+
     # 3. Process Data Helper
     def process_week_grid(start_date, end_date, schedule_df, stats_dict, def_ratings):
         # Create Date Headers
@@ -52,8 +59,16 @@ def generate_html_report():
         day_cols = [d.strftime('%a (%m/%d)') for d in days]
         
         # Filter schedule
-        mask = (schedule_df['GAME_DATE'] >= start_date) & (schedule_df['GAME_DATE'] <= end_date)
-        week_games = schedule_df.loc[mask].copy()
+        # Defensive guard (pre-existing gap, unrelated to PR/Last-Season): schedule_df can
+        # come back completely empty (no columns at all) when there are no games in the
+        # requested window and the "Time Travel" fallback above also found nothing -- e.g.
+        # every NBA off-season, since the fallback shifts by exactly one year and lands on
+        # the same off-season month again. That used to raise KeyError('GAME_DATE') here.
+        if schedule_df.empty or 'GAME_DATE' not in schedule_df.columns:
+            week_games = pd.DataFrame(columns=['TEAM_ID', 'TEAM_ABBREVIATION', 'GAME_DATE', 'MATCHUP'])
+        else:
+            mask = (schedule_df['GAME_DATE'] >= start_date) & (schedule_df['GAME_DATE'] <= end_date)
+            week_games = schedule_df.loc[mask].copy()
         
         # Helper to get badge
         def get_badge_html(opp_abbr, is_home):
@@ -90,18 +105,59 @@ def generate_html_report():
             team_df = team_df.sort_values('Games', ascending=False)
 
         # --- PLAYER STATS & SCHEDULE ---
+        # Metric label -> raw stat column mapping, shared by all PR calculations below.
+        pr_metric_map = {
+            'MIN': 'MIN', 'PTS': 'PTS', 'REB': 'REB', 'AST': 'AST',
+            '3PM': 'FG3M', 'STL': 'STL', 'BLK': 'BLK',
+            'FG%': 'FG_PCT', 'FT%': 'FT_PCT',
+        }
+
         # Base: Season Stats
         base_df = stats_dict['Season'].copy()
         base_df = base_df[base_df['GP'] > 0] # Active only
-        
-        # Merge L7 and L14
-        # Rename columns for L7/L14
+
+        # Merge L7, L14 and Last Season
+        # Rename columns for L7/L14/LS
         l7 = stats_dict['L7'].copy().add_suffix('_L7')
         l14 = stats_dict['L14'].copy().add_suffix('_L14')
-        
+
+        # --- Last Season pool & its PR (computed BEFORE any roster filtering) ---
+        # The LS PR population must be "every player who logged last-season stats
+        # (GP > 0)", independent of who has already played THIS season. Computing it
+        # here on the full LastSeason fetch keeps the denominator honest early in a
+        # new season, when many players haven't appeared in the Season fetch yet.
+        ls_pool = stats_dict.get('LastSeason', pd.DataFrame()).copy()
+        if not ls_pool.empty:
+            ls_pool = ls_pool[ls_pool['GP'] > 0]
+            for label, raw_name in pr_metric_map.items():
+                if raw_name in ls_pool.columns:
+                    ls_pool[f'{label}_PR'] = ls_pool[raw_name].rank(pct=True) * 100
+                    # TOT view: derived as AVG x GP (Plan A, zero extra API calls),
+                    # with its own PR -- a totals ranking rewards volume/durability,
+                    # which is different information than the per-game ranking.
+                    if label in tot_metrics:
+                        ls_pool[f'{label}_TOT'] = ls_pool[raw_name] * ls_pool['GP']
+                        ls_pool[f'{label}_TOT_PR'] = ls_pool[f'{label}_TOT'].rank(pct=True) * 100
+        last_season = ls_pool.add_suffix('_LS') # PTS_PR -> PTS_PR_LS etc.
+
+        # Roster union: this season's actives + last season's actives who are still
+        # on a roster today (static active list, see utils.get_active_player_ids).
+        # Without this, players who haven't played yet this season would vanish from
+        # the table entirely -- exactly the players the Last Season view is for.
+        # Their Season/L7/L14 columns stay NaN and render with the existing
+        # missing-data handling; only identity columns are carried over.
+        if not ls_pool.empty:
+            active_ids = utils.get_active_player_ids()
+            extra_mask = (~ls_pool['PLAYER_ID'].isin(base_df['PLAYER_ID'])) & ls_pool['PLAYER_ID'].isin(active_ids)
+            extra_base = ls_pool.loc[extra_mask, ['PLAYER_ID', 'PLAYER_NAME', 'TEAM_ID', 'TEAM_ABBREVIATION']].copy()
+            if not extra_base.empty:
+                base_df = pd.concat([base_df, extra_base], ignore_index=True)
+
         # Merge on PLAYER_ID
         merged = pd.merge(base_df, l7, left_on='PLAYER_ID', right_on='PLAYER_ID_L7', how='left')
         merged = pd.merge(merged, l14, left_on='PLAYER_ID', right_on='PLAYER_ID_L14', how='left')
+        if not last_season.empty:
+            merged = pd.merge(merged, last_season, left_on='PLAYER_ID', right_on='PLAYER_ID_LS', how='left')
         
         # Add Schedule Grid to Players
         if not team_df.empty:
@@ -115,7 +171,35 @@ def generate_html_report():
                     merged[c] = merged[c].fillna(0).astype(int)
                 else:
                     merged[c] = merged[c].fillna('-')
-        
+
+        # --- Percentile Rank (PR) Calculation (Season/L7/L14) ---
+        # Must run on RAW numeric values, before the string formatting below turns
+        # them into "12.3%" etc. Population = all players with data for that period
+        # (rows the roster-union added with NaN stats are excluded from ranking by
+        # pandas automatically, so they don't distort denominators and get no PR).
+        # LastSeason PR is NOT computed here -- it was already computed on the full
+        # ls_pool above, so its population is all of last season's actives.
+        # All 9 metrics are "higher is better" for fantasy (no inverted-direction stat
+        # like turnovers exists in this stat set), so PR = rank(pct=True) * 100 directly.
+        for period_suffix in ['', '_L7', '_L14']:
+            gp_col = f"GP{period_suffix}"
+            for label, raw_name in pr_metric_map.items():
+                raw_col = f"{raw_name}{period_suffix}"
+                pr_col = f"{label}_PR{period_suffix}"
+                if raw_col in merged.columns:
+                    # NaN values (no data for that period) are excluded from ranking
+                    # by pandas and stay NaN, so they naturally don't get a PR.
+                    merged[pr_col] = merged[raw_col].rank(pct=True) * 100
+                    # TOT view: derived as AVG x GP (Plan A, zero extra API calls),
+                    # with its own PR -- a totals ranking rewards volume/durability,
+                    # which is different information than the per-game ranking.
+                    if label in tot_metrics and gp_col in merged.columns:
+                        tot_col = f"{label}_TOT{period_suffix}"
+                        merged[tot_col] = merged[raw_col] * merged[gp_col]
+                        merged[f"{label}_TOT_PR{period_suffix}"] = merged[tot_col].rank(pct=True) * 100
+                else:
+                    merged[pr_col] = pd.NA
+
         # Format Player
         merged['Player'] = merged.apply(lambda x: f"<b>{x['PLAYER_NAME']}</b> <br><span style='color:#888'>{x['TEAM_ABBREVIATION']}</span>", axis=1)
         
@@ -135,6 +219,12 @@ def generate_html_report():
             merged['FG%_L14'] = (merged['FG_PCT_L14'] * 100).map('{:.1f}%'.format)
             merged['FT%_L14'] = (merged['FT_PCT_L14'] * 100).map('{:.1f}%'.format)
             merged = merged.rename(columns={'FG3M_L14': '3PM_L14', 'PTS_L14': 'PTS_L14', 'REB_L14': 'REB_L14', 'AST_L14': 'AST_L14', 'STL_L14': 'STL_L14', 'BLK_L14': 'BLK_L14'})
+
+        # Format Stats (Last Season)
+        if 'FG_PCT_LS' in merged.columns:
+            merged['FG%_LS'] = (merged['FG_PCT_LS'] * 100).map('{:.1f}%'.format)
+            merged['FT%_LS'] = (merged['FT_PCT_LS'] * 100).map('{:.1f}%'.format)
+            merged = merged.rename(columns={'FG3M_LS': '3PM_LS'})
 
         return team_df, merged, day_cols
 
@@ -167,7 +257,7 @@ def generate_html_report():
             team_html += "</tbody></table></div>"
 
         # --- Player Table HTML ---
-        # Columns: Player, Games, [Days], [Stats Season], [Stats L7], [Stats L14]
+        # Columns: Player, Games, [Days], [Stats Season], [Stats L7], [Stats L14], [Stats Last Season]
         
         # Stat Columns Definition
         stat_metrics = ['MIN', 'PTS', 'REB', 'AST', '3PM', 'STL', 'BLK', 'FG%', 'FT%']
@@ -175,9 +265,13 @@ def generate_html_report():
         player_html = f"""
         <div class="player-section">
             <div class="controls">
-                <button class="btn-stat active" onclick="switchStats('Season', '{table_id_suffix}')">Season Avg</button>
-                <button class="btn-stat" onclick="switchStats('L7', '{table_id_suffix}')">Last 7 Days</button>
-                <button class="btn-stat" onclick="switchStats('L14', '{table_id_suffix}')">Last 14 Days</button>
+                <button class="btn-stat active" data-period="Season" onclick="switchStats('Season', '{table_id_suffix}')">Season Avg</button>
+                <button class="btn-stat" data-period="L7" onclick="switchStats('L7', '{table_id_suffix}')">Last 7 Days</button>
+                <button class="btn-stat" data-period="L14" onclick="switchStats('L14', '{table_id_suffix}')">Last 14 Days</button>
+                <button class="btn-stat" data-period="LS" onclick="switchStats('LS', '{table_id_suffix}')">Last Season</button>
+                <span style="margin-left:20px">Show:</span>
+                <button class="btn-stat active" data-mode="AVG" onclick="switchDisplayMode('AVG', '{table_id_suffix}')">AVG</button>
+                <button class="btn-stat" data-mode="TOT" onclick="switchDisplayMode('TOT', '{table_id_suffix}')">TOT</button>
                 <button class="btn-reset" onclick="resetTeamFilter('{table_id_suffix}')">Show All Teams</button>
             </div>
             <table id="playerTable{table_id_suffix}" class="display" style="width:100%">
@@ -187,12 +281,18 @@ def generate_html_report():
                         <th>Team</th> <!-- Hidden column for filtering -->
                         <th>Games</th>
                         {''.join([f'<th>{d}</th>' for d in day_cols])}
-                        <!-- Season Stats Headers -->
-                        {''.join([f'<th class="stat-season">{m}</th>' for m in stat_metrics])}
-                        <!-- L7 Stats Headers -->
-                        {''.join([f'<th class="stat-l7" style="display:none">{m}</th>' for m in stat_metrics])}
-                        <!-- L14 Stats Headers -->
-                        {''.join([f'<th class="stat-l14" style="display:none">{m}</th>' for m in stat_metrics])}
+                        <!-- Season Stats Headers (AVG / TOT) -->
+                        {''.join([f'<th class="stat-season stat-avg">{m}</th>' for m in stat_metrics])}
+                        {''.join([f'<th class="stat-season stat-tot" style="display:none">{m}</th>' for m in stat_metrics])}
+                        <!-- L7 Stats Headers (AVG / TOT) -->
+                        {''.join([f'<th class="stat-l7 stat-avg" style="display:none">{m}</th>' for m in stat_metrics])}
+                        {''.join([f'<th class="stat-l7 stat-tot" style="display:none">{m}</th>' for m in stat_metrics])}
+                        <!-- L14 Stats Headers (AVG / TOT) -->
+                        {''.join([f'<th class="stat-l14 stat-avg" style="display:none">{m}</th>' for m in stat_metrics])}
+                        {''.join([f'<th class="stat-l14 stat-tot" style="display:none">{m}</th>' for m in stat_metrics])}
+                        <!-- Last Season Stats Headers (AVG / TOT) -->
+                        {''.join([f'<th class="stat-ls stat-avg" style="display:none">{m}</th>' for m in stat_metrics])}
+                        {''.join([f'<th class="stat-ls stat-tot" style="display:none">{m}</th>' for m in stat_metrics])}
                     </tr>
                 </thead>
                 <tbody>
@@ -207,36 +307,67 @@ def generate_html_report():
                 player_html += f"<td>{row.get(d, '')}</td>"
             
             # Helper to create stat cell with data-order
-            def create_stat_cell(row, metric, suffix, css_class, visible=True):
-                key = f"{metric}_{suffix}" if suffix else metric
+            def create_stat_cell(row, metric, suffix, css_class, mode='avg', visible=True):
+                # TOT mode swaps in the derived *_TOT columns for counting stats only;
+                # MIN / FG% / FT% show the same value in both modes (old-page behavior).
+                use_tot = (mode == 'tot' and metric in tot_metrics)
+                base_key = f"{metric}_TOT" if use_tot else metric
+                key = f"{base_key}_{suffix}" if suffix else base_key
                 val = row.get(key, 0)
-                
+
                 # Determine sort value (raw number)
+                # Each AVG/TOT cell is its own DataTables column carrying its own raw
+                # value here, so sorting stays exact in both display modes.
                 sort_val = val
                 if isinstance(val, str) and '%' in val: # Handle pre-formatted % strings if any (though we formatted them in process_week_grid)
                      try: sort_val = float(val.strip('%'))
                      except: sort_val = 0
-                
+
                 # Determine display value
                 display_val = val
                 if isinstance(val, float):
                     display_val = f"{val:.1f}"
-                
+
+                # --- PR (Percentile Rank) sub-label ---
+                # Looked up from the *_PR / *_TOT_PR [_L7/_L14/_LS] column computed in
+                # process_week_grid (raw-value based, before formatting). AVG and TOT
+                # have independent PRs: the totals ranking reflects volume/durability.
+                # Skipped when the player has no data for this stat/period (NaN) so no
+                # "PR nan" ever renders.
+                pr_base = f"{metric}_TOT_PR" if use_tot else f"{metric}_PR"
+                pr_key = f"{pr_base}_{suffix}" if suffix else pr_base
+                pr_val = row.get(pr_key)
+                pr_html = ""
+                if pr_val is not None and not pd.isna(pr_val):
+                    pr_html = f"<br><span style='font-size:0.75em; color:#999;'>PR {int(round(pr_val))}</span>"
+
                 style = "" if visible else "display:none"
-                return f"<td class='{css_class}' style='{style}' data-order='{sort_val}'>{display_val}</td>"
+                return f"<td class='{css_class}' style='{style}' data-order='{sort_val}'>{display_val}{pr_html}</td>"
 
-            # Season Stats
+            # Season Stats (AVG then TOT)
             for m in stat_metrics:
-                player_html += create_stat_cell(row, m, "", "stat-season", True)
-                
-            # L7 Stats
+                player_html += create_stat_cell(row, m, "", "stat-season stat-avg", 'avg', True)
             for m in stat_metrics:
-                player_html += create_stat_cell(row, m, "L7", "stat-l7", False)
+                player_html += create_stat_cell(row, m, "", "stat-season stat-tot", 'tot', False)
 
-            # L14 Stats
+            # L7 Stats (AVG then TOT)
             for m in stat_metrics:
-                player_html += create_stat_cell(row, m, "L14", "stat-l14", False)
-                
+                player_html += create_stat_cell(row, m, "L7", "stat-l7 stat-avg", 'avg', False)
+            for m in stat_metrics:
+                player_html += create_stat_cell(row, m, "L7", "stat-l7 stat-tot", 'tot', False)
+
+            # L14 Stats (AVG then TOT)
+            for m in stat_metrics:
+                player_html += create_stat_cell(row, m, "L14", "stat-l14 stat-avg", 'avg', False)
+            for m in stat_metrics:
+                player_html += create_stat_cell(row, m, "L14", "stat-l14 stat-tot", 'tot', False)
+
+            # Last Season Stats (AVG then TOT)
+            for m in stat_metrics:
+                player_html += create_stat_cell(row, m, "LS", "stat-ls stat-avg", 'avg', False)
+            for m in stat_metrics:
+                player_html += create_stat_cell(row, m, "LS", "stat-ls stat-tot", 'tot', False)
+
             player_html += "</tr>"
             
         player_html += "</tbody></table></div>"
@@ -331,24 +462,56 @@ def generate_html_report():
                 evt.currentTarget.className += " active";
             }}
             
-            // --- Feature: Switch Stats ---
+            // --- Feature: Switch Stats (period x display mode) ---
+            // The visible stat columns are the intersection of the active period
+            // (Season/L7/L14/LS) and the active display mode (AVG/TOT); both toggles
+            // funnel through applyStatView so they stay orthogonal.
+            var currentPeriod = 'season';
+            var currentMode = 'avg';
+
+            function applyStatView() {{
+                var periods = ['season', 'l7', 'l14', 'ls'];
+                var modes = ['avg', 'tot'];
+                periods.forEach(p => {{
+                    modes.forEach(m => {{
+                        var display = (p == currentPeriod && m == currentMode) ? 'table-cell' : 'none';
+                        $('.stat-' + p + '.stat-' + m).css('display', display);
+                    }});
+                }});
+            }}
+
             function switchStats(period, suffix) {{
+                currentPeriod = period.toLowerCase();
                 // Update Buttons
+                // NOTE: matched via the button's data-period attribute (exact match), not
+                // innerText substring matching -- the old innerText-substring check broke
+                // once a "Last Season" button was added, since its label also contains the
+                // literal word "Season" and would falsely light up alongside "Season Avg".
+                // Scoped to [data-period] so the AVG/TOT buttons are left alone.
                 var container = document.querySelector('#Week' + suffix.replace('W','') + ' .controls');
-                var btns = container.getElementsByClassName('btn-stat');
+                var btns = container.querySelectorAll('.btn-stat[data-period]');
                 for (var i = 0; i < btns.length; i++) {{
                     btns[i].classList.remove('active');
-                    if (btns[i].innerText.includes(period) || (period=='Season' && btns[i].innerText.includes('Season'))) {{
+                    if (btns[i].getAttribute('data-period') === period) {{
                         btns[i].classList.add('active');
                     }}
                 }}
-                
-                // Toggle Columns
-                var periods = ['season', 'l7', 'l14'];
-                periods.forEach(p => {{
-                    var display = (p == period.toLowerCase()) ? 'table-cell' : 'none';
-                    $('.stat-' + p).css('display', display);
-                }});
+                applyStatView();
+            }}
+
+            // --- Feature: Switch Display Mode (AVG / TOT) ---
+            function switchDisplayMode(mode, suffix) {{
+                currentMode = mode.toLowerCase();
+                // Scoped to [data-mode] so the period buttons are left alone.
+                var container = document.querySelector('#Week' + suffix.replace('W','') + ' .controls');
+                var btns = container.querySelectorAll('.btn-stat[data-mode]');
+                for (var i = 0; i < btns.length; i++) {{
+                    btns[i].classList.remove('active');
+                    if (btns[i].getAttribute('data-mode') === mode) {{
+                        btns[i].classList.add('active');
+                    }}
+                }}
+                applyStatView();
             }}
             
             // --- Feature: Filter Team ---
@@ -399,4 +562,12 @@ def generate_html_report():
     webbrowser.open('file://' + os.path.realpath(output_file))
 
 if __name__ == "__main__":
+    # Windows consoles often default to a legacy codepage (e.g. cp950) that can't
+    # encode the emoji used in the progress prints -> UnicodeEncodeError. Force
+    # UTF-8 output; guarded because reconfigure() needs Python 3.7+.
+    try:
+        sys.stdout.reconfigure(encoding='utf-8')
+        sys.stderr.reconfigure(encoding='utf-8')
+    except AttributeError:
+        pass
     generate_html_report()

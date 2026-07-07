@@ -1,7 +1,7 @@
 import pandas as pd
 from datetime import datetime, timedelta
 from nba_api.stats.endpoints import leaguegamefinder, leaguedashplayerstats, leaguedashteamstats
-from nba_api.stats.static import teams
+from nba_api.stats.static import teams, players
 import time
 
 # Constants
@@ -35,29 +35,66 @@ def get_schedule(start_date, end_date):
     
     return games
 
+def get_active_player_ids():
+    """
+    Returns a set of PLAYER_IDs for players currently on an NBA roster,
+    from nba_api's bundled static player list (no network call).
+
+    Trade-off: the static list ships with the installed nba_api version, so it
+    can lag real roster moves by a package release. Chosen anyway because it is
+    zero-cost and can't fail at runtime; it's only used as a coarse filter to
+    keep long-retired players out of the report, not for any stat math.
+    """
+    return {p['id'] for p in players.get_active_players()}
+
+def get_last_complete_season_str(reference_date=None):
+    """
+    Returns the most recently *completed* NBA regular season as "YYYY-YY"
+    (e.g. "2025-26"), computed from the current date rather than relying on
+    nba_api's own default season resolution.
+
+    NBA seasons run roughly October -> June. We use July 1st as the cutoff:
+    from July onward, the Finals of the season that started the previous
+    October have already concluded, so that season counts as "last complete
+    season". Before July, that season may still be in progress, so we step
+    back one more year.
+    """
+    d = reference_date or datetime.now().date()
+    if d.month >= 7:
+        start_year = d.year - 1
+    else:
+        start_year = d.year - 2
+    return f"{start_year}-{str(start_year + 1)[-2:]}"
+
 def get_player_stats_multi_period():
     """
     Fetches stats for:
     1. Season (2024-25)
     2. Last 7 Days
     3. Last 14 Days
-    
-    Returns a dictionary of DataFrames: {'Season': df, 'L7': df, 'L14': df}
+    4. Last Season (previous full completed season - useful early in a new
+       season, or in the off-season, when Season/L7/L14 are thin or empty)
+
+    Returns a dictionary of DataFrames: {'Season': df, 'L7': df, 'L14': df, 'LastSeason': df}
     """
-    
-    # Helper to fetch stats with optional date filter
-    def fetch_stats(date_from=None):
+
+    # Helper to fetch stats with optional date filter and/or explicit season
+    def fetch_stats(date_from=None, season=None):
         date_from_str = date_from.strftime('%m/%d/%Y') if date_from else ''
-        
+
         # If we are in "Time Travel" mode (2025 system time but 2024 season),
         # we might need to adjust the date_from query.
         # But for simplicity, let's try standard query first.
-        
-        stats = leaguedashplayerstats.LeagueDashPlayerStats(
+
+        kwargs = dict(
             per_mode_detailed='PerGame',
             season_type_all_star='Regular Season',
             date_from_nullable=date_from_str
         )
+        if season:
+            kwargs['season'] = season
+
+        stats = leaguedashplayerstats.LeagueDashPlayerStats(**kwargs)
         df = stats.get_data_frames()[0]
         
         # Select key columns
@@ -101,10 +138,16 @@ def get_player_stats_multi_period():
         df_l7 = fetch_stats(d7_2024)
         df_l14 = fetch_stats(d14_2024)
 
+    # Last Season (previous full completed season)
+    last_season_str = get_last_complete_season_str()
+    print(f"  Fetching Last Season Stats ({last_season_str})...")
+    df_last_season = fetch_stats(season=last_season_str)
+
     return {
         'Season': df_season,
         'L7': df_l7,
-        'L14': df_l14
+        'L14': df_l14,
+        'LastSeason': df_last_season
     }
 
 def get_team_defensive_ratings():
