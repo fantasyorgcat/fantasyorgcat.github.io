@@ -12,6 +12,7 @@ concurrency:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -42,3 +43,7 @@ jobs:
             git commit -m "Daily Update: $(date +'%Y-%m-%d')"
           fi
           git push origin HEAD:main
+      - name: Request Pages deployment after successful report push
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python dispatch_pages.py

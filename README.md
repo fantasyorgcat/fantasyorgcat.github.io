@@ -2,7 +2,7 @@
 
 公開網站：https://hotmilk300.github.io/Fantasy-NBA-Streaming-Assistant/
 
-每日 08:00 UTC 更新，成功產生並通過檢查後，由 GitHub Pages 自動發布。來源失敗時保留上一份有效報告。
+每日 08:00 UTC 更新，成功產生並通過檢查、push 後，用既有 GITHUB_TOKEN 送出版本綁定的 repository_dispatch，由 GitHub Pages 自動發布。Pages 會驗證報告 SHA 等於當前 main，及每日 workflow 確實成功；過期、失敗或來源不符的事件會停止部署。兩個 workflow 的權限宣告保持原值，沒有新增 token。來源失敗時保留上一份有效報告。
 
 ## 資料與功能
 
@@ -18,6 +18,7 @@
 pip install -r requirements.txt
 python generate_report.py
 python test_sources.py
+python test_dispatch.py
 python security_gate.py --generated
 ```
 
