@@ -12,6 +12,37 @@ import base64
 
 IDENTITY_COLUMNS = ['PLAYER_ID','PLAYER_NAME','TEAM_ID','TEAM_ABBREVIATION']
 
+def matchup_badge(opp_abbr, is_home, ratings):
+    info=ratings.get(opp_abbr)
+    label=escape(f"{'vs' if is_home else '@'} {opp_abbr}")
+    if info:
+        rank,population=info['Rank'],info['Population']
+        color=utils.get_color_for_rank(rank,population)
+        note=f"PBP Stats 最近10場已完成例行賽 (可跨季): {info['DefRtg']:.1f}失分/100防守回合; 排名 {rank}/{population}; {info['Games']}/10場; {info['Start']}–{info['End']}"
+        detail=f"近10場 {rank}/{population} · {info['Games']}/10"
+    else:
+        color,note,detail='#eeeeee','最近10場例行賽防守資料暫缺','防守暫缺 · 0/10'
+    return f"<div class='matchup' style='background-color:{color};padding:4px;border-radius:4px;text-align:center;font-weight:bold' title='{escape(note,quote=True)}'>{label}<br><small>{escape(detail)}</small></div>"
+
+
+def season_schedule_payload(schedule, weeks, ratings):
+    output=[]
+    for week in weeks:
+        days=[week['start']+timedelta(days=i) for i in range(7)]
+        selected=schedule.loc[(schedule['GAME_DATE']>=days[0])&(schedule['GAME_DATE']<=days[-1])]
+        teams={}
+        for row in selected.to_dict('records'):
+            abbr=row['TEAM_ABBREVIATION']
+            data=teams.setdefault(abbr,dict(games=0,days=['']*7))
+            index=(row['GAME_DATE']-days[0]).days
+            if data['days'][index]:raise ValueError('Multiple same-day NBA games for a team')
+            data['games']+=1
+            data['days'][index]=matchup_badge(row['MATCHUP'].split(' ')[2],'vs.' in row['MATCHUP'],ratings)
+        output.append(dict(number=week['number'],label=week['label'],headers=[d.strftime('%a (%m/%d)') for d in days],
+            teams=teams,events=len(selected)//2))
+    return output
+
+
 def generate_html_report():
     print("Initializing Fantasy NBA Report Generator V2...")
 
@@ -28,7 +59,9 @@ def generate_html_report():
 
     # 2. Fetch Data
     print("Fetching Schedule...")
+    season_schedule = utils.get_season_schedule().copy()
     full_schedule = utils.get_schedule(w1_start, final_end)
+    all_weeks = utils.season_weeks(season_schedule)
 
     print("Fetching Player Stats (Multi-Period)...")
     stats_dict = utils.get_player_stats_multi_period()
@@ -63,18 +96,7 @@ def generate_html_report():
 
         # Helper to get badge
         def get_badge_html(opp_abbr, is_home):
-            info = def_ratings.get(opp_abbr)
-            prefix = 'vs' if is_home else '@'
-            label = escape(f'{prefix} {opp_abbr}')
-            if info:
-                rank, population = info['Rank'], info['Population']
-                color = utils.get_color_for_rank(rank, population)
-                note = f"PBP Stats 最近10場已完成例行賽 (可跨季): {info['DefRtg']:.1f}失分/100防守回合; 排名 {rank}/{population}; {info['Games']}/10場; {info['Start']}–{info['End']}"
-                detail = f"近10場 {rank}/{population} · {info['Games']}/10"
-            else:
-                color, note, detail = '#eeeeee', '最近10場例行賽防守資料暫缺', '防守暫缺 · 0/10'
-            return f"<div class='matchup' style='background-color:{color};padding:4px;border-radius:4px;text-align:center;font-weight:bold' title='{escape(note, quote=True)}'>{label}<br><small>{escape(detail)}</small></div>"
-
+            return matchup_badge(opp_abbr,is_home,def_ratings)
 
         # --- TEAM SCHEDULE GRID ---
         team_grid_data = []
@@ -344,7 +366,7 @@ def generate_html_report():
         content = generate_html(t, p, d, f'W{i+1}')
         weeks_data.append({
             'id': f'Week{i+1}',
-            'label': f'Week {i+1} ({current_start.strftime("%m/%d")} - {current_end.strftime("%m/%d")})',
+            'label': f'近{i+1}週 ({current_start.strftime("%m/%d")} - {current_end.strftime("%m/%d")})',
             'content': content
         })
 
@@ -352,6 +374,15 @@ def generate_html_report():
         current_start = current_end + timedelta(days=1)
         current_end = current_start + timedelta(days=6)
 
+    season_payload=season_schedule_payload(season_schedule,all_weeks,def_ratings)
+    season_json=json.dumps(season_payload,ensure_ascii=False).replace('<','\\u003c')
+    season_content=''
+    if all_weeks:
+        first=all_weeks[0]
+        t,p,d=process_week_grid(first['start'],first['end'],season_schedule,stats_dict,def_ratings)
+        season_content=generate_html(t,p,d,'WSeason')
+    season_options=''.join(f'<option value="{i}">{escape(w["label"])}</option>' for i,w in enumerate(all_weeks))
+    season_select=(f'<label class="season-picker" for="season-week">整季週次<select id="season-week" onchange="selectSeasonWeek(this.value)" {"disabled" if not all_weeks else ""}><option value="">{"選擇整季週次" if all_weeks else "當季尚無已公布賽程"}</option>{season_options}</select></label>')
     tab_buttons = ''.join(
         f"<button class='tablinks' onclick=\"openWeek(event, '{w['id']}')\" "
         f"id='{ 'defaultOpen' if i == 0 else '' }'>{w['label']}</button>"
@@ -361,6 +392,7 @@ def generate_html_report():
         f"<div id='{w['id']}' class='tabcontent'>{w['content']}</div>"
         for w in weeks_data
     )
+    week_panels += f'<div id="WeekSeason" class="tabcontent"><h3 id="season-week-heading"></h3><p id="season-week-empty" hidden>本週沒有已公布的例行賽賽程。</p>{season_content}</div>'
     table_initializers = ''.join(
         f"tables['W{i+1}'] = $('#playerTableW{i+1}').DataTable({{order:[[2,'desc']],pageLength:25,scrollX:true,language:{{search:'搜尋',lengthMenu:'每頁 _MENU_ 人',info:'_START_–_END_ / _TOTAL_ 人',infoFiltered:'（全體 _MAX_ 人）',zeroRecords:'沒有符合球員，按全體球員清除篩選',infoEmpty:'0 人'}}}});"
         f"if ($('#teamTableW{i+1}').length) $('#teamTableW{i+1}').DataTable({{paging:false,info:false,searching:false}});"
@@ -369,11 +401,15 @@ def generate_html_report():
     metadata = stats_dict['metadata']
     generated_at = datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')
     provenance = dict(utils.PROVENANCE)
+    provenance['season_weeks']=[dict(number=w['number'],start=str(w['start']),end=str(w['end']),
+        events=season_payload[i]['events']) for i,w in enumerate(all_weeks)]
     provenance.update(generated_at=generated_at, stats_source='ESPN', defense_source='PBP Stats',
                       period_populations={k:len(stats_dict[k]) for k in ['Season','L7','L14','LastSeason']})
     last_period = provenance.get('players_' + str(int(metadata['last_season'][:4])+1), {})
     last_end = last_period.get('source_period_end','未查得')[:10]
     data_notice = (
+        "選週只切換賽程，統計與PR維持報告更新時的資料。 "
+        "整季採美東日期週一至週日，首場當季例行賽所在週為 Week 1；跨年連續，換季重設。近1週從今天起至週日。僅列來源已公布日期，尚未排定賽事不虛構；無比賽週仍保留。 "
         f"報告產生時間：{generated_at}。ESPN 球員資料：當季 {metadata['season']}，上季 {metadata['last_season']} "
         f"例行賽來源期間至 {last_end}。近期窗口為美東日期 {today} 前完整7／14天。"
         f"球隊／球員名單取自本次 ESPN roster；比賽日期使用美東時間，四週範圍 {w1_start}–{final_end}。"
@@ -415,6 +451,7 @@ def generate_html_report():
             var tables = {{}};
             var activeWeek = "W1";
             var teamSelection = {{}};
+            var seasonWeeks = {season_json};
 
             $(document).ready( function () {{
                 // Initialize DataTables for all weeks
@@ -437,10 +474,52 @@ def generate_html_report():
                     tablinks[i].className = tablinks[i].className.replace(" active", "");
                 }}
                 document.getElementById(weekName).style.display = "block";
+                document.getElementById('season-week').classList.remove('active');
                 evt.currentTarget.className += " active";
                 activeWeek = weekName.replace('Week','W');
+                if (activeWeek !== 'WSeason') document.getElementById('season-week').value = '';
                 if (tables[activeWeek]) tables[activeWeek].columns.adjust();
                 updateSelection(activeWeek);
+            }}
+
+            function selectSeasonWeek(value) {{
+                if (value === '') return;
+                var week = seasonWeeks[Number(value)];
+                if (!week) return;
+                openWeek({{currentTarget:document.getElementById('season-week')}}, 'WeekSeason');
+                document.getElementById('season-week-heading').textContent=week.label;
+                document.getElementById('season-week-empty').hidden=week.events !== 0;
+                if (!tables.WSeason) {{
+                    tables.WSeason=$('#playerTableWSeason').DataTable({{order:[[2,'desc']],pageLength:25,scrollX:true}});
+                    tables.WSeason.column(1).visible(false);
+                    tables.WSeason.on('draw',function() {{ updateSelection('WSeason'); }});
+                    switchStats('{default_period}','WSeason');
+                }}
+                var table=tables.WSeason;
+                for (var day=0;day<7;day++) $(table.column(day+3).header()).text(week.headers[day]);
+                table.rows().every(function() {{
+                    var row=this.data();
+                    var team=week.teams[row[1]] || {{games:0,days:['','','','','','','']}};
+                    row[2]=String(team.games);
+                    for (var day=0;day<7;day++) row[day+3]=team.days[day];
+                    this.data(row);
+                }});
+                var teamTable=document.getElementById('teamTableWSeason');
+                if (teamTable) {{
+                    for (var day=0;day<7;day++) teamTable.tHead.rows[0].cells[day+2].textContent=week.headers[day];
+                    teamTable.tBodies[0].replaceChildren();
+                    Object.keys(week.teams).sort().forEach(function(abbr) {{
+                        var data=week.teams[abbr],tr=document.createElement('tr');
+                        tr.className='team-row';tr.dataset.team=abbr;
+                        tr.onclick=function() {{ filterTeam(tr,abbr,'WSeason'); }};
+                        [abbr,String(data.games)].forEach(function(text) {{ var td=tr.insertCell();td.textContent=text; }});
+                        data.days.forEach(function(html) {{ tr.insertCell().innerHTML=html; }});
+                        if (teamSelection.WSeason===abbr) tr.classList.add('selected');
+                        teamTable.tBodies[0].appendChild(tr);
+                    }});
+                }}
+                table.columns.adjust().draw(false);
+                updateSelection('WSeason');
             }}
 
             // --- Feature: Switch Stats (period x display mode) ---
@@ -541,7 +620,7 @@ def generate_html_report():
                 <div class="metric-card"><span>上季 PR 母體</span><strong>{len(stats_dict['LastSeason'])}</strong><small>人</small></div>
             </div>
             <details class="data-details"><summary>資料說明 · {escape(fixture_caption)} · 防守近10場跨季接續</summary><p class="data-notice">{escape(data_notice)}</p><p class="defense-notice">{escape(defense_notice)}</p></details>
-            <div class="workspace-bar"><nav class="tab" aria-label="選擇週次">{tab_buttons}</nav><div class="filter-tools"><span id="active-selection" class="selection-label">全體球員</span><button id="show-all-players" class="global-reset" onclick="resetActiveTeamFilter()" aria-pressed="true" title="清除球隊與搜尋，保留統計期間及AVG/TOT">全體球員</button></div></div>
+            <div class="workspace-bar"><nav class="tab" aria-label="選擇週次">{tab_buttons}</nav>{season_select}<div class="filter-tools"><span id="active-selection" class="selection-label">全體球員</span><button id="show-all-players" class="global-reset" onclick="resetActiveTeamFilter()" aria-pressed="true" title="清除球隊與搜尋，保留統計期間及AVG/TOT">全體球員</button></div></div>
             <div class="legend"><b>近10場對手防守</b><span><i class="dot" style="background:#ccffcc"></i>較好打</span><span><i class="dot" style="background:#ffffcc"></i>中段</span><span><i class="dot" style="background:#ffcccc"></i>較難打</span><span><i class="dot" style="background:#eee"></i>暫缺</span></div>
             {week_panels}
             <footer class="footer">FANTASY STREAMING · 每日資料快照 · 球隊防守非位置別 DvP</footer>

@@ -28,7 +28,7 @@ jobs:
           pip install -r requirements.txt
       - name: Generate Report
         run: |
-          python -m unittest test_sources test_defense
+          python -m unittest test_sources test_defense test_schedule
           python generate_report.py
       - name: Validate generated public report
         run: python security_gate.py --generated

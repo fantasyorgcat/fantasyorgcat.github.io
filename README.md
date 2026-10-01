@@ -17,7 +17,7 @@
 
 ```sh
 pip install -r requirements.txt
-python -m unittest test_sources test_defense
+python -m unittest test_sources test_defense test_schedule
 python generate_report.py
 python security_gate.py --generated
 ```
@@ -25,3 +25,7 @@ python security_gate.py --generated
 輸出 `fantasy_nba_report_v2.html` 與 `data_snapshot.json`。需要自動開啟報告時設定 `OPEN_REPORT=1`。
 
 部署 gate 檢查 HTML 資產完整性、公開來源摘要、測試資料排除與發布檔案中的秘密模式。Pages 僅上傳首頁、資料摘要、三個固定版本本地 JS/CSS 與 `.nojekyll`。瀏覽器互動測試可使用已安裝的 Playwright 執行 `python test_dashboard_browser.py <網址>`；該測試不屬於網站發布內容。
+
+整季週次選單列出 ESPN 已公布的當季例行賽，與近四週快捷控制並存。以 America/New_York 日期、週一至週日編號：開季第一場所在週為 Week 1，跨年不歸零，換季重設。近1週仍從今天起至週日；整季第一週可有開季前的空白日期，無比賽週仍可選。來源尚未安排日期的 NBA Cup 等賽事不虛構；選單是已公布整季賽程，不保證開季前已有每隊82場。當季尚無已公布賽程時選單停用。來源失敗或缺漏仍中止生成。
+
+整季資料透過同一次產生程序中的記憶體快取共用30隊API回應；每日重新產生時重新讀取來源。前端僅加一個延後初始化的整季表格，切換週次更新日期、場數與對手，沿用原始統計與PR。可執行 `python test_season_browser.py <網址>` 驗證下拉實際資料與手機操作。

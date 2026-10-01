@@ -108,11 +108,13 @@ def get_active_player_ids():
     return set(get_roster()['PLAYER_ID'])
 
 
-def get_schedule(start_date, end_date):
+@lru_cache(maxsize=1)
+def get_season_schedule():
     def team_schedule(team):
         d = read_json(f"{SITE}/teams/{team['id']}/schedule?season={season_year()}&seasontype=2")
         if d['season']['year'] != season_year():
             raise ValueError('ESPN schedule season mismatch')
+        if not isinstance(d.get('events'), list):raise ValueError('ESPN schedule population missing')
         return d['events']
     events = {}
     for group in parallel_map(team_schedule, get_teams()):
@@ -123,13 +125,9 @@ def get_schedule(start_date, end_date):
             if eid in events and events[eid]['date'] != event['date']:
                 raise ValueError('Conflicting schedule event dates')
             events[eid] = event
-    if not events:
-        raise ValueError('No current-season regular-season schedule available')
     rows = []
     for e in events.values():
         day = datetime.fromisoformat(e['date'].replace('Z','+00:00')).astimezone(ZoneInfo('America/New_York')).date()
-        if not start_date <= day <= end_date:
-            continue
         competitors = e['competitions'][0]['competitors']
         if len(competitors) != 2:
             raise ValueError('Invalid NBA schedule competition')
@@ -138,8 +136,32 @@ def get_schedule(start_date, end_date):
             own, other = abbreviation(c['team']['abbreviation']), abbreviation(opponent['team']['abbreviation'])
             marker = 'vs.' if c['homeAway'] == 'home' else '@'
             rows.append(dict(TEAM_ID=int(c['team']['id']),TEAM_ABBREVIATION=own,GAME_DATE=day,MATCHUP=f'{own} {marker} {other}'))
-    PROVENANCE['schedule'] = dict(season=season_label(season_year()),timezone='America/New_York',start=str(start_date),end=str(end_date),events_in_window=len(rows)//2)
+    PROVENANCE['schedule'] = dict(season=season_label(season_year()),timezone='America/New_York',
+        published_events=len(events),first_game=str(min(r['GAME_DATE'] for r in rows)) if rows else None,
+        last_game=str(max(r['GAME_DATE'] for r in rows)) if rows else None,
+        coverage='All dated regular-season events currently published by ESPN; excludes preseason/postseason')
     return pd.DataFrame(rows, columns=['TEAM_ID','TEAM_ABBREVIATION','GAME_DATE','MATCHUP'])
+
+
+def get_schedule(start_date, end_date):
+    full=get_season_schedule()
+    selected=full.loc[(full['GAME_DATE']>=start_date)&(full['GAME_DATE']<=end_date)].copy()
+    PROVENANCE['schedule'].update(start=str(start_date),end=str(end_date),events_in_window=len(selected)//2)
+    return selected
+
+
+def season_weeks(schedule):
+    """Monday–Sunday in Eastern dates; opening game's week is 1, without year resets."""
+    if schedule.empty:return []
+    first=min(schedule['GAME_DATE']);last=max(schedule['GAME_DATE'])
+    start=first-timedelta(days=first.weekday())
+    weeks=[]
+    while start<=last:
+        end=start+timedelta(days=6)
+        weeks.append(dict(number=len(weeks)+1,start=start,end=end,
+            label=f'Week {len(weeks)+1} · {start:%Y/%m/%d}–{end:%Y/%m/%d}'))
+        start=end+timedelta(days=1)
+    return weeks
 
 
 def league_stats(year):
