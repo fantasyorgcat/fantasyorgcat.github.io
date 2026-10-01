@@ -1,5 +1,5 @@
 import pandas as pd
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import utils
 import webbrowser
 import os
@@ -8,36 +8,25 @@ import json
 
 def generate_html_report():
     print("Initializing Fantasy NBA Report Generator V2...")
-    
+
     # 1. Define Date Ranges
-    today = datetime.now().date()
+    today = datetime.now(timezone.utc).date()
     days_until_sunday = (6 - today.weekday()) % 7
     w1_end = today + timedelta(days=days_until_sunday)
     w1_start = today
-    
+
     # Calculate end date for 4 weeks
     final_end = w1_end + timedelta(days=21) # 3 more weeks
-    
+
     print(f"Report Range: {w1_start} to {final_end}")
 
     # 2. Fetch Data
     print("Fetching Schedule...")
     full_schedule = utils.get_schedule(w1_start, final_end)
-    
-    # Fallback for Date Mismatch
-    if full_schedule.empty:
-        print("⚠️ No games found. Trying previous year (Time Travel Mode)...")
-        w1_start_fallback = w1_start.replace(year=w1_start.year - 1)
-        final_end_fallback = final_end.replace(year=final_end.year - 1)
-        full_schedule = utils.get_schedule(w1_start_fallback, final_end_fallback)
-        
-        if not full_schedule.empty:
-            print(f"✅ Found games in {w1_start_fallback.year}! Adjusting display dates...")
-            full_schedule['GAME_DATE'] = full_schedule['GAME_DATE'].apply(lambda d: d.replace(year=d.year + 1))
 
     print("Fetching Player Stats (Multi-Period)...")
     stats_dict = utils.get_player_stats_multi_period()
-    
+
     print("Fetching Defensive Ratings...")
     def_ratings = utils.get_team_defensive_ratings()
 
@@ -55,9 +44,9 @@ def generate_html_report():
         while curr <= end_date:
             days.append(curr)
             curr += timedelta(days=1)
-            
+
         day_cols = [d.strftime('%a (%m/%d)') for d in days]
-        
+
         # Filter schedule
         # Defensive guard (pre-existing gap, unrelated to PR/Last-Season): schedule_df can
         # come back completely empty (no columns at all) when there are no games in the
@@ -69,7 +58,7 @@ def generate_html_report():
         else:
             mask = (schedule_df['GAME_DATE'] >= start_date) & (schedule_df['GAME_DATE'] <= end_date)
             week_games = schedule_df.loc[mask].copy()
-        
+
         # Helper to get badge
         def get_badge_html(opp_abbr, is_home):
             def_info = def_ratings.get(opp_abbr, {'Rank': 15})
@@ -81,14 +70,14 @@ def generate_html_report():
         # --- TEAM SCHEDULE GRID ---
         team_grid_data = []
         all_team_ids = week_games['TEAM_ID'].unique()
-        
+
         for tid in all_team_ids:
             t_games = week_games[week_games['TEAM_ID'] == tid]
             if t_games.empty: continue
-            
+
             abbr = t_games.iloc[0]['TEAM_ABBREVIATION']
             row = {'TEAM_ID': tid, 'Team': abbr, 'Games': len(t_games)}
-            
+
             for d, col_name in zip(days, day_cols):
                 g = t_games[t_games['GAME_DATE'] == d]
                 if not g.empty:
@@ -99,7 +88,7 @@ def generate_html_report():
                 else:
                     row[col_name] = ""
             team_grid_data.append(row)
-            
+
         team_df = pd.DataFrame(team_grid_data)
         if not team_df.empty:
             team_df = team_df.sort_values('Games', ascending=False)
@@ -158,13 +147,13 @@ def generate_html_report():
         merged = pd.merge(merged, l14, left_on='PLAYER_ID', right_on='PLAYER_ID_L14', how='left')
         if not last_season.empty:
             merged = pd.merge(merged, last_season, left_on='PLAYER_ID', right_on='PLAYER_ID_LS', how='left')
-        
+
         # Add Schedule Grid to Players
         if not team_df.empty:
             schedule_cols = ['Games'] + day_cols
             team_schedule = team_df[['Team'] + schedule_cols].rename(columns={'Team': 'TEAM_ABBREVIATION'})
             merged = pd.merge(merged, team_schedule, on='TEAM_ABBREVIATION', how='left')
-            
+
             # Fill NaN schedule
             for c in schedule_cols:
                 if c == 'Games':
@@ -202,18 +191,18 @@ def generate_html_report():
 
         # Format Player
         merged['Player'] = merged.apply(lambda x: f"<b>{x['PLAYER_NAME']}</b> <br><span style='color:#888'>{x['TEAM_ABBREVIATION']}</span>", axis=1)
-        
+
         # Format Stats (Season)
         merged['FG%'] = (merged['FG_PCT'] * 100).map('{:.1f}%'.format)
         merged['FT%'] = (merged['FT_PCT'] * 100).map('{:.1f}%'.format)
         merged = merged.rename(columns={'FG3M': '3PM'})
-        
+
         # Format Stats (L7)
         if 'FG_PCT_L7' in merged.columns:
             merged['FG%_L7'] = (merged['FG_PCT_L7'] * 100).map('{:.1f}%'.format)
             merged['FT%_L7'] = (merged['FT_PCT_L7'] * 100).map('{:.1f}%'.format)
             merged = merged.rename(columns={'FG3M_L7': '3PM_L7', 'PTS_L7': 'PTS_L7', 'REB_L7': 'REB_L7', 'AST_L7': 'AST_L7', 'STL_L7': 'STL_L7', 'BLK_L7': 'BLK_L7'})
-            
+
         # Format Stats (L14)
         if 'FG_PCT_L14' in merged.columns:
             merged['FG%_L14'] = (merged['FG_PCT_L14'] * 100).map('{:.1f}%'.format)
@@ -231,7 +220,7 @@ def generate_html_report():
     # 4. Generate HTML
     def generate_html(team_df, player_df, day_cols, table_id_suffix):
         if player_df.empty: return "<p>No data.</p>"
-        
+
         # --- Team Table HTML ---
         team_html = ""
         if not team_df.empty:
@@ -258,10 +247,10 @@ def generate_html_report():
 
         # --- Player Table HTML ---
         # Columns: Player, Games, [Days], [Stats Season], [Stats L7], [Stats L14], [Stats Last Season]
-        
+
         # Stat Columns Definition
         stat_metrics = ['MIN', 'PTS', 'REB', 'AST', '3PM', 'STL', 'BLK', 'FG%', 'FT%']
-        
+
         player_html = f"""
         <div class="player-section">
             <div class="controls">
@@ -297,7 +286,7 @@ def generate_html_report():
                 </thead>
                 <tbody>
         """
-        
+
         for _, row in player_df.iterrows():
             player_html += f"<tr>"
             player_html += f"<td>{row['Player']}</td>"
@@ -305,7 +294,7 @@ def generate_html_report():
             player_html += f"<td>{row.get('Games', 0)}</td>"
             for d in day_cols:
                 player_html += f"<td>{row.get(d, '')}</td>"
-            
+
             # Helper to create stat cell with data-order
             def create_stat_cell(row, metric, suffix, css_class, mode='avg', visible=True):
                 # TOT mode swaps in the derived *_TOT columns for counting stats only;
@@ -313,7 +302,10 @@ def generate_html_report():
                 use_tot = (mode == 'tot' and metric in tot_metrics)
                 base_key = f"{metric}_TOT" if use_tot else metric
                 key = f"{base_key}_{suffix}" if suffix else base_key
-                val = row.get(key, 0)
+                val = row.get(key)
+                if val is None or pd.isna(val):
+                    style = '' if visible else 'display:none'
+                    return f"<td class='{css_class}' style='{style}' data-order='-1'>—</td>"
 
                 # Determine sort value (raw number)
                 # Each AVG/TOT cell is its own DataTables column carrying its own raw
@@ -369,16 +361,16 @@ def generate_html_report():
                 player_html += create_stat_cell(row, m, "LS", "stat-ls stat-tot", 'tot', False)
 
             player_html += "</tr>"
-            
+
         player_html += "</tbody></table></div>"
-        
+
         return team_html + "<hr>" + player_html
 
     # Generate 4 Weeks
     weeks_data = []
     current_start = w1_start
     current_end = w1_end
-    
+
     for i in range(4):
         print(f"Processing Week {i+1} ({current_start} - {current_end})...")
         t, p, d = process_week_grid(current_start, current_end, full_schedule, stats_dict, def_ratings)
@@ -388,10 +380,39 @@ def generate_html_report():
             'label': f'Week {i+1} ({current_start.strftime("%m/%d")} - {current_end.strftime("%m/%d")})',
             'content': content
         })
-        
+
         # Next week
         current_start = current_end + timedelta(days=1)
         current_end = current_start + timedelta(days=6)
+
+    tab_buttons = ''.join(
+        f"<button class='tablinks' onclick=\"openWeek(event, '{w['id']}')\" "
+        f"id='{ 'defaultOpen' if i == 0 else '' }'>{w['label']}</button>"
+        for i, w in enumerate(weeks_data)
+    )
+    week_panels = ''.join(
+        f"<div id='{w['id']}' class='tabcontent'>{w['content']}</div>"
+        for w in weeks_data
+    )
+    table_initializers = ''.join(
+        f"tables['W{i+1}'] = $('#playerTableW{i+1}').DataTable({{order:[[2,'desc']],pageLength:25}});"
+        f"if ($('#teamTableW{i+1}').length) $('#teamTableW{i+1}').DataTable({{paging:false,info:false,searching:false}});"
+        for i in range(4)
+    )
+    metadata = stats_dict['metadata']
+    generated_at = datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')
+    data_notice = (
+        f"Generated: {generated_at}. Statistics: NBA regular season {metadata['season']}; "
+        f"Last Season: {metadata['last_season']}. Last 7 / 14: actual calendar windows ending {today}. "
+        f"Schedule: official NBA dates {w1_start} to {final_end}. "
+        "No prior-year games are shifted into the current schedule. "
+        "Defensive ratings: last completed regular season. "
+        "Player team labels reflect the statistics source, not a live roster feed."
+    )
+    if stats_dict['Season'].empty:
+        data_notice += " Current-season statistics are not available yet; use Last Season."
+    if full_schedule.empty:
+        data_notice += " No official regular-season games in this four-week window."
 
     html_template = f"""
     <!DOCTYPE html>
@@ -403,24 +424,24 @@ def generate_html_report():
             body {{ font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; color: #333; padding: 20px; }}
             h1 {{ color: #2c3e50; }}
             .container {{ max-width: 1600px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }}
-            
+
             /* Tabs */
             .tab {{ overflow: hidden; border: 1px solid #ccc; background-color: #f1f1f1; border-radius: 8px 8px 0 0; }}
             .tab button {{ background-color: inherit; float: left; border: none; outline: none; cursor: pointer; padding: 14px 16px; transition: 0.3s; font-size: 17px; font-weight: bold; }}
             .tab button:hover {{ background-color: #ddd; }}
             .tab button.active {{ background-color: #3498db; color: white; }}
             .tabcontent {{ display: none; padding: 20px; border: 1px solid #ccc; border-top: none; border-radius: 0 0 8px 8px; }}
-            
+
             /* Tables */
             table {{ width: 100%; border-collapse: collapse; font-size: 0.95em; }}
             th {{ background-color: #3498db; color: white; padding: 10px; text-align: left; }}
             td {{ padding: 8px; border-bottom: 1px solid #eee; vertical-align: middle; }}
-            
+
             /* Team Selection */
             .team-row {{ cursor: pointer; transition: background 0.2s; }}
             .team-row:hover {{ background-color: #eef9ff !important; }}
             .team-row.selected {{ background-color: #d6eaf8 !important; border-left: 4px solid #3498db; }}
-            
+
             /* Controls */
             .controls {{ margin-bottom: 15px; }}
             .btn-stat {{ padding: 8px 15px; border: 1px solid #ddd; background: white; cursor: pointer; border-radius: 4px; margin-right: 5px; }}
@@ -436,18 +457,16 @@ def generate_html_report():
         <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
         <script>
             var tables = {{}};
-            
+
             $(document).ready( function () {{
                 // Initialize DataTables for all weeks
-                {''.join([f'''
-                tables['W{i+1}'] = $('#playerTableW{i+1}').DataTable({{ "order": [[ 2, "desc" ]], "pageLength": 25 }});
-                $('#teamTableW{i+1}').DataTable({{ "paging": false, "info": false, "searching": false }});
-                ''' for i in range(4)])}
+                {table_initializers}
 
+                Object.keys(tables).forEach(function(suffix) {{ tables[suffix].column(1).visible(false); applyStatView(suffix); }});
                 // Open default tab
                 document.getElementById("defaultOpen").click();
             }});
-            
+
             function openWeek(evt, weekName) {{
                 var i, tabcontent, tablinks;
                 tabcontent = document.getElementsByClassName("tabcontent");
@@ -460,28 +479,32 @@ def generate_html_report():
                 }}
                 document.getElementById(weekName).style.display = "block";
                 evt.currentTarget.className += " active";
+                if (tables[weekName.replace('Week','W')]) tables[weekName.replace('Week','W')].columns.adjust();
             }}
-            
+
             // --- Feature: Switch Stats (period x display mode) ---
             // The visible stat columns are the intersection of the active period
             // (Season/L7/L14/LS) and the active display mode (AVG/TOT); both toggles
             // funnel through applyStatView so they stay orthogonal.
-            var currentPeriod = 'season';
-            var currentMode = 'avg';
-
-            function applyStatView() {{
-                var periods = ['season', 'l7', 'l14', 'ls'];
-                var modes = ['avg', 'tot'];
-                periods.forEach(p => {{
-                    modes.forEach(m => {{
-                        var display = (p == currentPeriod && m == currentMode) ? 'table-cell' : 'none';
-                        $('.stat-' + p + '.stat-' + m).css('display', display);
-                    }});
+            var viewState = {{}};
+            function applyStatView(suffix) {{
+                var state = viewState[suffix] || {{period:'season',mode:'avg'}};
+                var table = tables[suffix];
+                table.columns().every(function () {{
+                    var header = this.header();
+                    if (header.className.indexOf('stat-') !== -1) {{
+                        $(header).css('display', '');
+                        this.nodes().to$().css('display', '');
+                        this.visible(header.classList.contains('stat-' + state.period) &&
+                                     header.classList.contains('stat-' + state.mode), false);
+                    }}
                 }});
+                table.columns.adjust().draw(false);
             }}
 
             function switchStats(period, suffix) {{
-                currentPeriod = period.toLowerCase();
+                viewState[suffix] = viewState[suffix] || {{period:'season',mode:'avg'}};
+                viewState[suffix].period = period.toLowerCase();
                 // Update Buttons
                 // NOTE: matched via the button's data-period attribute (exact match), not
                 // innerText substring matching -- the old innerText-substring check broke
@@ -496,12 +519,13 @@ def generate_html_report():
                         btns[i].classList.add('active');
                     }}
                 }}
-                applyStatView();
+                applyStatView(suffix);
             }}
 
             // --- Feature: Switch Display Mode (AVG / TOT) ---
             function switchDisplayMode(mode, suffix) {{
-                currentMode = mode.toLowerCase();
+                viewState[suffix] = viewState[suffix] || {{period:'season',mode:'avg'}};
+                viewState[suffix].mode = mode.toLowerCase();
                 // Scoped to [data-mode] so the period buttons are left alone.
                 var container = document.querySelector('#Week' + suffix.replace('W','') + ' .controls');
                 var btns = container.querySelectorAll('.btn-stat[data-mode]');
@@ -511,20 +535,20 @@ def generate_html_report():
                         btns[i].classList.add('active');
                     }}
                 }}
-                applyStatView();
+                applyStatView(suffix);
             }}
-            
+
             // --- Feature: Filter Team ---
             function filterTeam(row, teamAbbr, suffix) {{
                 // Highlight Row
                 $('#teamTable' + suffix + ' .team-row').removeClass('selected');
                 $(row).addClass('selected');
-                
+
                 // Filter Player Table
                 // Column 1 is Team (index 1)
                 tables[suffix].column(1).search(teamAbbr).draw();
             }}
-            
+
             function resetTeamFilter(suffix) {{
                 $('#teamTable' + suffix + ' .team-row').removeClass('selected');
                 tables[suffix].column(1).search('').draw();
@@ -534,30 +558,31 @@ def generate_html_report():
     <body>
         <div class="container">
             <h1>🏀 Fantasy NBA Streaming Assistant V2</h1>
-            
+
+            <p class="data-notice">{data_notice}</p>
             <div class="legend">
-                <b>Matchup Strength (DvP):</b> 
-                <span class="dot" style="background-color:#ccffcc"></span>Easy (Green) 
-                <span class="dot" style="background-color:#e5ffcc"></span> 
-                <span class="dot" style="background-color:#ffffcc"></span>Average 
-                <span class="dot" style="background-color:#ffe5cc"></span> 
+                <b>Matchup Strength (DvP):</b>
+                <span class="dot" style="background-color:#ccffcc"></span>Easy (Green)
+                <span class="dot" style="background-color:#e5ffcc"></span>
+                <span class="dot" style="background-color:#ffffcc"></span>Average
+                <span class="dot" style="background-color:#ffe5cc"></span>
                 <span class="dot" style="background-color:#ffcccc"></span>Hard (Red)
             </div>
 
             <div class="tab">
-                {''.join([f'<button class="tablinks" onclick="openWeek(event, \'{w["id"]}\')" id="{ "defaultOpen" if i==0 else "" }">{w["label"]}</button>' for i, w in enumerate(weeks_data)])}
+                {tab_buttons}
             </div>
 
-            {''.join([f'<div id="{w["id"]}" class="tabcontent">{w["content"]}</div>' for w in weeks_data])}
+            {week_panels}
         </div>
     </body>
     </html>
     """
-    
+
     output_file = "fantasy_nba_report_v2.html"
     with open(output_file, "w", encoding="utf-8") as f:
         f.write(html_template)
-        
+
     print(f"Report generated: {output_file}")
     webbrowser.open('file://' + os.path.realpath(output_file))
 
