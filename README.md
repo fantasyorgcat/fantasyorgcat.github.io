@@ -36,5 +36,7 @@ ESPN/NBA/PBP資料再散布授權仍未確認，技術檢查不代表資料使�
 
 本機球員工具檢查：`python -m unittest test_sources test_defense test_schedule test_player_catalog`、`node --check player_tools.js`、`python test_player_tools_browser.py <預覽網址>`；原四週/整季瀏覽器測試亦須通過。
 
-Rank：九個既有PR（MIN、PTS、REB、AST、3PM、STL、BLK、FG%、FT%）未四捨五入加總；各統計期及AVG/TOT在完整聯盟母體排名，最高第1，同分採1,2,2,4。缺任何PR不列Rank；球隊與比較篩選不重編。
+Rank：九個PR（PTS、REB、AST、3PM、STL、BLK、FG%、FT%、TO）未四捨五入加總，不含MIN／出賽時間PR；MIN及其PR仍顯示。各統計期及AVG/TOT在完整聯盟母體排名，最高第1，同分採1,2,2,4。缺任一納入PR不列Rank，缺MIN不影響；球隊與比較篩選不重編。
 
+
+TO（失誤）：AVG使用ESPN avgTurnovers，TOT使用原始turnovers總數，近7/14天沿既有完整日曆窗口的逐場失誤計算。失誤越少PR越高；缺失誤資料不當0、不推估，不新增出賽門檻。Rank含TO、排除MIN。

@@ -2,18 +2,22 @@
 import math
 import pandas as pd
 
-METRICS=['MIN','PTS','REB','AST','3PM','STL','BLK','FG%','FT%']
-COUNTING={'PTS','REB','AST','3PM','STL','BLK'}
+METRICS=['MIN','PTS','REB','AST','3PM','STL','BLK','FG%','FT%','TO']
+RANK_METRICS=[metric for metric in METRICS if metric != 'MIN']
+COUNTING={'PTS','REB','AST','3PM','STL','BLK','TO'}
+
+def metric_pr(values, metric):
+    return values.rank(pct=True,ascending=metric!='TO')*100
 
 def add_pr_ranks(pool):
-    """Rank the full period population by exactly the nine displayed PRs."""
+    """Rank the full period population by nine PRs including TO, excluding minutes."""
     for mode in ['avg','tot']:
-        keys=[m+('_TOT_PR' if mode=='tot' and m in COUNTING else '_PR') for m in METRICS]
+        keys=[m+('_TOT_PR' if mode=='tot' and m in COUNTING else '_PR') for m in RANK_METRICS]
         values=pool.reindex(columns=keys)
         if not values.empty and not values.apply(lambda col: col.dropna().map(math.isfinite).all()).all():
             raise ValueError('Nonfinite PR cannot be ranked')
         suffix='_TOT' if mode=='tot' else ''
-        pool['PR_SUM'+suffix]=values.sum(axis=1,min_count=len(METRICS))
+        pool['PR_SUM'+suffix]=values.sum(axis=1,min_count=len(RANK_METRICS))
         pool['PR_RANK'+suffix]=pool['PR_SUM'+suffix].rank(method='min',ascending=False)
     return pool
 

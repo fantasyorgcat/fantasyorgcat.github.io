@@ -1,6 +1,6 @@
 import unittest
 import pandas as pd
-from player_catalog import build_catalog, add_pr_ranks, METRICS, COUNTING
+from player_catalog import build_catalog, add_pr_ranks, METRICS, COUNTING, metric_pr
 
 class Catalog(unittest.TestCase):
     def row(self):return dict(PLAYER_ID=123,PLAYER_NAME='Test <script>',TEAM_ABBREVIATION='LAL',GP_LS=7,PTS_LS=11/7,PTS_TOT_LS=11,PTS_PR_LS=43.2,PTS_TOT_PR_LS=68.9,FG_PCT_LS=.40041,**{'FG%_PR_LS':92.3})
@@ -45,7 +45,43 @@ class Rank(unittest.TestCase):
         p=self.pool();p.loc[3,'PTS_TOT_PR']=200;add_pr_ranks(p)
         self.assertEqual(p.PR_RANK_TOT.iloc[3],1);self.assertEqual(p.PR_RANK.iloc[3],4)
         self.assertEqual(len(add_pr_ranks(p.iloc[:0].copy())),0)
-        p.loc[0,'MIN_PR']=float('inf')
+        p.loc[0,'PTS_PR']=float('inf')
         with self.assertRaises(ValueError):add_pr_ranks(p)
+    def test_minutes_changes_and_missing_minutes_do_not_affect_rank(self):
+        baseline=add_pr_ranks(self.pool())
+        changed=self.pool();changed['MIN_PR']=[0,100,999,55,float('nan')]
+        add_pr_ranks(changed)
+        for key in ['PR_SUM','PR_SUM_TOT','PR_RANK','PR_RANK_TOT']:
+            pd.testing.assert_series_equal(baseline[key],changed[key])
+        missing=self.pool().drop(columns='MIN_PR');add_pr_ranks(missing)
+        self.assertEqual(missing.PR_RANK.tolist(),[1,2,2,4,5])
+        self.assertEqual(missing.PR_RANK_TOT.tolist(),[1,2,2,4,5])
+    def test_nine_included_prs_are_required_and_sum_without_minutes(self):
+        p=self.pool()
+        for m in METRICS:
+            p[m+'_PR']=10.0 if m!='MIN' else 100.0
+            if m in COUNTING:p[m+'_TOT_PR']=10.0
+        p.loc[0,'PTS_PR']=11.0;p.loc[0,'PTS_TOT_PR']=11.0
+        p.loc[4,'FT%_PR']=float('nan');add_pr_ranks(p)
+        self.assertEqual(p.PR_SUM.iloc[0],91);self.assertEqual(p.PR_SUM_TOT.iloc[0],91)
+        self.assertEqual(p.PR_RANK.tolist()[:4],[1,2,2,2])
+        self.assertTrue(pd.isna(p.PR_RANK.iloc[4]));self.assertTrue(pd.isna(p.PR_RANK_TOT.iloc[4]))
+
+class TurnoverPR(unittest.TestCase):
+    def test_low_high_ties_zero_and_null_single_reversal(self):
+        values=pd.Series([0.0,1.0,1.0,4.0,float('nan')])
+        pr=metric_pr(values,'TO')
+        self.assertEqual(pr.tolist()[:4],[100.0,62.5,62.5,25.0])
+        self.assertTrue(pd.isna(pr.iloc[4]))
+        self.assertEqual(metric_pr(values,'PTS').tolist()[:4],[25.0,62.5,62.5,100.0])
+    def test_rank_includes_to_once_and_excludes_minutes(self):
+        pool=Rank().pool()
+        for m in METRICS:
+            pool[m+'_PR']=10.0
+            if m in COUNTING:pool[m+'_TOT_PR']=10.0
+        pool['MIN_PR']=1000.0;pool.loc[0,'TO_PR']=100.0;pool.loc[0,'TO_TOT_PR']=100.0
+        pool.loc[4,'TO_PR']=float('nan');pool.loc[4,'TO_TOT_PR']=float('nan');add_pr_ranks(pool)
+        self.assertEqual(pool.PR_SUM.iloc[0],180);self.assertEqual(pool.PR_SUM_TOT.iloc[0],180)
+        self.assertEqual(pool.PR_RANK.iloc[0],1);self.assertTrue(pd.isna(pool.PR_RANK.iloc[4]))
 
 if __name__=='__main__':unittest.main()

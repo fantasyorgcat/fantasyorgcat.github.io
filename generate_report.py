@@ -9,7 +9,7 @@ from html import escape
 from pathlib import Path
 import hashlib
 import base64
-from player_catalog import build_catalog, add_pr_ranks
+from player_catalog import build_catalog, add_pr_ranks, metric_pr
 
 IDENTITY_COLUMNS = ['PLAYER_ID','PLAYER_NAME','TEAM_ID','TEAM_ABBREVIATION']
 
@@ -74,7 +74,7 @@ def generate_html_report():
     # MIN / FG% / FT% are intentionally excluded: the old FANTASY-SUP page shows
     # them unchanged in TOT mode (rates and minutes-per-game don't sum meaningfully).
     # Shared by process_week_grid (data) and generate_html (rendering) below.
-    tot_metrics = ['PTS', 'REB', 'AST', '3PM', 'STL', 'BLK']
+    tot_metrics = ['PTS', 'REB', 'AST', '3PM', 'STL', 'BLK', 'TO']
 
     # 3. Process Data Helper
     def process_week_grid(start_date, end_date, schedule_df, stats_dict, def_ratings):
@@ -130,7 +130,7 @@ def generate_html_report():
         pr_metric_map = {
             'MIN': 'MIN', 'PTS': 'PTS', 'REB': 'REB', 'AST': 'AST',
             '3PM': 'FG3M', 'STL': 'STL', 'BLK': 'BLK',
-            'FG%': 'FG_PCT', 'FT%': 'FT_PCT',
+            'FG%': 'FG_PCT', 'FT%': 'FT_PCT', 'TO':'TO',
         }
 
         # Complete period populations; no qualification cutoff or current-roster filtering.
@@ -139,10 +139,10 @@ def generate_html_report():
             pool = stats_dict[period].copy()
             pool = pool[pool['GP'] > 0]
             for label, raw in pr_metric_map.items():
-                pool[f'{label}_PR'] = pool[raw].rank(pct=True) * 100
+                pool[f'{label}_PR'] = metric_pr(pool[raw],label)
                 if label in tot_metrics:
                     pool[f'{label}_TOT'] = pool[raw+'_TOTAL']
-                    pool[f'{label}_TOT_PR'] = pool[f'{label}_TOT'].rank(pct=True) * 100
+                    pool[f'{label}_TOT_PR'] = metric_pr(pool[f'{label}_TOT'],label)
             ranked[period] = add_pr_ranks(pool)
         base_df = ranked['Season'].copy()
         roster = stats_dict.get('Roster')
@@ -238,7 +238,7 @@ def generate_html_report():
         # Columns: Player, Games, [Days], [Stats Season], [Stats L7], [Stats L14], [Stats Last Season]
 
         # Stat Columns Definition
-        stat_metrics = ['MIN', 'PTS', 'REB', 'AST', '3PM', 'STL', 'BLK', 'FG%', 'FT%', 'Rank']
+        stat_metrics = ['MIN', 'PTS', 'REB', 'AST', '3PM', 'STL', 'BLK', 'FG%', 'FT%', 'TO', 'Rank']
 
         player_html = f"""
         <div class="player-section"><div class="player-heading"><h3>球員名單</h3><span id="selection{table_id_suffix}">全體球員</span></div>
@@ -260,17 +260,17 @@ def generate_html_report():
                         <th>Games</th>
                         {''.join([f'<th>{d}</th>' for d in day_cols])}
                         <!-- Season Stats Headers (AVG / TOT) -->
-                        {''.join([f'<th class="stat-season stat-avg{ " rank-season-avg" if m=="Rank" else "" }">{m}</th>' for m in stat_metrics])}
-                        {''.join([f'<th class="stat-season stat-tot{ " rank-season-tot" if m=="Rank" else "" }" style="display:none">{m}</th>' for m in stat_metrics])}
+                        {''.join([f'<th class="stat-season stat-avg{ " rank-season-avg" if m=="Rank" else "" }" title="{ "失誤越少PR越高" if m=="TO" else "" }">{m}</th>' for m in stat_metrics])}
+                        {''.join([f'<th class="stat-season stat-tot{ " rank-season-tot" if m=="Rank" else "" }" style="display:none" title="{ "失誤越少PR越高" if m=="TO" else "" }">{m}</th>' for m in stat_metrics])}
                         <!-- L7 Stats Headers (AVG / TOT) -->
-                        {''.join([f'<th class="stat-l7 stat-avg{ " rank-l7-avg" if m=="Rank" else "" }" style="display:none">{m}</th>' for m in stat_metrics])}
-                        {''.join([f'<th class="stat-l7 stat-tot{ " rank-l7-tot" if m=="Rank" else "" }" style="display:none">{m}</th>' for m in stat_metrics])}
+                        {''.join([f'<th class="stat-l7 stat-avg{ " rank-l7-avg" if m=="Rank" else "" }" style="display:none" title="{ "失誤越少PR越高" if m=="TO" else "" }">{m}</th>' for m in stat_metrics])}
+                        {''.join([f'<th class="stat-l7 stat-tot{ " rank-l7-tot" if m=="Rank" else "" }" style="display:none" title="{ "失誤越少PR越高" if m=="TO" else "" }">{m}</th>' for m in stat_metrics])}
                         <!-- L14 Stats Headers (AVG / TOT) -->
-                        {''.join([f'<th class="stat-l14 stat-avg{ " rank-l14-avg" if m=="Rank" else "" }" style="display:none">{m}</th>' for m in stat_metrics])}
-                        {''.join([f'<th class="stat-l14 stat-tot{ " rank-l14-tot" if m=="Rank" else "" }" style="display:none">{m}</th>' for m in stat_metrics])}
+                        {''.join([f'<th class="stat-l14 stat-avg{ " rank-l14-avg" if m=="Rank" else "" }" style="display:none" title="{ "失誤越少PR越高" if m=="TO" else "" }">{m}</th>' for m in stat_metrics])}
+                        {''.join([f'<th class="stat-l14 stat-tot{ " rank-l14-tot" if m=="Rank" else "" }" style="display:none" title="{ "失誤越少PR越高" if m=="TO" else "" }">{m}</th>' for m in stat_metrics])}
                         <!-- Last Season Stats Headers (AVG / TOT) -->
-                        {''.join([f'<th class="stat-ls stat-avg{ " rank-ls-avg" if m=="Rank" else "" }" style="display:none">{m}</th>' for m in stat_metrics])}
-                        {''.join([f'<th class="stat-ls stat-tot{ " rank-ls-tot" if m=="Rank" else "" }" style="display:none">{m}</th>' for m in stat_metrics])}
+                        {''.join([f'<th class="stat-ls stat-avg{ " rank-ls-avg" if m=="Rank" else "" }" style="display:none" title="{ "失誤越少PR越高" if m=="TO" else "" }">{m}</th>' for m in stat_metrics])}
+                        {''.join([f'<th class="stat-ls stat-tot{ " rank-ls-tot" if m=="Rank" else "" }" style="display:none" title="{ "失誤越少PR越高" if m=="TO" else "" }">{m}</th>' for m in stat_metrics])}
                     </tr>
                 </thead>
                 <tbody>
@@ -294,7 +294,7 @@ def generate_html_report():
                     rank=row.get('PR_RANK'+ending)
                     present=rank is not None and pd.notna(rank)
                     total=row.get('PR_SUM'+ending)
-                    title='九項PR未四捨五入加總；全體排名，同分並列1,2,2,4' if present else 'PR不完整，無排名'
+                    title='九項PR加總（含TO、不含MIN）；全體排名，同分並列1,2,2,4' if present else '九項PR不完整，無排名（不含MIN）'
                     if present:title+=f'; PR合計 {float(total):.6f}'
                     style='' if visible else 'display:none'
                     return f"<td class='{css_class} rank-{suffix.lower() or 'season'}-{mode}' style='{style}' data-order='{int(rank) if present else 1000000000}' title='{escape(title,quote=True)}'>{int(rank) if present else '—'}</td>"

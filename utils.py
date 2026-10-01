@@ -15,11 +15,19 @@ SITE = 'https://site.api.espn.com/apis/site/v2/sports/basketball/nba'
 WEB = 'https://site.web.api.espn.com/apis/common/v3/sports/basketball/nba'
 PBP = 'https://api.pbpstats.com'
 ALIASES = {'GS':'GSW', 'NO':'NOP', 'NY':'NYK', 'SA':'SAS', 'UTAH':'UTA', 'WSH':'WAS'}
-COLUMNS = ['PLAYER_ID','PLAYER_NAME','TEAM_ID','TEAM_ABBREVIATION','GP','MIN','PTS','REB','AST','STL','BLK','FG_PCT','FT_PCT','FG3M']
-TOTAL_FIELDS = {'PTS':'points','REB':'rebounds','AST':'assists','STL':'steals','BLK':'blocks','FG3M':'threePointFieldGoalsMade'}
+COLUMNS = ['PLAYER_ID','PLAYER_NAME','TEAM_ID','TEAM_ABBREVIATION','GP','MIN','PTS','REB','AST','STL','BLK','FG_PCT','FT_PCT','FG3M','TO']
+TOTAL_FIELDS = {'PTS':'points','REB':'rebounds','AST':'assists','STL':'steals','BLK':'blocks','FG3M':'threePointFieldGoalsMade','TO':'turnovers'}
 COLUMNS += [key+'_TOTAL' for key in TOTAL_FIELDS]
 IDENTITY = COLUMNS[:4]
 PROVENANCE = {}
+
+def parse_turnovers(value, total=False):
+    if value is None or (isinstance(value,str) and value.strip() in ['', '-', '--', 'N/A']):return None
+    if isinstance(value,bool):raise ValueError('Invalid turnover statistic')
+    value=float(value)
+    if not math.isfinite(value) or value<0 or (total and not value.is_integer()):
+        raise ValueError('Invalid turnover statistic')
+    return value
 
 
 def today():
@@ -184,20 +192,20 @@ def league_stats(year):
     if len(athletes) != d['pagination']['count'] or len({a['athlete']['id'] for a in athletes}) != len(athletes):
         raise ValueError('Incomplete or duplicated league PR population')
     definitions={c['name']:c['names'] for c in d['categories'] if 'names' in c}
-    fields={'GP':'gamesPlayed','MIN':'avgMinutes','PTS':'avgPoints','REB':'avgRebounds','AST':'avgAssists','STL':'avgSteals','BLK':'avgBlocks','FG_PCT':'fieldGoalPct','FT_PCT':'freeThrowPct','FG3M':'avgThreePointFieldGoalsMade'}
+    fields={'GP':'gamesPlayed','MIN':'avgMinutes','PTS':'avgPoints','REB':'avgRebounds','AST':'avgAssists','STL':'avgSteals','BLK':'avgBlocks','FG_PCT':'fieldGoalPct','FT_PCT':'freeThrowPct','FG3M':'avgThreePointFieldGoalsMade','TO':'avgTurnovers'}
     team_lookup={t['abbreviation']:t['id'] for t in get_teams()}
     rows=[]
     for a in athletes:
-        raw={name:float(value) for c in a['categories'] for name,value in zip(definitions[c['name']],c['values'])}
+        raw={name:(parse_turnovers(value,total=name=='turnovers') if name in ['avgTurnovers','turnovers'] else float(value)) for c in a['categories'] for name,value in zip(definitions[c['name']],c['values'])}
         if raw['gamesPlayed'] <= 0:continue
         identity=a['athlete'];team=abbreviation(identity['teams'][-1]['abbreviation'])
         row=dict(PLAYER_ID=int(identity['id']),PLAYER_NAME=identity['displayName'],TEAM_ID=team_lookup[team],TEAM_ABBREVIATION=team)
-        row.update({key:raw[value] for key,value in fields.items()})
-        row.update({key+'_TOTAL':raw[name] for key,name in TOTAL_FIELDS.items()})
-        if any(not math.isfinite(row[key+'_TOTAL']) or row[key+'_TOTAL'] < 0 or not row[key+'_TOTAL'].is_integer() for key in TOTAL_FIELDS):
+        row.update({key:(raw.get(value) if key=='TO' else raw[value]) for key,value in fields.items()})
+        row.update({key+'_TOTAL':(raw.get(name) if key=='TO' else raw[name]) for key,name in TOTAL_FIELDS.items()})
+        if any(not math.isfinite(row[key+'_TOTAL']) or row[key+'_TOTAL'] < 0 or not row[key+'_TOTAL'].is_integer() for key in TOTAL_FIELDS if key!='TO' or row[key+'_TOTAL'] is not None):
             raise ValueError('Invalid source integer totals')
         row['FG_PCT']/=100;row['FT_PCT']/=100
-        if not all(math.isfinite(row[k]) for k in fields):raise ValueError('Nonfinite statistics')
+        if not all(math.isfinite(row[k]) for k in fields if k!='TO' or row[k] is not None):raise ValueError('Nonfinite statistics')
         rows.append(row)
     PROVENANCE[f'players_{year}']=dict(season=season_label(year),population=len(rows),season_type='Regular Season',source_period_start=requested['type']['startDate'],source_period_end=requested['type']['endDate'])
     return pd.DataFrame(rows,columns=COLUMNS)
@@ -221,6 +229,7 @@ def player_gamelog(player, year):
                 row={'date':day}
                 for key,name in [('MIN','minutes'),('PTS','points'),('REB','totalRebounds'),('AST','assists'),('STL','steals'),('BLK','blocks')]:
                     value=raw[name];row[key]=float(value.split(':')[0])+float(value.split(':')[1])/60 if ':' in value else float(value)
+                row['TO']=parse_turnovers(raw.get('turnovers'),total=True)
                 for prefix,name in [('FG','fieldGoalsMade-fieldGoalsAttempted'),('FT','freeThrowsMade-freeThrowsAttempted'),('FG3','threePointFieldGoalsMade-threePointFieldGoalsAttempted')]:
                     made,attempted=map(float,raw[name].split('-'));row[prefix+'M']=made;row[prefix+'A']=attempted
                 rows[eid]=row
@@ -237,7 +246,9 @@ def recent_stats(season_df, year):
             if not selected:continue
             n=len(selected);row={k:player[k] for k in IDENTITY};row['GP']=n
             for k in ['MIN','PTS','REB','AST','STL','BLK','FG3M']:row[k]=sum(x[k] for x in selected)/n
-            for key in TOTAL_FIELDS:row[key+'_TOTAL']=sum(x[key] for x in selected)
+            turnovers=[x.get('TO') for x in selected]
+            row['TO']=sum(turnovers)/n if all(v is not None for v in turnovers) else None
+            for key in TOTAL_FIELDS:row[key+'_TOTAL']=(sum(turnovers) if all(v is not None for v in turnovers) else None) if key=='TO' else sum(x[key] for x in selected)
             for prefix in ['FG','FT']:
                 attempts=sum(x[prefix+'A'] for x in selected);row[prefix+'_PCT']=sum(x[prefix+'M'] for x in selected)/attempts if attempts else 0
             output[days].append(row)
