@@ -6,6 +6,9 @@ on:
   workflow_dispatch: # Allows manual trigger
 permissions:
   contents: write
+concurrency:
+  group: daily-report
+  cancel-in-progress: false
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -22,6 +25,8 @@ jobs:
       - name: Generate Report
         run: |
           python generate_report.py
+      - name: Validate generated public report
+        run: python security_gate.py --generated
       - name: Prepare for Deployment
         run: |
           # Rename the output to index.html so it serves as the homepage
@@ -32,6 +37,8 @@ jobs:
           git config --global user.email "action@github.com"
           
           # Commit and Push
-          git add index.html
-          git commit -m "Daily Update: $(date +'%Y-%m-%d')" || echo "No changes to commit"
+          git add index.html data_snapshot.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Daily Update: $(date +'%Y-%m-%d')"
+          fi
           git push origin HEAD:main

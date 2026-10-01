@@ -5,12 +5,18 @@ import webbrowser
 import os
 import sys
 import json
+from html import escape
+from pathlib import Path
+import hashlib
+import base64
+
+IDENTITY_COLUMNS = ['PLAYER_ID','PLAYER_NAME','TEAM_ID','TEAM_ABBREVIATION']
 
 def generate_html_report():
     print("Initializing Fantasy NBA Report Generator V2...")
 
     # 1. Define Date Ranges
-    today = datetime.now(timezone.utc).date()
+    today = utils.today()
     days_until_sunday = (6 - today.weekday()) % 7
     w1_end = today + timedelta(days=days_until_sunday)
     w1_start = today
@@ -30,7 +36,7 @@ def generate_html_report():
     print("Fetching Defensive Ratings...")
     def_ratings = utils.get_team_defensive_ratings()
 
-    # Counting stats that get a separate TOT (= AVG x GP for the period) view.
+    # Counting stats use exact source totals, not rounded averages multiplied by GP.
     # MIN / FG% / FT% are intentionally excluded: the old FANTASY-SUP page shows
     # them unchanged in TOT mode (rates and minutes-per-game don't sum meaningfully).
     # Shared by process_week_grid (data) and generate_html (rendering) below.
@@ -48,11 +54,7 @@ def generate_html_report():
         day_cols = [d.strftime('%a (%m/%d)') for d in days]
 
         # Filter schedule
-        # Defensive guard (pre-existing gap, unrelated to PR/Last-Season): schedule_df can
-        # come back completely empty (no columns at all) when there are no games in the
-        # requested window and the "Time Travel" fallback above also found nothing -- e.g.
-        # every NBA off-season, since the fallback shifts by exactly one year and lands on
-        # the same off-season month again. That used to raise KeyError('GAME_DATE') here.
+        # A valid off-season window can contain no games.
         if schedule_df.empty or 'GAME_DATE' not in schedule_df.columns:
             week_games = pd.DataFrame(columns=['TEAM_ID', 'TEAM_ABBREVIATION', 'GAME_DATE', 'MATCHUP'])
         else:
@@ -61,11 +63,18 @@ def generate_html_report():
 
         # Helper to get badge
         def get_badge_html(opp_abbr, is_home):
-            def_info = def_ratings.get(opp_abbr, {'Rank': 15})
-            rank = def_info['Rank']
-            color = utils.get_color_for_rank(rank)
+            info = def_ratings.get(opp_abbr)
             prefix = 'vs' if is_home else '@'
-            return f"<div style='background-color:{color}; padding: 4px; border-radius: 4px; text-align:center; font-weight:bold;' title='Def Rank: {rank}'>{prefix} {opp_abbr}</div>"
+            label = escape(f'{prefix} {opp_abbr}')
+            if info:
+                rank, population = info['Rank'], info['Population']
+                color = utils.get_color_for_rank(rank, population)
+                note = f"PBP Stats 當季近10場: {info['DefRtg']:.1f}失分/100防守回合; 排名 {rank}/{population}; {info['Games']}/10場; {info['Start']}–{info['End']}"
+                detail = f"防守 {rank}/{population} · {info['Games']}/10"
+            else:
+                color, note, detail = '#eeeeee', '當季例行賽防守資料暫缺；不使用上季或勝率替代', '防守暫缺 · 0/10'
+            return f"<div class='matchup' style='background-color:{color};padding:4px;border-radius:4px;text-align:center;font-weight:bold' title='{escape(note, quote=True)}'>{label}<br><small>{escape(detail)}</small></div>"
+
 
         # --- TEAM SCHEDULE GRID ---
         team_grid_data = []
@@ -101,46 +110,31 @@ def generate_html_report():
             'FG%': 'FG_PCT', 'FT%': 'FT_PCT',
         }
 
-        # Base: Season Stats
-        base_df = stats_dict['Season'].copy()
-        base_df = base_df[base_df['GP'] > 0] # Active only
-
-        # Merge L7, L14 and Last Season
-        # Rename columns for L7/L14/LS
-        l7 = stats_dict['L7'].copy().add_suffix('_L7')
-        l14 = stats_dict['L14'].copy().add_suffix('_L14')
-
-        # --- Last Season pool & its PR (computed BEFORE any roster filtering) ---
-        # The LS PR population must be "every player who logged last-season stats
-        # (GP > 0)", independent of who has already played THIS season. Computing it
-        # here on the full LastSeason fetch keeps the denominator honest early in a
-        # new season, when many players haven't appeared in the Season fetch yet.
-        ls_pool = stats_dict.get('LastSeason', pd.DataFrame()).copy()
-        if not ls_pool.empty:
-            ls_pool = ls_pool[ls_pool['GP'] > 0]
-            for label, raw_name in pr_metric_map.items():
-                if raw_name in ls_pool.columns:
-                    ls_pool[f'{label}_PR'] = ls_pool[raw_name].rank(pct=True) * 100
-                    # TOT view: derived as AVG x GP (Plan A, zero extra API calls),
-                    # with its own PR -- a totals ranking rewards volume/durability,
-                    # which is different information than the per-game ranking.
-                    if label in tot_metrics:
-                        ls_pool[f'{label}_TOT'] = ls_pool[raw_name] * ls_pool['GP']
-                        ls_pool[f'{label}_TOT_PR'] = ls_pool[f'{label}_TOT'].rank(pct=True) * 100
-        last_season = ls_pool.add_suffix('_LS') # PTS_PR -> PTS_PR_LS etc.
-
-        # Roster union: this season's actives + last season's actives who are still
-        # on a roster today (static active list, see utils.get_active_player_ids).
-        # Without this, players who haven't played yet this season would vanish from
-        # the table entirely -- exactly the players the Last Season view is for.
-        # Their Season/L7/L14 columns stay NaN and render with the existing
-        # missing-data handling; only identity columns are carried over.
-        if not ls_pool.empty:
-            active_ids = utils.get_active_player_ids()
-            extra_mask = (~ls_pool['PLAYER_ID'].isin(base_df['PLAYER_ID'])) & ls_pool['PLAYER_ID'].isin(active_ids)
-            extra_base = ls_pool.loc[extra_mask, ['PLAYER_ID', 'PLAYER_NAME', 'TEAM_ID', 'TEAM_ABBREVIATION']].copy()
-            if not extra_base.empty:
-                base_df = pd.concat([base_df, extra_base], ignore_index=True)
+        # Complete period populations; no qualification cutoff or current-roster filtering.
+        ranked = {}
+        for period in ['Season', 'L7', 'L14', 'LastSeason']:
+            pool = stats_dict[period].copy()
+            pool = pool[pool['GP'] > 0]
+            for label, raw in pr_metric_map.items():
+                pool[f'{label}_PR'] = pool[raw].rank(pct=True) * 100
+                if label in tot_metrics:
+                    pool[f'{label}_TOT'] = pool[raw+'_TOTAL']
+                    pool[f'{label}_TOT_PR'] = pool[f'{label}_TOT'].rank(pct=True) * 100
+            ranked[period] = pool
+        base_df = ranked['Season'].copy()
+        roster = stats_dict.get('Roster')
+        if roster is None:
+            roster = ranked['LastSeason'][IDENTITY_COLUMNS].copy()
+        extra = roster.loc[~roster['PLAYER_ID'].isin(base_df['PLAYER_ID']), IDENTITY_COLUMNS]
+        base_df = pd.concat([base_df, extra], ignore_index=True)
+        # Current roster overrides historical team assignment without altering stats/PR.
+        identities = roster.set_index('PLAYER_ID')
+        for column in ['PLAYER_NAME', 'TEAM_ID', 'TEAM_ABBREVIATION']:
+            mapped = base_df['PLAYER_ID'].map(identities[column])
+            base_df[column] = base_df[column].where(mapped.isna(), mapped)
+        l7 = ranked['L7'].add_suffix('_L7')
+        l14 = ranked['L14'].add_suffix('_L14')
+        last_season = ranked['LastSeason'].add_suffix('_LS')
 
         # Merge on PLAYER_ID
         merged = pd.merge(base_df, l7, left_on='PLAYER_ID', right_on='PLAYER_ID_L7', how='left')
@@ -161,58 +155,30 @@ def generate_html_report():
                 else:
                     merged[c] = merged[c].fillna('-')
 
-        # --- Percentile Rank (PR) Calculation (Season/L7/L14) ---
-        # Must run on RAW numeric values, before the string formatting below turns
-        # them into "12.3%" etc. Population = all players with data for that period
-        # (rows the roster-union added with NaN stats are excluded from ranking by
-        # pandas automatically, so they don't distort denominators and get no PR).
-        # LastSeason PR is NOT computed here -- it was already computed on the full
-        # ls_pool above, so its population is all of last season's actives.
-        # All 9 metrics are "higher is better" for fantasy (no inverted-direction stat
-        # like turnovers exists in this stat set), so PR = rank(pct=True) * 100 directly.
-        for period_suffix in ['', '_L7', '_L14']:
-            gp_col = f"GP{period_suffix}"
-            for label, raw_name in pr_metric_map.items():
-                raw_col = f"{raw_name}{period_suffix}"
-                pr_col = f"{label}_PR{period_suffix}"
-                if raw_col in merged.columns:
-                    # NaN values (no data for that period) are excluded from ranking
-                    # by pandas and stay NaN, so they naturally don't get a PR.
-                    merged[pr_col] = merged[raw_col].rank(pct=True) * 100
-                    # TOT view: derived as AVG x GP (Plan A, zero extra API calls),
-                    # with its own PR -- a totals ranking rewards volume/durability,
-                    # which is different information than the per-game ranking.
-                    if label in tot_metrics and gp_col in merged.columns:
-                        tot_col = f"{label}_TOT{period_suffix}"
-                        merged[tot_col] = merged[raw_col] * merged[gp_col]
-                        merged[f"{label}_TOT_PR{period_suffix}"] = merged[tot_col].rank(pct=True) * 100
-                else:
-                    merged[pr_col] = pd.NA
-
         # Format Player
-        merged['Player'] = merged.apply(lambda x: f"<b>{x['PLAYER_NAME']}</b> <br><span style='color:#888'>{x['TEAM_ABBREVIATION']}</span>", axis=1)
+        merged['Player'] = merged.apply(lambda x: f"<b>{escape(str(x['PLAYER_NAME']))}</b> <br><span style='color:#888'>{escape(str(x['TEAM_ABBREVIATION']))}</span>", axis=1)
 
         # Format Stats (Season)
-        merged['FG%'] = (merged['FG_PCT'] * 100).map('{:.1f}%'.format)
-        merged['FT%'] = (merged['FT_PCT'] * 100).map('{:.1f}%'.format)
+        merged['FG%'] = (merged['FG_PCT'] * 100).map(lambda v: f'{v:.1f}%' if pd.notna(v) else pd.NA)
+        merged['FT%'] = (merged['FT_PCT'] * 100).map(lambda v: f'{v:.1f}%' if pd.notna(v) else pd.NA)
         merged = merged.rename(columns={'FG3M': '3PM'})
 
         # Format Stats (L7)
         if 'FG_PCT_L7' in merged.columns:
-            merged['FG%_L7'] = (merged['FG_PCT_L7'] * 100).map('{:.1f}%'.format)
-            merged['FT%_L7'] = (merged['FT_PCT_L7'] * 100).map('{:.1f}%'.format)
+            merged['FG%_L7'] = (merged['FG_PCT_L7'] * 100).map(lambda v: f'{v:.1f}%' if pd.notna(v) else pd.NA)
+            merged['FT%_L7'] = (merged['FT_PCT_L7'] * 100).map(lambda v: f'{v:.1f}%' if pd.notna(v) else pd.NA)
             merged = merged.rename(columns={'FG3M_L7': '3PM_L7', 'PTS_L7': 'PTS_L7', 'REB_L7': 'REB_L7', 'AST_L7': 'AST_L7', 'STL_L7': 'STL_L7', 'BLK_L7': 'BLK_L7'})
 
         # Format Stats (L14)
         if 'FG_PCT_L14' in merged.columns:
-            merged['FG%_L14'] = (merged['FG_PCT_L14'] * 100).map('{:.1f}%'.format)
-            merged['FT%_L14'] = (merged['FT_PCT_L14'] * 100).map('{:.1f}%'.format)
+            merged['FG%_L14'] = (merged['FG_PCT_L14'] * 100).map(lambda v: f'{v:.1f}%' if pd.notna(v) else pd.NA)
+            merged['FT%_L14'] = (merged['FT_PCT_L14'] * 100).map(lambda v: f'{v:.1f}%' if pd.notna(v) else pd.NA)
             merged = merged.rename(columns={'FG3M_L14': '3PM_L14', 'PTS_L14': 'PTS_L14', 'REB_L14': 'REB_L14', 'AST_L14': 'AST_L14', 'STL_L14': 'STL_L14', 'BLK_L14': 'BLK_L14'})
 
         # Format Stats (Last Season)
         if 'FG_PCT_LS' in merged.columns:
-            merged['FG%_LS'] = (merged['FG_PCT_LS'] * 100).map('{:.1f}%'.format)
-            merged['FT%_LS'] = (merged['FT_PCT_LS'] * 100).map('{:.1f}%'.format)
+            merged['FG%_LS'] = (merged['FG_PCT_LS'] * 100).map(lambda v: f'{v:.1f}%' if pd.notna(v) else pd.NA)
+            merged['FT%_LS'] = (merged['FT_PCT_LS'] * 100).map(lambda v: f'{v:.1f}%' if pd.notna(v) else pd.NA)
             merged = merged.rename(columns={'FG3M_LS': '3PM_LS'})
 
         return team_df, merged, day_cols
@@ -290,7 +256,7 @@ def generate_html_report():
         for _, row in player_df.iterrows():
             player_html += f"<tr>"
             player_html += f"<td>{row['Player']}</td>"
-            player_html += f"<td>{row['TEAM_ABBREVIATION']}</td>" # Hidden Team
+            player_html += f"<td>{escape(str(row['TEAM_ABBREVIATION']))}</td>" # Hidden Team
             player_html += f"<td>{row.get('Games', 0)}</td>"
             for d in day_cols:
                 player_html += f"<td>{row.get(d, '')}</td>"
@@ -311,9 +277,10 @@ def generate_html_report():
                 # Each AVG/TOT cell is its own DataTables column carrying its own raw
                 # value here, so sorting stays exact in both display modes.
                 sort_val = val
-                if isinstance(val, str) and '%' in val: # Handle pre-formatted % strings if any (though we formatted them in process_week_grid)
-                     try: sort_val = float(val.strip('%'))
-                     except: sort_val = 0
+                if metric in ['FG%', 'FT%']:
+                    raw_key = {'FG%':'FG_PCT', 'FT%':'FT_PCT'}[metric]
+                    raw_key = f'{raw_key}_{suffix}' if suffix else raw_key
+                    sort_val = float(row[raw_key]) * 100
 
                 # Determine display value
                 display_val = val
@@ -401,26 +368,46 @@ def generate_html_report():
     )
     metadata = stats_dict['metadata']
     generated_at = datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')
+    provenance = dict(utils.PROVENANCE)
+    provenance.update(generated_at=generated_at, stats_source='ESPN', defense_source='PBP Stats',
+                      period_populations={k:len(stats_dict[k]) for k in ['Season','L7','L14','LastSeason']})
+    last_period = provenance.get('players_' + str(int(metadata['last_season'][:4])+1), {})
+    last_end = last_period.get('source_period_end','未查得')[:10]
     data_notice = (
-        f"Generated: {generated_at}. Statistics: NBA regular season {metadata['season']}; "
-        f"Last Season: {metadata['last_season']}. Last 7 / 14: actual calendar windows ending {today}. "
-        f"Schedule: official NBA dates {w1_start} to {final_end}. "
-        "No prior-year games are shifted into the current schedule. "
-        "Defensive ratings: last completed regular season. "
-        "Player team labels reflect the statistics source, not a live roster feed."
+        f"報告產生時間：{generated_at}。ESPN 球員資料：當季 {metadata['season']}，上季 {metadata['last_season']} "
+        f"例行賽來源期間至 {last_end}。近期窗口為美東日期 {today} 前完整7／14天。"
+        f"球隊／球員名單取自本次 ESPN roster；比賽日期使用美東時間，四週範圍 {w1_start}–{final_end}。"
+        f"各期 PR 母體：當季 {len(stats_dict['Season'])}、近7天 {len(stats_dict['L7'])}、近14天 {len(stats_dict['L14'])}、上季 {len(stats_dict['LastSeason'])} 位有出賽球員。"
     )
     if stats_dict['Season'].empty:
-        data_notice += " Current-season statistics are not available yet; use Last Season."
-    if full_schedule.empty:
-        data_notice += " No official regular-season games in this four-week window."
+        data_notice += " 當季例行賽尚無球員統計，預設顯示 Last Season；缺值不填造。"
+    defense_meta = provenance.get('defense', {})
+    defense_notice = (
+        f"對手防守獨立使用當季 {metadata['season']} 各隊最近10場例行賽："
+        "PBP Stats 總對手得分 ÷ 球隊逐場總防守回合 ×100，越低越強；"
+        f"有效隊伍 {defense_meta.get('eligible_teams',len(def_ratings))}/30，來源最後比賽日期 {defense_meta.get('last_game') or '當季暫無資料'}。"
+        "不足10場顯示 n/10；灰色表示暫缺，不跨季。紅→綠為有效隊伍強→弱五等分；初季樣本少請保守參考。"
+        "這是整隊防守，不是位置DvP；切換球員統計期間不會改變防守期間。来源不保證即時更新，抓取時間不是比賽截至日期。"
+    )
+    def integrity(name):
+        return 'sha384-' + base64.b64encode(hashlib.sha384(Path('assets',name).read_bytes()).digest()).decode()
+    jquery_sri = integrity('jquery-3.7.1.min.js')
+    datatables_sri = integrity('datatables-2.3.7.min.js')
+    css_sri = integrity('datatables-2.3.7.min.css')
+    default_period = 'Season' if not stats_dict['Season'].empty else 'LS'
 
     html_template = f"""
     <!DOCTYPE html>
-    <html>
+    <html lang="zh-Hant">
     <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src data:; connect-src 'none'; base-uri 'none'; form-action 'none'">
         <title>Fantasy NBA Streaming Assistant V2</title>
-        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+        <link rel="stylesheet" type="text/css" href="assets/datatables-2.3.7.min.css" integrity="{css_sri}">
         <style>
+            .data-notice, .defense-notice {{ line-height:1.7; font-size:0.9em; }}
+            .tabcontent {{ overflow-x:auto; }}
             body {{ font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; color: #333; padding: 20px; }}
             h1 {{ color: #2c3e50; }}
             .container {{ max-width: 1600px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }}
@@ -453,8 +440,8 @@ def generate_html_report():
             .legend {{ margin-bottom: 15px; padding: 10px; background: #eee; border-radius: 4px; font-size: 0.9em; }}
             .dot {{ height: 10px; width: 10px; border-radius: 50%; display: inline-block; margin-right: 5px; }}
         </style>
-        <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>
-        <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+        <script type="text/javascript" charset="utf8" src="assets/jquery-3.7.1.min.js" integrity="{jquery_sri}"></script>
+        <script type="text/javascript" charset="utf8" src="assets/datatables-2.3.7.min.js" integrity="{datatables_sri}"></script>
         <script>
             var tables = {{}};
 
@@ -462,7 +449,7 @@ def generate_html_report():
                 // Initialize DataTables for all weeks
                 {table_initializers}
 
-                Object.keys(tables).forEach(function(suffix) {{ tables[suffix].column(1).visible(false); applyStatView(suffix); }});
+                Object.keys(tables).forEach(function(suffix) {{ tables[suffix].column(1).visible(false); switchStats('{default_period}',suffix); }});
                 // Open default tab
                 document.getElementById("defaultOpen").click();
             }});
@@ -559,9 +546,10 @@ def generate_html_report():
         <div class="container">
             <h1>🏀 Fantasy NBA Streaming Assistant V2</h1>
 
-            <p class="data-notice">{data_notice}</p>
+            <p class="data-notice">{escape(data_notice)}</p>
+            <p class="defense-notice">{escape(defense_notice)}</p>
             <div class="legend">
-                <b>Matchup Strength (DvP):</b>
+                <b>當季近10場整隊防守：</b>
                 <span class="dot" style="background-color:#ccffcc"></span>Easy (Green)
                 <span class="dot" style="background-color:#e5ffcc"></span>
                 <span class="dot" style="background-color:#ffffcc"></span>Average
@@ -583,8 +571,10 @@ def generate_html_report():
     with open(output_file, "w", encoding="utf-8") as f:
         f.write(html_template)
 
+    Path("data_snapshot.json").write_text(json.dumps(provenance, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"Report generated: {output_file}")
-    webbrowser.open('file://' + os.path.realpath(output_file))
+    if os.environ.get('OPEN_REPORT') == '1':
+        webbrowser.open('file://' + os.path.realpath(output_file))
 
 if __name__ == "__main__":
     # Windows consoles often default to a legacy codepage (e.g. cp950) that can't

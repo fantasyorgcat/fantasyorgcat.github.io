@@ -1,28 +1,26 @@
-# Fantasy-NBA-Streaming-Assistant
+# Fantasy NBA Streaming Assistant
 
-Quickly filtering players and schedules for NBA fantasy leagues
+公開網站：https://hotmilk300.github.io/Fantasy-NBA-Streaming-Assistant/
 
-## 🏀 網頁工具（每日自動更新）
+每日 08:00 UTC 更新，成功產生並通過檢查後，由 GitHub Pages 自動發布。來源失敗時保留上一份有效報告。
 
-**👉 直達連結：https://hotmilk300.github.io/Fantasy-NBA-Streaming-Assistant/**
+## 資料與功能
 
-每天台灣時間 16:00 由 GitHub Actions 自動抓取 NBA 官方數據重新產生報告頁。
+- ESPN：全聯盟球員例行賽統計、現役名單及當季賽程。四週賽程以 America/New_York 日期呈現。
+- Season、Last 7、Last 14、Last Season 可切換；近 7/14 天使用美東完整日曆日，不包含當天。缺值顯示「—」。
+- AVG / TOT 分別計算 PR；各期間使用完整、該期間有出賽的球員母體，不因球隊篩選改變 PR。FG% / FT% 的近況使用總命中數除以總出手數。
+- PBP Stats：各隊當季最近 10 場例行賽的防守效率，100 × 對手總得分 ÷ 該隊 game-log DefPoss 合計。各隊獨立選場；不足 10 場標示 n/10，無資料顯示灰色暫缺，不使用去年或其他代理指標。分母來源與比分來源需對得上相同場次。
+- `data_snapshot.json` 記錄來源、季別、窗口、資料母體與防守計算摘要。防守效率是球隊指標，並非位置別 DvP。
 
-## 功能簡介
+## 本機產生與檢查
 
-- **每週賽程過濾**：依 NBA 賽程列出各隊當週出賽場次，快速找出多賽球員
-- **球員數據總表**：MIN / PTS / REB / AST / 3PM / STL / BLK / FG% / FT% 九項指標
-- **四種數據期間**：Season（本季）／ Last 7 ／ Last 14 ／ Last Season（上季，新賽季初期沒數據時用）
-- **AVG / TOT 切換**：場均與總和兩種視角，各自獨立排序
-- **PR 百分位排名**：每項數據附全聯盟百分位（PR 0–100），一眼看出相對強弱
-- **對位防守強度著色**：依對手防守評級為球隊上色，輔助 streaming 決策
-
-## 本地執行
-
-```bash
+```sh
 pip install -r requirements.txt
 python generate_report.py
-# 產出 fantasy_nba_report_v2.html，瀏覽器開啟即可
+python test_sources.py
+python security_gate.py --generated
 ```
 
-資料來源：[nba_api](https://github.com/swar/nba_api)（NBA 官方統計）
+輸出 `fantasy_nba_report_v2.html` 與 `data_snapshot.json`。需要自動開啟報告時設定 `OPEN_REPORT=1`。
+
+發布 gate 檢查 HTML 資產完整性、公開資料來源摘要、測試資料排除及追蹤檔案的有限憑證模式。Pages 僅上傳首頁、資料摘要、三個固定版本本地 JS/CSS 與 `.nojekyll`，不發布整個 repository。這些檢查不代表絕對沒有安全風險。

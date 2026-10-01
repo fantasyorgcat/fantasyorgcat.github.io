@@ -1,3 +1,9 @@
 __pycache__/
 *.pyc
 fantasy_nba_report_v2.html
+.test-deps/
+.runtime-deps/
+_site/
+espn-*.json
+*-probe.json
+_site_verified/

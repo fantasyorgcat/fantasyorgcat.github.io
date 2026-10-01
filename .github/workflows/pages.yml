@@ -35,9 +35,14 @@ jobs:
           # The daily update pushes a new report commit after its starting SHA.
           # Resolve main at checkout time instead of using workflow_run.head_sha.
           ref: ${{ github.event_name == 'workflow_run' && 'main' || github.sha }}
+      - name: Stage only public website files
+        run: |
+          python security_gate.py --stage _site
+          git rev-parse HEAD
+          sha256sum _site/index.html
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: _site
       - id: deployment
         uses: actions/deploy-pages@v4

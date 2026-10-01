@@ -1,0 +1,42 @@
+{
+  "schedule": {
+    "season": "2026-27",
+    "timezone": "America/New_York",
+    "start": "2026-09-30",
+    "end": "2026-10-25",
+    "events_in_window": 43
+  },
+  "players_2026": {
+    "season": "2025-26",
+    "population": 578,
+    "season_type": "Regular Season",
+    "source_period_start": "2025-10-21T07:00:00.000+00:00",
+    "source_period_end": "2026-04-13T06:59:00.000+00:00"
+  },
+  "current_stats_last_game": null,
+  "recent_windows": {
+    "start_7": "2026-09-23",
+    "start_14": "2026-09-16",
+    "end_exclusive": "2026-09-30",
+    "timezone": "America/New_York"
+  },
+  "roster_players": 608,
+  "defense": {
+    "source": "PBP Stats",
+    "season": "2026-27",
+    "window": "last 10 team regular-season games",
+    "formula": "100 * sum(opponent scoreboard points) / sum(team game-log DefPoss)",
+    "eligible_teams": 0,
+    "last_game": null,
+    "teams": {}
+  },
+  "generated_at": "2026-10-01 03:25 UTC",
+  "stats_source": "ESPN",
+  "defense_source": "PBP Stats",
+  "period_populations": {
+    "Season": 0,
+    "L7": 0,
+    "L14": 0,
+    "LastSeason": 578
+  }
+}
