@@ -5,45 +5,6 @@ import utils
 
 class Sources(unittest.TestCase):
     def setUp(self):utils.PROVENANCE.clear()
-    def defense_data(self,n=12):
-        games=[];logs={'a':[],'b':[]}
-        for i in range(n):
-            eid=f'00226{i:05}';day=str(date(2026,10,20)+timedelta(days=i))
-            games.append(dict(GameId=eid,Date=day,HomeTeamId='a',AwayTeamId='b',HomePoints=90+i,AwayPoints=100+i,HomeTeamAbbreviation='LAL',AwayTeamAbbreviation='OKC'))
-            for team in logs:logs[team].append(dict(GameId=eid,Date=day,DefPoss=90+i))
-        def reader(url):
-            if '/get-games/' in url:return {'results':games}
-            return {'multi_row_table_data':logs[url.split('EntityId=')[1]]}
-        return games,logs,reader
-    def test_last_ten_weighted_and_no_cross_season(self):
-        games,logs,reader=self.defense_data()
-        with patch.object(utils,'season_year',return_value=2027),patch.object(utils,'read_json',side_effect=reader),patch.object(utils,'abbreviation',side_effect=lambda x:x):
-            ratings=utils.get_team_defensive_ratings()
-        expected=100*sum(100+i for i in range(2,12))/sum(90+i for i in range(2,12))
-        self.assertAlmostEqual(ratings['LAL']['DefRtg'],expected)
-        self.assertEqual(ratings['LAL']['Games'],10)
-        self.assertEqual(ratings['OKC']['Rank'],1)
-        self.assertEqual(ratings['LAL']['Population'],2)
-    def test_short_window(self):
-        games,logs,reader=self.defense_data(3)
-        with patch.object(utils,'season_year',return_value=2027),patch.object(utils,'read_json',side_effect=reader),patch.object(utils,'abbreviation',side_effect=lambda x:x):
-            self.assertEqual(utils.get_team_defensive_ratings()['LAL']['Games'],3)
-    def test_empty_and_placeholder_are_not_games(self):
-        with patch.object(utils,'season_year',return_value=2027),patch.object(utils,'read_json',return_value={'results':[]}):
-            self.assertEqual(utils.get_team_defensive_ratings(),{})
-    def test_lag_and_duplicates_abort(self):
-        games,logs,reader=self.defense_data()
-        logs['a'].pop()
-        with patch.object(utils,'season_year',return_value=2027),patch.object(utils,'read_json',side_effect=reader),patch.object(utils,'abbreviation',side_effect=lambda x:x):
-            with self.assertRaises(ValueError):utils.get_team_defensive_ratings()
-        games.append(games[0])
-        with patch.object(utils,'season_year',return_value=2027),patch.object(utils,'read_json',side_effect=reader):
-            with self.assertRaises(ValueError):utils.get_team_defensive_ratings()
-    def test_wrong_season_aborts(self):
-        games,logs,reader=self.defense_data()
-        games[0]['GameId']='0022500001'
-        with patch.object(utils,'season_year',return_value=2027),patch.object(utils,'read_json',side_effect=reader):
-            with self.assertRaises(ValueError):utils.get_team_defensive_ratings()
     def test_unknown_team_aborts(self):
         with patch.object(utils,'get_teams',return_value=[{'abbreviation':'LAL'}]):
             self.assertEqual(utils.abbreviation('LAL'),'LAL')

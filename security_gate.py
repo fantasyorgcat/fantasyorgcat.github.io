@@ -42,9 +42,10 @@ def check(report, snapshot):
         if not attrs or attrs.get('integrity')!=expected:raise ValueError('Asset integrity mismatch')
     if hashlib.sha256(Path('assets/jquery-3.7.1.min.js').read_bytes()).digest()!=base64.b64decode('/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo='):
         raise ValueError('Official pinned jQuery digest mismatch')
-    if 'Fixture Alpha' in data or 'Fixture Beta' in data:raise ValueError('Test fixture cannot be published')
+    if 'Fixture Alpha' in data or 'Fixture Beta' in data or 'UI TEST ONLY' in data:raise ValueError('Test fixture cannot be published')
     meta=json.loads(snapshot.read_text(encoding='utf-8'))
     if meta.get('stats_source')!='ESPN' or meta.get('defense_source')!='PBP Stats':raise ValueError('Source provenance absent')
+    if meta.get('fixture') or meta.get('defense',{}).get('source')!='PBP Stats':raise ValueError('Defense provenance absent or test fixture')
     if not meta.get('roster_players') or not meta.get('schedule',{}).get('season'):raise ValueError('Roster/schedule provenance absent')
     if not any(k.startswith('players_') and v.get('population',0)>0 for k,v in meta.items() if isinstance(v,dict)):
         raise ValueError('Complete league statistics provenance absent')

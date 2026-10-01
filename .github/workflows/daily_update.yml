@@ -11,8 +11,11 @@ concurrency:
   cancel-in-progress: false
 jobs:
   build-and-deploy:
+    if: github.ref == 'refs/heads/main' && github.repository == 'hotmilk300/Fantasy-NBA-Streaming-Assistant'
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    outputs:
+      report_sha: ${{ steps.report.outputs.report_sha }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -25,10 +28,12 @@ jobs:
           pip install -r requirements.txt
       - name: Generate Report
         run: |
+          python -m unittest test_sources test_defense
           python generate_report.py
       - name: Validate generated public report
         run: python security_gate.py --generated
       - name: Prepare for Deployment
+        id: report
         run: |
           # Rename the output to index.html so it serves as the homepage
           mv fantasy_nba_report_v2.html index.html
@@ -43,7 +48,37 @@ jobs:
             git commit -m "Daily Update: $(date +'%Y-%m-%d')"
           fi
           git push origin HEAD:main
-      - name: Request Pages deployment after successful report push
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: python dispatch_pages.py
+          echo "report_sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+  deploy:
+    needs: build-and-deploy
+    if: >-
+      needs.build-and-deploy.result == 'success' &&
+      github.ref == 'refs/heads/main' &&
+      github.repository == 'hotmilk300/Fantasy-NBA-Streaming-Assistant'
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    concurrency:
+      group: pages
+      cancel-in-progress: true
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.build-and-deploy.outputs.report_sha }}
+      - name: Validate and stage the exact generated report
+        run: |
+          python security_gate.py --stage _site
+          git rev-parse HEAD
+          sha256sum _site/index.html
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - id: deployment
+        uses: actions/deploy-pages@v4

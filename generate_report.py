@@ -69,10 +69,10 @@ def generate_html_report():
             if info:
                 rank, population = info['Rank'], info['Population']
                 color = utils.get_color_for_rank(rank, population)
-                note = f"PBP Stats 當季近10場: {info['DefRtg']:.1f}失分/100防守回合; 排名 {rank}/{population}; {info['Games']}/10場; {info['Start']}–{info['End']}"
-                detail = f"防守 {rank}/{population} · {info['Games']}/10"
+                note = f"PBP Stats 最近10場已完成例行賽 (可跨季): {info['DefRtg']:.1f}失分/100防守回合; 排名 {rank}/{population}; {info['Games']}/10場; {info['Start']}–{info['End']}"
+                detail = f"近10場 {rank}/{population} · {info['Games']}/10"
             else:
-                color, note, detail = '#eeeeee', '當季例行賽防守資料暫缺；不使用上季或勝率替代', '防守暫缺 · 0/10'
+                color, note, detail = '#eeeeee', '最近10場例行賽防守資料暫缺', '防守暫缺 · 0/10'
             return f"<div class='matchup' style='background-color:{color};padding:4px;border-radius:4px;text-align:center;font-weight:bold' title='{escape(note, quote=True)}'>{label}<br><small>{escape(detail)}</small></div>"
 
 
@@ -192,7 +192,7 @@ def generate_html_report():
         if not team_df.empty:
             team_html = f"""
             <div class="team-section">
-                <h3>Team Schedule (Click to Filter Players)</h3>
+                <h3>球隊賽程 <small>點選球隊篩選球員</small></h3><div class="schedule-scroll">
                 <table id="teamTable{table_id_suffix}" class="display compact" style="width:100%">
                     <thead>
                         <tr>
@@ -209,7 +209,7 @@ def generate_html_report():
                 for d in day_cols:
                     team_html += f"<td>{row[d]}</td>"
                 team_html += "</tr>"
-            team_html += "</tbody></table></div>"
+            team_html += "</tbody></table></div></div>"
 
         # --- Player Table HTML ---
         # Columns: Player, Games, [Days], [Stats Season], [Stats L7], [Stats L14], [Stats Last Season]
@@ -218,16 +218,16 @@ def generate_html_report():
         stat_metrics = ['MIN', 'PTS', 'REB', 'AST', '3PM', 'STL', 'BLK', 'FG%', 'FT%']
 
         player_html = f"""
-        <div class="player-section">
+        <div class="player-section"><div class="player-heading"><h3>球員名單</h3><span id="selection{table_id_suffix}">全體球員</span></div>
             <div class="controls">
-                <button class="btn-stat active" data-period="Season" onclick="switchStats('Season', '{table_id_suffix}')">Season Avg</button>
-                <button class="btn-stat" data-period="L7" onclick="switchStats('L7', '{table_id_suffix}')">Last 7 Days</button>
-                <button class="btn-stat" data-period="L14" onclick="switchStats('L14', '{table_id_suffix}')">Last 14 Days</button>
-                <button class="btn-stat" data-period="LS" onclick="switchStats('LS', '{table_id_suffix}')">Last Season</button>
-                <span style="margin-left:20px">Show:</span>
+                <button class="btn-stat active" data-period="Season" onclick="switchStats('Season', '{table_id_suffix}')">本季</button>
+                <button class="btn-stat" data-period="L7" onclick="switchStats('L7', '{table_id_suffix}')">近7天</button>
+                <button class="btn-stat" data-period="L14" onclick="switchStats('L14', '{table_id_suffix}')">近14天</button>
+                <button class="btn-stat" data-period="LS" onclick="switchStats('LS', '{table_id_suffix}')">上季</button>
+                <span style="margin-left:20px">數值</span>
                 <button class="btn-stat active" data-mode="AVG" onclick="switchDisplayMode('AVG', '{table_id_suffix}')">AVG</button>
                 <button class="btn-stat" data-mode="TOT" onclick="switchDisplayMode('TOT', '{table_id_suffix}')">TOT</button>
-                <button class="btn-reset" onclick="resetTeamFilter('{table_id_suffix}')">Show All Teams</button>
+                <button class="btn-reset" onclick="resetTeamFilter('{table_id_suffix}')">全體球員</button>
             </div>
             <table id="playerTable{table_id_suffix}" class="display" style="width:100%">
                 <thead>
@@ -362,7 +362,7 @@ def generate_html_report():
         for w in weeks_data
     )
     table_initializers = ''.join(
-        f"tables['W{i+1}'] = $('#playerTableW{i+1}').DataTable({{order:[[2,'desc']],pageLength:25}});"
+        f"tables['W{i+1}'] = $('#playerTableW{i+1}').DataTable({{order:[[2,'desc']],pageLength:25,scrollX:true,language:{{search:'搜尋',lengthMenu:'每頁 _MENU_ 人',info:'_START_–_END_ / _TOTAL_ 人',infoFiltered:'（全體 _MAX_ 人）',zeroRecords:'沒有符合球員，按全體球員清除篩選',infoEmpty:'0 人'}}}});"
         f"if ($('#teamTableW{i+1}').length) $('#teamTableW{i+1}').DataTable({{paging:false,info:false,searching:false}});"
         for i in range(4)
     )
@@ -383,12 +383,15 @@ def generate_html_report():
         data_notice += " 當季例行賽尚無球員統計，預設顯示 Last Season；缺值不填造。"
     defense_meta = provenance.get('defense', {})
     defense_notice = (
-        f"對手防守獨立使用當季 {metadata['season']} 各隊最近10場例行賽："
-        "PBP Stats 總對手得分 ÷ 球隊逐場總防守回合 ×100，越低越強；"
-        f"有效隊伍 {defense_meta.get('eligible_teams',len(def_ratings))}/30，來源最後比賽日期 {defense_meta.get('last_game') or '當季暫無資料'}。"
-        "不足10場顯示 n/10；灰色表示暫缺，不跨季。紅→綠為有效隊伍強→弱五等分；初季樣本少請保守參考。"
-        "這是整隊防守，不是位置DvP；切換球員統計期間不會改變防守期間。来源不保證即時更新，抓取時間不是比賽截至日期。"
+        "PBP Stats 各隊最近10場已完成例行賽，可跨季接續上季；排除季前與季後賽。"
+        "以對手總得分 ÷ 逐場 DefPoss 合計 ×100 計算，越低防守越強，再對有資料球隊排名。"
+        f"有效球隊 {defense_meta.get('eligible_teams',len(def_ratings))}/30，最新比賽 {defense_meta.get('last_game') or '暫無資料'}。"
+        "不足10場標示 n/10；來源缺漏會停止更新並保留有效報告。這是球隊防守，並非位置別 DvP。"
     )
+    dashboard_css = Path('dashboard.css').read_text(encoding='utf-8-sig')
+    roster_count = len(stats_dict.get('Roster', stats_dict['Season']))
+    defense_count = defense_meta.get('eligible_teams', len(def_ratings))
+    fixture_caption = '本季例行賽尚無球員統計，預設顯示上季' if stats_dict['Season'].empty else f"本季 {metadata['season']} 球員統計"
     def integrity(name):
         return 'sha384-' + base64.b64encode(hashlib.sha384(Path('assets',name).read_bytes()).digest()).decode()
     jquery_sri = integrity('jquery-3.7.1.min.js')
@@ -405,51 +408,20 @@ def generate_html_report():
         <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src data:; connect-src 'none'; base-uri 'none'; form-action 'none'">
         <title>Fantasy NBA Streaming Assistant V2</title>
         <link rel="stylesheet" type="text/css" href="assets/datatables-2.3.7.min.css" integrity="{css_sri}">
-        <style>
-            .data-notice, .defense-notice {{ line-height:1.7; font-size:0.9em; }}
-            .tabcontent {{ overflow-x:auto; }}
-            body {{ font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; color: #333; padding: 20px; }}
-            h1 {{ color: #2c3e50; }}
-            .container {{ max-width: 1600px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }}
-
-            /* Tabs */
-            .tab {{ overflow: hidden; border: 1px solid #ccc; background-color: #f1f1f1; border-radius: 8px 8px 0 0; }}
-            .tab button {{ background-color: inherit; float: left; border: none; outline: none; cursor: pointer; padding: 14px 16px; transition: 0.3s; font-size: 17px; font-weight: bold; }}
-            .tab button:hover {{ background-color: #ddd; }}
-            .tab button.active {{ background-color: #3498db; color: white; }}
-            .tabcontent {{ display: none; padding: 20px; border: 1px solid #ccc; border-top: none; border-radius: 0 0 8px 8px; }}
-
-            /* Tables */
-            table {{ width: 100%; border-collapse: collapse; font-size: 0.95em; }}
-            th {{ background-color: #3498db; color: white; padding: 10px; text-align: left; }}
-            td {{ padding: 8px; border-bottom: 1px solid #eee; vertical-align: middle; }}
-
-            /* Team Selection */
-            .team-row {{ cursor: pointer; transition: background 0.2s; }}
-            .team-row:hover {{ background-color: #eef9ff !important; }}
-            .team-row.selected {{ background-color: #d6eaf8 !important; border-left: 4px solid #3498db; }}
-
-            /* Controls */
-            .controls {{ margin-bottom: 15px; }}
-            .btn-stat {{ padding: 8px 15px; border: 1px solid #ddd; background: white; cursor: pointer; border-radius: 4px; margin-right: 5px; }}
-            .btn-stat.active {{ background-color: #2ecc71; color: white; border-color: #27ae60; }}
-            .btn-reset {{ padding: 8px 15px; border: 1px solid #e74c3c; background: white; color: #e74c3c; cursor: pointer; border-radius: 4px; float: right; }}
-            .btn-reset:hover {{ background: #e74c3c; color: white; }}
-
-            /* Legend */
-            .legend {{ margin-bottom: 15px; padding: 10px; background: #eee; border-radius: 4px; font-size: 0.9em; }}
-            .dot {{ height: 10px; width: 10px; border-radius: 50%; display: inline-block; margin-right: 5px; }}
-        </style>
+        <style>{dashboard_css}</style>
         <script type="text/javascript" charset="utf8" src="assets/jquery-3.7.1.min.js" integrity="{jquery_sri}"></script>
         <script type="text/javascript" charset="utf8" src="assets/datatables-2.3.7.min.js" integrity="{datatables_sri}"></script>
         <script>
             var tables = {{}};
+            var activeWeek = "W1";
+            var teamSelection = {{}};
 
             $(document).ready( function () {{
                 // Initialize DataTables for all weeks
                 {table_initializers}
 
                 Object.keys(tables).forEach(function(suffix) {{ tables[suffix].column(1).visible(false); switchStats('{default_period}',suffix); }});
+                Object.keys(tables).forEach(function(suffix) {{ tables[suffix].on('draw',function() {{ updateSelection(suffix); }}); }});
                 // Open default tab
                 document.getElementById("defaultOpen").click();
             }});
@@ -466,7 +438,9 @@ def generate_html_report():
                 }}
                 document.getElementById(weekName).style.display = "block";
                 evt.currentTarget.className += " active";
-                if (tables[weekName.replace('Week','W')]) tables[weekName.replace('Week','W')].columns.adjust();
+                activeWeek = weekName.replace('Week','W');
+                if (tables[activeWeek]) tables[activeWeek].columns.adjust();
+                updateSelection(activeWeek);
             }}
 
             // --- Feature: Switch Stats (period x display mode) ---
@@ -525,43 +499,52 @@ def generate_html_report():
                 applyStatView(suffix);
             }}
 
-            // --- Feature: Filter Team ---
+            function updateSelection(suffix) {{
+                var table = tables[suffix];
+                if (!table) return;
+                var team = teamSelection[suffix];
+                var count = table.rows({{search:'applied'}}).count();
+                var text = (team ? team + ' 球員' : '全體球員') + ' · ' + count + ' 人';
+                $('#selection'+suffix).text(text);
+                if (suffix === activeWeek) {{
+                    $('#active-selection').text(text);
+                    $('#show-all-players').attr('aria-pressed', !team && !table.search() ? 'true' : 'false');
+                }}
+            }}
             function filterTeam(row, teamAbbr, suffix) {{
-                // Highlight Row
                 $('#teamTable' + suffix + ' .team-row').removeClass('selected');
                 $(row).addClass('selected');
-
-                // Filter Player Table
-                // Column 1 is Team (index 1)
-                tables[suffix].column(1).search(teamAbbr).draw();
+                teamSelection[suffix] = teamAbbr;
+                tables[suffix].column(1).search('^' + $.fn.dataTable.util.escapeRegex(teamAbbr) + '$', true, false).draw();
+                updateSelection(suffix);
             }}
-
             function resetTeamFilter(suffix) {{
+                var table = tables[suffix];
+                if (!table) return;
                 $('#teamTable' + suffix + ' .team-row').removeClass('selected');
-                tables[suffix].column(1).search('').draw();
+                delete teamSelection[suffix];
+                table.search('').columns().search('').draw();
+                $(table.table().container()).find('input[type="search"]').val('');
+                updateSelection(suffix);
             }}
+            function resetActiveTeamFilter() {{ resetTeamFilter(activeWeek); }}
         </script>
     </head>
     <body>
         <div class="container">
-            <h1>🏀 Fantasy NBA Streaming Assistant V2</h1>
-
-            <p class="data-notice">{escape(data_notice)}</p>
-            <p class="defense-notice">{escape(defense_notice)}</p>
-            <div class="legend">
-                <b>當季近10場整隊防守：</b>
-                <span class="dot" style="background-color:#ccffcc"></span>Easy (Green)
-                <span class="dot" style="background-color:#e5ffcc"></span>
-                <span class="dot" style="background-color:#ffffcc"></span>Average
-                <span class="dot" style="background-color:#ffe5cc"></span>
-                <span class="dot" style="background-color:#ffcccc"></span>Hard (Red)
+            <header class="appbar"><div class="brand"><span class="brand-mark">FS</span><div>FANTASY STREAMING<small>NBA · WEEKLY PLANNER</small></div></div><div class="app-status">ESPN + PBP Stats<br>更新 {escape(generated_at)}</div></header>
+            <section class="hero"><div><div class="eyebrow">Your next roster move</div><h1>把下一場，排進你的陣容。</h1><p>四週賽程、球員表現與對手防守，一起看清楚。</p></div><div class="hero-meta"><strong>{escape(metadata['season'])} NBA</strong>{escape(str(w1_start))} — {escape(str(final_end))}</div></section>
+            <div class="metric-grid">
+                <div class="metric-card"><span>現役球員</span><strong>{roster_count}</strong><small>人</small></div>
+                <div class="metric-card"><span>四週賽程</span><strong>{provenance.get('schedule',{}).get('events_in_window',0)}</strong><small>場</small></div>
+                <div class="metric-card"><span>防守資料 · 截至 {escape(str(defense_meta.get('last_game') or '暫缺'))}</span><strong>{defense_count}<small>/ 30 隊</small></strong></div>
+                <div class="metric-card"><span>上季 PR 母體</span><strong>{len(stats_dict['LastSeason'])}</strong><small>人</small></div>
             </div>
-
-            <div class="tab">
-                {tab_buttons}
-            </div>
-
+            <details class="data-details"><summary>資料說明 · {escape(fixture_caption)} · 防守近10場跨季接續</summary><p class="data-notice">{escape(data_notice)}</p><p class="defense-notice">{escape(defense_notice)}</p></details>
+            <div class="workspace-bar"><nav class="tab" aria-label="選擇週次">{tab_buttons}</nav><div class="filter-tools"><span id="active-selection" class="selection-label">全體球員</span><button id="show-all-players" class="global-reset" onclick="resetActiveTeamFilter()" aria-pressed="true" title="清除球隊與搜尋，保留統計期間及AVG/TOT">全體球員</button></div></div>
+            <div class="legend"><b>近10場對手防守</b><span><i class="dot" style="background:#ccffcc"></i>較好打</span><span><i class="dot" style="background:#ffffcc"></i>中段</span><span><i class="dot" style="background:#ffcccc"></i>較難打</span><span><i class="dot" style="background:#eee"></i>暫缺</span></div>
             {week_panels}
+            <footer class="footer">FANTASY STREAMING · 每日資料快照 · 球隊防守非位置別 DvP</footer>
         </div>
     </body>
     </html>

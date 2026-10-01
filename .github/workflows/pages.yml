@@ -4,8 +4,6 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
-  repository_dispatch:
-    types: [nba-report-ready]
 
 permissions:
   contents: read
@@ -25,12 +23,6 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
-        with:
-          # Dispatch checks current main against its exact generated report SHA.
-          ref: ${{ github.event_name == 'repository_dispatch' && 'main' || github.sha }}
-      - name: Verify dispatch report and successful upstream run
-        if: github.event_name == 'repository_dispatch'
-        run: python validate_dispatch.py
       - name: Stage only public website files
         run: |
           python security_gate.py --stage _site
