@@ -9,7 +9,7 @@ from html import escape
 from pathlib import Path
 import hashlib
 import base64
-from player_catalog import build_catalog
+from player_catalog import build_catalog, add_pr_ranks
 
 IDENTITY_COLUMNS = ['PLAYER_ID','PLAYER_NAME','TEAM_ID','TEAM_ABBREVIATION']
 
@@ -143,7 +143,7 @@ def generate_html_report():
                 if label in tot_metrics:
                     pool[f'{label}_TOT'] = pool[raw+'_TOTAL']
                     pool[f'{label}_TOT_PR'] = pool[f'{label}_TOT'].rank(pct=True) * 100
-            ranked[period] = pool
+            ranked[period] = add_pr_ranks(pool)
         base_df = ranked['Season'].copy()
         roster = stats_dict.get('Roster')
         if roster is None:
@@ -238,7 +238,7 @@ def generate_html_report():
         # Columns: Player, Games, [Days], [Stats Season], [Stats L7], [Stats L14], [Stats Last Season]
 
         # Stat Columns Definition
-        stat_metrics = ['MIN', 'PTS', 'REB', 'AST', '3PM', 'STL', 'BLK', 'FG%', 'FT%']
+        stat_metrics = ['MIN', 'PTS', 'REB', 'AST', '3PM', 'STL', 'BLK', 'FG%', 'FT%', 'Rank']
 
         player_html = f"""
         <div class="player-section"><div class="player-heading"><h3>球員名單</h3><span id="selection{table_id_suffix}">全體球員</span></div>
@@ -260,17 +260,17 @@ def generate_html_report():
                         <th>Games</th>
                         {''.join([f'<th>{d}</th>' for d in day_cols])}
                         <!-- Season Stats Headers (AVG / TOT) -->
-                        {''.join([f'<th class="stat-season stat-avg">{m}</th>' for m in stat_metrics])}
-                        {''.join([f'<th class="stat-season stat-tot" style="display:none">{m}</th>' for m in stat_metrics])}
+                        {''.join([f'<th class="stat-season stat-avg{ " rank-season-avg" if m=="Rank" else "" }">{m}</th>' for m in stat_metrics])}
+                        {''.join([f'<th class="stat-season stat-tot{ " rank-season-tot" if m=="Rank" else "" }" style="display:none">{m}</th>' for m in stat_metrics])}
                         <!-- L7 Stats Headers (AVG / TOT) -->
-                        {''.join([f'<th class="stat-l7 stat-avg" style="display:none">{m}</th>' for m in stat_metrics])}
-                        {''.join([f'<th class="stat-l7 stat-tot" style="display:none">{m}</th>' for m in stat_metrics])}
+                        {''.join([f'<th class="stat-l7 stat-avg{ " rank-l7-avg" if m=="Rank" else "" }" style="display:none">{m}</th>' for m in stat_metrics])}
+                        {''.join([f'<th class="stat-l7 stat-tot{ " rank-l7-tot" if m=="Rank" else "" }" style="display:none">{m}</th>' for m in stat_metrics])}
                         <!-- L14 Stats Headers (AVG / TOT) -->
-                        {''.join([f'<th class="stat-l14 stat-avg" style="display:none">{m}</th>' for m in stat_metrics])}
-                        {''.join([f'<th class="stat-l14 stat-tot" style="display:none">{m}</th>' for m in stat_metrics])}
+                        {''.join([f'<th class="stat-l14 stat-avg{ " rank-l14-avg" if m=="Rank" else "" }" style="display:none">{m}</th>' for m in stat_metrics])}
+                        {''.join([f'<th class="stat-l14 stat-tot{ " rank-l14-tot" if m=="Rank" else "" }" style="display:none">{m}</th>' for m in stat_metrics])}
                         <!-- Last Season Stats Headers (AVG / TOT) -->
-                        {''.join([f'<th class="stat-ls stat-avg" style="display:none">{m}</th>' for m in stat_metrics])}
-                        {''.join([f'<th class="stat-ls stat-tot" style="display:none">{m}</th>' for m in stat_metrics])}
+                        {''.join([f'<th class="stat-ls stat-avg{ " rank-ls-avg" if m=="Rank" else "" }" style="display:none">{m}</th>' for m in stat_metrics])}
+                        {''.join([f'<th class="stat-ls stat-tot{ " rank-ls-tot" if m=="Rank" else "" }" style="display:none">{m}</th>' for m in stat_metrics])}
                     </tr>
                 </thead>
                 <tbody>
@@ -280,7 +280,7 @@ def generate_html_report():
             player_html += f"<tr>"
             pid=str(int(row['PLAYER_ID']))
             accessible=escape(str(row['PLAYER_NAME']),quote=True)
-            picks=f"<div class='pick-controls'><label><input type='checkbox' data-pick='compare' data-player-id='{pid}' aria-label='比較 {accessible}'>比較</label><label><input type='checkbox' data-pick='roster' data-player-id='{pid}' aria-label='儲存陣容 {accessible}'>陣容</label></div>"
+            picks=f"<div class='pick-controls'><label><input type='checkbox' data-pick='compare' data-player-id='{pid}' aria-label='比較 {accessible}'>比較</label></div>"
             player_html += f"<td>{row['Player']}{picks}</td>"
             player_html += f"<td>{escape(str(row['TEAM_ABBREVIATION']))}</td>" # Hidden Team
             player_html += f"<td>{row.get('Games', 0)}</td>"
@@ -289,6 +289,15 @@ def generate_html_report():
 
             # Helper to create stat cell with data-order
             def create_stat_cell(row, metric, suffix, css_class, mode='avg', visible=True):
+                if metric == 'Rank':
+                    ending=('_TOT' if mode=='tot' else '')+('_'+suffix if suffix else '')
+                    rank=row.get('PR_RANK'+ending)
+                    present=rank is not None and pd.notna(rank)
+                    total=row.get('PR_SUM'+ending)
+                    title='九項PR未四捨五入加總；全體排名，同分並列1,2,2,4' if present else 'PR不完整，無排名'
+                    if present:title+=f'; PR合計 {float(total):.6f}'
+                    style='' if visible else 'display:none'
+                    return f"<td class='{css_class} rank-{suffix.lower() or 'season'}-{mode}' style='{style}' data-order='{int(rank) if present else 1000000000}' title='{escape(title,quote=True)}'>{int(rank) if present else '—'}</td>"
                 # TOT mode swaps in the derived *_TOT columns for counting stats only;
                 # MIN / FG% / FT% show the same value in both modes (old-page behavior).
                 use_tot = (mode == 'tot' and metric in tot_metrics)
@@ -423,6 +432,7 @@ def generate_html_report():
     )
     if stats_dict['Season'].empty:
         data_notice += " 當季例行賽尚無球員統計，預設顯示 Last Season；缺值不填造。"
+    data_notice += ' ESPN/NBA/PBP資料再散布授權仍未確認。'
     defense_meta = provenance.get('defense', {})
     defense_notice = (
         "PBP Stats 各隊最近10場已完成例行賽，可跨季接續上季；排除季前與季後賽。"
@@ -441,7 +451,7 @@ def generate_html_report():
     css_sri = integrity('datatables-2.3.7.min.css')
     default_period = 'Season' if not stats_dict['Season'].empty else 'LS'
     catalog_json=json.dumps(comparison_catalog,ensure_ascii=False,allow_nan=False).replace('<','\\u003c')
-    tools_meta_json=json.dumps(dict(season=metadata['season'],lastSeason=metadata['last_season'],generatedAt=generated_at,
+    tools_meta_json=json.dumps(dict(season=metadata['season'],lastSeason=metadata['last_season'],
         defaultPeriod=default_period.lower()),ensure_ascii=False).replace('<','\\u003c')
     tools_js=Path('player_tools.js').read_text(encoding='utf-8')
 
@@ -492,6 +502,8 @@ def generate_html_report():
                 if (activeWeek !== 'WSeason') document.getElementById('season-week').value = '';
                 if (tables[activeWeek]) tables[activeWeek].columns.adjust();
                 updateSelection(activeWeek);
+                document.dispatchEvent(new Event('active-week-changed'));
+                document.dispatchEvent(new Event('active-week-changed'));
             }}
 
             function selectSeasonWeek(value) {{
@@ -532,6 +544,7 @@ def generate_html_report():
                 }}
                 table.columns.adjust().draw(false);
                 updateSelection('WSeason');
+                document.dispatchEvent(new Event('active-week-changed'));
             }}
 
             // --- Feature: Switch Stats (period x display mode) ---
@@ -624,8 +637,8 @@ def generate_html_report():
     </head>
     <body>
         <div class="container">
-            <header class="appbar"><div class="brand"><span class="brand-mark">FS</span><div>FANTASY STREAMING<small>NBA · WEEKLY PLANNER</small></div></div><div class="app-status">ESPN + PBP Stats<br>更新 {escape(generated_at)}</div></header>
-            <section class="hero"><div><div class="eyebrow">Your next roster move</div><h1>把下一場，排進你的陣容。</h1><p>四週賽程、球員表現與對手防守，一起看清楚。</p></div><div class="hero-meta"><strong>{escape(metadata['season'])} NBA</strong>{escape(str(w1_start))} — {escape(str(final_end))}</div></section>
+            <header class="appbar"><div class="brand"><span class="brand-mark">FC</span><div>FANTASYORGCAT<small>NBA · WEEKLY PLANNER</small></div></div><div class="app-status">ESPN + PBP Stats<br>更新 {escape(generated_at)}</div></header>
+            <section class="hero"><div><div class="eyebrow">WEEKLY COMPARISON</div><h1>把下一場，排進你的陣容。</h1><p>四週賽程、球員表現與對手防守，一起看清楚。</p></div><div class="hero-meta"><strong>{escape(metadata['season'])} NBA</strong>{escape(str(w1_start))} — {escape(str(final_end))}</div></section>
             <div class="metric-grid">
                 <div class="metric-card"><span>現役球員</span><strong>{roster_count}</strong><small>人</small></div>
                 <div class="metric-card"><span>四週賽程</span><strong>{provenance.get('schedule',{}).get('events_in_window',0)}</strong><small>場</small></div>
@@ -635,11 +648,9 @@ def generate_html_report():
             <details class="data-details"><summary>資料說明 · {escape(fixture_caption)} · 防守近10場跨季接續</summary><p class="data-notice">{escape(data_notice)}</p><p class="defense-notice">{escape(defense_notice)}</p></details>
             <div class="workspace-bar"><nav class="tab" aria-label="選擇週次">{tab_buttons}</nav>{season_select}<div class="filter-tools"><span id="active-selection" class="selection-label">全體球員</span><button id="show-all-players" class="global-reset" onclick="resetActiveTeamFilter()" aria-pressed="true" title="清除球隊與搜尋，保留統計期間及AVG/TOT">全體球員</button></div></div>
             <div class="legend"><b>近10場對手防守</b><span><i class="dot" style="background:#ccffcc"></i>較好打</span><span><i class="dot" style="background:#ffffcc"></i>中段</span><span><i class="dot" style="background:#ffcccc"></i>較難打</span><span><i class="dot" style="background:#eee"></i>暫缺</span></div>
-            <section class="player-tools"><button id="show-roster" type="button" class="btn-stat" aria-expanded="false" aria-controls="roster-panel">查看我的陣容（0）</button><span>名單的「比較」與「陣容」勾選各自獨立。</span><p id="roster-status" role="status" aria-live="polite"></p></section>
-            <section id="roster-panel" class="player-section" hidden><div class="player-heading"><h3>我的陣容</h3><button id="clear-roster" type="button" class="btn-stat">清空陣容</button></div><p class="storage-notice">僅儲存在此瀏覽器 profile、此 origin（<span id="storage-origin"></span>），不跨裝置同步。共用同一 profile 會共用陣容，同 origin 的其他網站也可能讀取；鍵名不代表權限隔離。無痕資料通常在關閉後消失。換網域不會帶入原陣容，請先記錄球員名單。</p><p id="roster-season-note"></p><button id="reset-roster-storage" type="button" class="btn-stat" hidden>重設本機儲存</button><div class="backup-controls"><button id="export-roster" type="button" class="btn-stat">匯出JSON備份</button><label for="import-roster">匯入JSON備份 <input id="import-roster" type="file" accept="application/json,.json"></label></div><p class="storage-notice">匯入會確認取代陣容；未匹配ID僅列提示，不會改配同名人。工具不主動上傳陣容、沒有分析追蹤；GitHub Pages 主機仍有IP安全紀錄。此頁資產均為本地檔，沒有外部圖片、字型或CDN請求。</p><div id="roster-list"></div></section>
             <section id="comparison-panel" class="player-section" hidden><div class="player-heading"><h3>球員比較</h3><button id="clear-comparison" type="button" class="btn-stat">清空比較</button></div><div class="controls"><label>統計期間 <select id="comparison-period"><option value="season">本季</option><option value="l7">近7天</option><option value="l14">近14天</option><option value="ls">上季</option></select></label><label>顯示 <select id="comparison-mode"><option value="avg">AVG</option><option value="tot">TOT</option></select></label></div><p id="comparison-meta"></p><div class="comparison-scroll"><table id="comparison-table"><thead id="comparison-head"></thead><tbody id="comparison-body"></tbody></table></div></section>
             {week_panels}
-            <footer class="footer">FANTASY STREAMING · 每日資料快照 · 球隊防守非位置別 DvP</footer>
+            <footer class="footer">FANTASYORGCAT · 每日資料快照 · 球隊防守非位置別 DvP</footer>
         </div>
     </body>
     </html>

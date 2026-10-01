@@ -5,6 +5,18 @@ import pandas as pd
 METRICS=['MIN','PTS','REB','AST','3PM','STL','BLK','FG%','FT%']
 COUNTING={'PTS','REB','AST','3PM','STL','BLK'}
 
+def add_pr_ranks(pool):
+    """Rank the full period population by exactly the nine displayed PRs."""
+    for mode in ['avg','tot']:
+        keys=[m+('_TOT_PR' if mode=='tot' and m in COUNTING else '_PR') for m in METRICS]
+        values=pool.reindex(columns=keys)
+        if not values.empty and not values.apply(lambda col: col.dropna().map(math.isfinite).all()).all():
+            raise ValueError('Nonfinite PR cannot be ranked')
+        suffix='_TOT' if mode=='tot' else ''
+        pool['PR_SUM'+suffix]=values.sum(axis=1,min_count=len(METRICS))
+        pool['PR_RANK'+suffix]=pool['PR_SUM'+suffix].rank(method='min',ascending=False)
+    return pool
+
 def number(value):
     if value is None or pd.isna(value):return None
     value=float(value)
@@ -30,6 +42,9 @@ def build_catalog(frame):
                     else:value=number(row.get(key+suffix))
                     pr=number(row.get(metric+('_TOT_PR' if summed else '_PR')+suffix)) if value is not None else None
                     cells[metric]=dict(value=value,pr=pr)
+                rank_suffix='_TOT' if mode=='tot' else ''
+                cells['Rank']=dict(value=number(row.get('PR_RANK'+rank_suffix+suffix)),pr=None,
+                    sum=number(row.get('PR_SUM'+rank_suffix+suffix)))
                 modes[mode]=cells
             player['periods'][period]=dict(gp=number(row.get('GP'+suffix)),**modes)
         catalog[pid]=player

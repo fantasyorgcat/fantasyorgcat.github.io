@@ -11,7 +11,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   build-and-deploy:
-    if: github.ref == 'refs/heads/main' && github.repository == 'hotmilk300/Fantasy-NBA-Streaming-Assistant'
+    if: github.ref == 'refs/heads/main' && github.repository == 'fantasyorgcat/fantasyorgcat.github.io'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     outputs:
@@ -54,7 +54,7 @@ jobs:
     if: >-
       needs.build-and-deploy.result == 'success' &&
       github.ref == 'refs/heads/main' &&
-      github.repository == 'hotmilk300/Fantasy-NBA-Streaming-Assistant'
+      github.repository == 'fantasyorgcat/fantasyorgcat.github.io'
     permissions:
       contents: read
       pages: write
