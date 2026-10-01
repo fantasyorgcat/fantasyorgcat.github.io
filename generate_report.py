@@ -9,6 +9,7 @@ from html import escape
 from pathlib import Path
 import hashlib
 import base64
+from player_catalog import build_catalog
 
 IDENTITY_COLUMNS = ['PLAYER_ID','PLAYER_NAME','TEAM_ID','TEAM_ABBREVIATION']
 
@@ -277,7 +278,10 @@ def generate_html_report():
 
         for _, row in player_df.iterrows():
             player_html += f"<tr>"
-            player_html += f"<td>{row['Player']}</td>"
+            pid=str(int(row['PLAYER_ID']))
+            accessible=escape(str(row['PLAYER_NAME']),quote=True)
+            picks=f"<div class='pick-controls'><label><input type='checkbox' data-pick='compare' data-player-id='{pid}' aria-label='比較 {accessible}'>比較</label><label><input type='checkbox' data-pick='roster' data-player-id='{pid}' aria-label='儲存陣容 {accessible}'>陣容</label></div>"
+            player_html += f"<td>{row['Player']}{picks}</td>"
             player_html += f"<td>{escape(str(row['TEAM_ABBREVIATION']))}</td>" # Hidden Team
             player_html += f"<td>{row.get('Games', 0)}</td>"
             for d in day_cols:
@@ -357,12 +361,14 @@ def generate_html_report():
 
     # Generate 4 Weeks
     weeks_data = []
+    comparison_catalog = {}
     current_start = w1_start
     current_end = w1_end
 
     for i in range(4):
         print(f"Processing Week {i+1} ({current_start} - {current_end})...")
         t, p, d = process_week_grid(current_start, current_end, full_schedule, stats_dict, def_ratings)
+        if i == 0:comparison_catalog=build_catalog(p)
         content = generate_html(t, p, d, f'W{i+1}')
         weeks_data.append({
             'id': f'Week{i+1}',
@@ -434,6 +440,10 @@ def generate_html_report():
     datatables_sri = integrity('datatables-2.3.7.min.js')
     css_sri = integrity('datatables-2.3.7.min.css')
     default_period = 'Season' if not stats_dict['Season'].empty else 'LS'
+    catalog_json=json.dumps(comparison_catalog,ensure_ascii=False,allow_nan=False).replace('<','\\u003c')
+    tools_meta_json=json.dumps(dict(season=metadata['season'],lastSeason=metadata['last_season'],generatedAt=generated_at,
+        defaultPeriod=default_period.lower()),ensure_ascii=False).replace('<','\\u003c')
+    tools_js=Path('player_tools.js').read_text(encoding='utf-8')
 
     html_template = f"""
     <!DOCTYPE html>
@@ -452,6 +462,8 @@ def generate_html_report():
             var activeWeek = "W1";
             var teamSelection = {{}};
             var seasonWeeks = {season_json};
+            var playerCatalog = {catalog_json};
+            var playerToolsMeta = {tools_meta_json};
 
             $(document).ready( function () {{
                 // Initialize DataTables for all weeks
@@ -607,6 +619,7 @@ def generate_html_report():
                 updateSelection(suffix);
             }}
             function resetActiveTeamFilter() {{ resetTeamFilter(activeWeek); }}
+            {tools_js}
         </script>
     </head>
     <body>
@@ -622,6 +635,9 @@ def generate_html_report():
             <details class="data-details"><summary>資料說明 · {escape(fixture_caption)} · 防守近10場跨季接續</summary><p class="data-notice">{escape(data_notice)}</p><p class="defense-notice">{escape(defense_notice)}</p></details>
             <div class="workspace-bar"><nav class="tab" aria-label="選擇週次">{tab_buttons}</nav>{season_select}<div class="filter-tools"><span id="active-selection" class="selection-label">全體球員</span><button id="show-all-players" class="global-reset" onclick="resetActiveTeamFilter()" aria-pressed="true" title="清除球隊與搜尋，保留統計期間及AVG/TOT">全體球員</button></div></div>
             <div class="legend"><b>近10場對手防守</b><span><i class="dot" style="background:#ccffcc"></i>較好打</span><span><i class="dot" style="background:#ffffcc"></i>中段</span><span><i class="dot" style="background:#ffcccc"></i>較難打</span><span><i class="dot" style="background:#eee"></i>暫缺</span></div>
+            <section class="player-tools"><button id="show-roster" type="button" class="btn-stat" aria-expanded="false" aria-controls="roster-panel">查看我的陣容（0）</button><span>名單的「比較」與「陣容」勾選各自獨立。</span><p id="roster-status" role="status" aria-live="polite"></p></section>
+            <section id="roster-panel" class="player-section" hidden><div class="player-heading"><h3>我的陣容</h3><button id="clear-roster" type="button" class="btn-stat">清空陣容</button></div><p class="storage-notice">僅儲存在此瀏覽器 profile、此 origin（<span id="storage-origin"></span>），不跨裝置同步。共用同一 profile 會共用陣容，同 origin 的其他網站也可能讀取；鍵名不代表權限隔離。無痕資料通常在關閉後消失。換網域不會帶入原陣容，請先記錄球員名單。</p><p id="roster-season-note"></p><button id="reset-roster-storage" type="button" class="btn-stat" hidden>重設本機儲存</button><div class="backup-controls"><button id="export-roster" type="button" class="btn-stat">匯出JSON備份</button><label for="import-roster">匯入JSON備份 <input id="import-roster" type="file" accept="application/json,.json"></label></div><p class="storage-notice">匯入會確認取代陣容；未匹配ID僅列提示，不會改配同名人。工具不主動上傳陣容、沒有分析追蹤；GitHub Pages 主機仍有IP安全紀錄。此頁資產均為本地檔，沒有外部圖片、字型或CDN請求。</p><div id="roster-list"></div></section>
+            <section id="comparison-panel" class="player-section" hidden><div class="player-heading"><h3>球員比較</h3><button id="clear-comparison" type="button" class="btn-stat">清空比較</button></div><div class="controls"><label>統計期間 <select id="comparison-period"><option value="season">本季</option><option value="l7">近7天</option><option value="l14">近14天</option><option value="ls">上季</option></select></label><label>顯示 <select id="comparison-mode"><option value="avg">AVG</option><option value="tot">TOT</option></select></label></div><p id="comparison-meta"></p><div class="comparison-scroll"><table id="comparison-table"><thead id="comparison-head"></thead><tbody id="comparison-body"></tbody></table></div></section>
             {week_panels}
             <footer class="footer">FANTASY STREAMING · 每日資料快照 · 球隊防守非位置別 DvP</footer>
         </div>

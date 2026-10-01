@@ -29,3 +29,9 @@ python security_gate.py --generated
 整季週次選單列出 ESPN 已公布的當季例行賽，與近四週快捷控制並存。以 America/New_York 日期、週一至週日編號：開季第一場所在週為 Week 1，跨年不歸零，換季重設。近1週仍從今天起至週日；整季第一週可有開季前的空白日期，無比賽週仍可選。來源尚未安排日期的 NBA Cup 等賽事不虛構；選單是已公布整季賽程，不保證開季前已有每隊82場。當季尚無已公布賽程時選單停用。來源失敗或缺漏仍中止生成。
 
 整季資料透過同一次產生程序中的記憶體快取共用30隊API回應；每日重新產生時重新讀取來源。前端僅加一個延後初始化的整季表格，切換週次更新日期、場數與對手，沿用原始統計與PR。可執行 `python test_season_browser.py <網址>` 驗證下拉實際資料與手機操作。
+
+球員工具：名單中比較/陣容各自勾選。比較表有獨立期間、AVG/TOT、原始數值排序與完整聯盟PR；比較選擇只保留在本次頁面。陣容用穩定ESPN球員ID在此瀏覽器localStorage儲存，保留未匹配ID，不依姓名猜配。跨年/換季仍可還原，轉隊顯示目前球隊。儲存停用、配額滿或內容損壞時可本次暫存，會提示並提供確認重設；跨分頁儲存失敗不清空暫存。
+
+備份JSON使用schemaVersion 1，最大32KB、最多100人、ID不重複、名稱最多120字元；匯入確認取代，未知數字ID只列未匹配，不執行HTML/JS。可匯出後在不同瀏覽器/網域手動匯入，沒有自動同步。localStorage依origin共用，同profile及同origin其他repo頁面可能讀取；專屬鍵名只避免撞鍵。工具不主動上傳陣容、沒有追蹤或外部圖片/字型/CDN請求；GitHub Pages仍記錄訪客IP作安全用途（官方文件 https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages#data-collection ）。本輪技術稽核不代表ESPN/NBA/PBP資料再散布授權已通過，公開新版仍待授權範圍確認。
+
+本機球員工具檢查：`python -m unittest test_sources test_defense test_schedule test_player_catalog test_dispatch`、`node --check player_tools.js`、`python test_player_tools_browser.py <預覽網址>`；原四週/整季瀏覽器測試亦須通過。
