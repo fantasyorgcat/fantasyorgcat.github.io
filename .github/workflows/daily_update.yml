@@ -1,8 +1,11 @@
 name: Daily NBA Fantasy Update
 on:
   schedule:
-    # Run at 8:00 AM UTC every day (approx 4:00 PM Taiwan Time)
-    - cron: '0 8 * * *'
+    # Run at 08:17 UTC daily (16:17 Taiwan); avoid the busy start of the hour.
+    - cron: '17 8 * * *'
+    # Temporary acceptance slot: 2026-10-03 13:17 UTC. Remove by 14:17 UTC.
+    # Cron has no year field; this must be removed after the acceptance window.
+    - cron: '17 13 3 10 *'
   workflow_dispatch: # Allows manual trigger
 permissions:
   contents: write
@@ -49,6 +52,16 @@ jobs:
           fi
           git push origin HEAD:main
           echo "report_sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          {
+            echo "### NBA report evidence"
+            echo "Event: $GITHUB_EVENT_NAME"
+            echo "Run: $GITHUB_RUN_ID / attempt $GITHUB_RUN_ATTEMPT"
+            echo "Report commit: $(git rev-parse HEAD)"
+            echo '```'
+            sha256sum index.html data_snapshot.json
+            python -c "import json; d=json.load(open('data_snapshot.json')); print(json.dumps({k:d.get(k) for k in ['generated_at','schedule','period_populations','roster_players','current_stats_last_game']}, indent=2))"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
   deploy:
     needs: build-and-deploy
     if: >-
