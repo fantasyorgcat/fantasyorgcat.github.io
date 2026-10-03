@@ -1,0 +1,4 @@
+TEST_ONLY
+GitHub connector capability verification
+revision=1
+No production content, credentials, or personal data.
