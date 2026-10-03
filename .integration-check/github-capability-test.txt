@@ -1,4 +1,5 @@
 TEST_ONLY
 GitHub connector capability verification
-revision=1
+revision=2
+Create and update are verified by exact UTF-8 readback.
 No production content, credentials, or personal data.
