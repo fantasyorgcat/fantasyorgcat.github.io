@@ -3,9 +3,6 @@ on:
   schedule:
     # Run at 08:17 UTC daily (16:17 Taiwan); avoid the busy start of the hour.
     - cron: '17 8 * * *'
-    # Temporary acceptance slot: 2026-10-03 13:17 UTC. Remove by 14:17 UTC.
-    # Cron has no year field; this must be removed after the acceptance window.
-    - cron: '17 13 3 10 *'
   workflow_dispatch: # Allows manual trigger
 permissions:
   contents: write
