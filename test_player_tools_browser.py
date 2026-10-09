@@ -1,8 +1,8 @@
-import sys,json
+import sys,json,os
 from pathlib import Path
 sys.path.insert(0,str(Path('.test-deps').resolve()))
 from playwright.sync_api import sync_playwright
-CHROME=r'C:\Users\USER\AppData\Local\ms-playwright\chromium-1228\chrome-win64\chrome.exe'
+CHROME=os.environ.get('CHROMIUM_PATH',r'C:\Users\USER\AppData\Local\ms-playwright\chromium-1228\chrome-win64\chrome.exe')
 def run(url):
  results=[]
  with sync_playwright() as p:
@@ -19,12 +19,12 @@ def run(url):
    assert page.locator('[data-pick="roster"],#roster-panel,#show-roster,#import-roster,#export-roster').count()==0
    pair=page.evaluate("()=>{const a=Object.keys(playerCatalog)[0];return[a,Object.keys(playerCatalog).find(id=>playerCatalog[id].team!==playerCatalog[a].team)]}")
    for pid in pair:
-    page.evaluate('(id)=>tables.W1.search(playerCatalog[id].name).draw()',pid)
+    page.evaluate(r"(id)=>tables.W1.column(0).search('^'+$.fn.dataTable.util.escapeRegex(playerCatalog[id].name)+'(?=\\s|$)',true,false).draw()",pid)
     cb=page.locator('#Week1 input[data-pick="compare"][data-player-id="'+pid+'"]');cb.focus();cb.press('Space');assert cb.is_checked()
    assert page.locator('#comparison-body tr').count()==2
    assert page.evaluate('!!(document.querySelector("#comparison-panel").compareDocumentPosition(document.querySelector("#Week1"))&Node.DOCUMENT_POSITION_FOLLOWING)')
    def exact():
-    value=page.evaluate('''()=>{const t=tables[activeWeek],headers=Array.from(document.querySelectorAll('#comparison-head th')).slice(2,9).map(n=>n.textContent);const expected=Array.from({length:7},(_,i)=>t.column(i+3).header().textContent);if(JSON.stringify(headers)!==JSON.stringify(expected))throw Error('Date mismatch');for(const tr of document.querySelectorAll('#comparison-body tr')){const team=playerCatalog[tr.dataset.playerId].team,r=t.rows({search:'none'}).data().toArray().find(row=>row[1]===team);if(r){if(tr.cells[1].textContent!==String(r[2]))throw Error('Game count mismatch');for(let i=0;i<7;i++){const tmp=document.createElement('template');tmp.innerHTML=r[i+3];if(tr.cells[i+2].innerHTML!==tmp.innerHTML)throw Error('Opponent/home-away/defense mismatch');}}}return activeWeek;}''');return value
+    value=page.evaluate('''()=>{const t=tables[activeWeek],columns=t.columns('[data-schedule-day]').indexes().toArray(),headers=Array.from(document.querySelectorAll('#comparison-head th')).slice(2,2+columns.length).map(n=>n.textContent);const expected=columns.map(i=>t.column(i).header().textContent);if(JSON.stringify(headers)!==JSON.stringify(expected))throw Error('Date mismatch');for(const tr of document.querySelectorAll('#comparison-body tr')){const team=playerCatalog[tr.dataset.playerId].team,r=t.rows({search:'none'}).data().toArray().find(row=>row[1]===team);if(r){if(tr.cells[1].textContent!==String(r[2]))throw Error('Game count mismatch');for(let i=0;i<columns.length;i++){const tmp=document.createElement('template');tmp.innerHTML=r[columns[i]];if(tr.cells[i+2].innerHTML!==tmp.innerHTML)throw Error('Opponent/home-away/defense mismatch');}}}return activeWeek;}''');return value
    exact();assert page.locator('#comparison-body tr td:nth-child(2)').first.inner_text()=='0'
    page.locator('#show-all-players').click();exact();assert page.locator('#comparison-body tr').count()==2
    for i in range(4):
