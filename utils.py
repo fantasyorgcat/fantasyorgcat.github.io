@@ -18,6 +18,7 @@ ALIASES = {'GS':'GSW', 'NO':'NOP', 'NY':'NYK', 'SA':'SAS', 'UTAH':'UTA', 'WSH':'
 COLUMNS = ['PLAYER_ID','PLAYER_NAME','TEAM_ID','TEAM_ABBREVIATION','GP','MIN','PTS','REB','AST','STL','BLK','FG_PCT','FT_PCT','FG3M','TO']
 TOTAL_FIELDS = {'PTS':'points','REB':'rebounds','AST':'assists','STL':'steals','BLK':'blocks','FG3M':'threePointFieldGoalsMade','TO':'turnovers'}
 COLUMNS += [key+'_TOTAL' for key in TOTAL_FIELDS]
+SCHEDULE_COLUMNS = ['TEAM_ID','TEAM_ABBREVIATION','GAME_DATE','MATCHUP','EVENT_ID','TIPOFF_UTC','STATUS','SEASON_TYPE','TIME_CONFIRMED']
 IDENTITY = COLUMNS[:4]
 PROVENANCE = {}
 
@@ -130,25 +131,39 @@ def get_season_schedule():
             if event['season']['year'] != season_year() or event['seasonType']['type'] != 2:
                 continue
             eid = event['id']
-            if eid in events and events[eid]['date'] != event['date']:
+            if eid in events and events[eid].get('date') != event.get('date'):
                 raise ValueError('Conflicting schedule event dates')
             events[eid] = event
     rows = []
     for e in events.values():
-        day = datetime.fromisoformat(e['date'].replace('Z','+00:00')).astimezone(ZoneInfo('America/New_York')).date()
-        competitors = e['competitions'][0]['competitors']
+        competition = e['competitions'][0]
+        stamp = datetime.fromisoformat(e['date'].replace('Z','+00:00')) if e.get('date') else None
+        if stamp is not None and stamp.tzinfo is None:raise ValueError('Schedule timestamp requires a timezone')
+        day = stamp.astimezone(ZoneInfo('America/New_York')).date() if stamp else None
+        status_type = competition.get('status',e.get('status',{})).get('type',{})
+        name = str(status_type.get('name','')).lower()
+        status = ('cancelled' if 'cancel' in name else 'postponed' if 'postpon' in name else
+                  'suspended' if 'suspend' in name else 'delayed' if 'delay' in name else
+                  'final' if status_type.get('completed') else
+                  {'pre':'scheduled','in':'in_progress','post':'final'}.get(status_type.get('state'),'unknown'))
+        confirmed = bool(stamp and competition.get('timeValid') is not False)
+        tipoff = stamp.astimezone(timezone.utc).isoformat().replace('+00:00','Z') if confirmed else None
+        competitors = competition['competitors']
         if len(competitors) != 2:
             raise ValueError('Invalid NBA schedule competition')
         for c in competitors:
             opponent = next(x for x in competitors if x['id'] != c['id'])
             own, other = abbreviation(c['team']['abbreviation']), abbreviation(opponent['team']['abbreviation'])
             marker = 'vs.' if c['homeAway'] == 'home' else '@'
-            rows.append(dict(TEAM_ID=int(c['team']['id']),TEAM_ABBREVIATION=own,GAME_DATE=day,MATCHUP=f'{own} {marker} {other}'))
+            rows.append(dict(TEAM_ID=int(c['team']['id']),TEAM_ABBREVIATION=own,GAME_DATE=day,MATCHUP=f'{own} {marker} {other}',
+                             EVENT_ID=str(e['id']),TIPOFF_UTC=tipoff,STATUS=status,SEASON_TYPE=2,TIME_CONFIRMED=confirmed))
+    dated = [r['GAME_DATE'] for r in rows if r['GAME_DATE'] is not None]
     PROVENANCE['schedule'] = dict(season=season_label(season_year()),timezone='America/New_York',
-        published_events=len(events),first_game=str(min(r['GAME_DATE'] for r in rows)) if rows else None,
-        last_game=str(max(r['GAME_DATE'] for r in rows)) if rows else None,
+        published_events=len(set(r['EVENT_ID'] for r in rows if r['GAME_DATE'] is not None)),
+        undated_events=len(set(r['EVENT_ID'] for r in rows if r['GAME_DATE'] is None)),
+        first_game=str(min(dated)) if dated else None,last_game=str(max(dated)) if dated else None,
         coverage='All dated regular-season events currently published by ESPN; excludes preseason/postseason')
-    return pd.DataFrame(rows, columns=['TEAM_ID','TEAM_ABBREVIATION','GAME_DATE','MATCHUP'])
+    return pd.DataFrame(rows, columns=SCHEDULE_COLUMNS)
 
 
 def get_schedule(start_date, end_date):
@@ -160,8 +175,9 @@ def get_schedule(start_date, end_date):
 
 def season_weeks(schedule):
     """Monday–Sunday in Eastern dates; opening game's week is 1, without year resets."""
-    if schedule.empty:return []
-    first=min(schedule['GAME_DATE']);last=max(schedule['GAME_DATE'])
+    dates=schedule['GAME_DATE'].dropna() if not schedule.empty else []
+    if not len(dates):return []
+    first=min(dates);last=max(dates)
     start=first-timedelta(days=first.weekday())
     weeks=[]
     while start<=last:

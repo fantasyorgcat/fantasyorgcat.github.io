@@ -3,7 +3,7 @@ from datetime import date,timedelta
 from unittest.mock import patch
 import pandas as pd
 import utils
-from generate_report import season_schedule_payload
+from generate_report import season_schedule_payload, schedule_event_payload, scheduled_matchup
 
 class Schedule(unittest.TestCase):
     def setUp(self):
@@ -65,5 +65,47 @@ class Schedule(unittest.TestCase):
         frame=self.frame([date(2026,10,20)])
         badge=season_schedule_payload(frame,utils.season_weeks(frame),ratings)[0]['teams']['LAL']['days'][1]
         self.assertIn('可跨季',badge);self.assertIn('10/10',badge);self.assertIn('108.5',badge)
+
+    def normalized(self,event):
+        a,b,c,d=self.patches(lambda url:self.source([event]))
+        with a,b,c,d:return utils.get_season_schedule().copy()
+
+    def test_event_id_utc_status_and_two_display_dates(self):
+        event=self.event('midnight','2027-01-01T02:30:00Z')
+        event['competitions'][0]['status']={'type':{'name':'STATUS_SCHEDULED','state':'pre','completed':False}}
+        frame=self.normalized(event);row=frame.iloc[0]
+        self.assertEqual(row.EVENT_ID,'midnight');self.assertEqual(row.TIPOFF_UTC,'2027-01-01T02:30:00Z')
+        self.assertEqual(row.GAME_DATE,date(2026,12,31));self.assertEqual(row.STATUS,'scheduled')
+        payload=schedule_event_payload(frame,{})
+        self.assertEqual(len(payload),1);self.assertEqual(payload[0]['date_et'],'2026-12-31')
+        self.assertEqual(payload[0]['season_type'],2)
+        self.assertIn('美東 12/31 21:30',payload[0]['home_html']);self.assertIn('台北 01/01 10:30',payload[0]['home_html'])
+
+    def test_dst_changes_clock_without_changing_eastern_date(self):
+        for stamp,et in [('2026-10-31T23:30:00Z','10/31 19:30'),('2026-11-02T00:30:00Z','11/01 19:30')]:
+            utils.get_season_schedule.cache_clear();frame=self.normalized(self.event('dst',stamp))
+            self.assertIn('美東 '+et,scheduled_matchup(frame.iloc[0],{}))
+
+    def test_undated_and_time_tbd_do_not_invent_tipoff(self):
+        event=self.event('tbd',None)
+        frame=self.normalized(event)
+        self.assertEqual(utils.season_weeks(frame),[]);self.assertIsNone(frame.iloc[0].TIPOFF_UTC)
+        self.assertEqual(utils.PROVENANCE['schedule']['undated_events'],1)
+        self.assertTrue(utils.get_schedule(date(2026,10,1),date(2027,4,11)).empty)
+        utils.get_season_schedule.cache_clear()
+        event=self.event('tbd-clock','2026-10-21T00:00Z');event['competitions'][0]['timeValid']=False
+        row=self.normalized(event).iloc[0];self.assertIsNone(row.TIPOFF_UTC)
+        self.assertIn('開賽時間待定',scheduled_matchup(row,{}))
+
+    def test_postponed_cancelled_final_states_and_scheduled_count(self):
+        for name,state,completed,expected,count in [('STATUS_POSTPONED','pre',False,'postponed',0),('STATUS_CANCELED','pre',False,'cancelled',0),('STATUS_FINAL','post',True,'final',1)]:
+            utils.get_season_schedule.cache_clear();event=self.event(name,'2026-10-21T01:00Z')
+            event['competitions'][0]['status']={'type':dict(name=name,state=state,completed=completed)}
+            frame=self.normalized(event);self.assertEqual(frame.iloc[0].STATUS,expected)
+            payload=season_schedule_payload(frame,utils.season_weeks(frame),{})
+            self.assertEqual(payload[0]['teams']['LAL']['games'],count)
+
+    def test_naive_timestamp_rejected(self):
+        with self.assertRaisesRegex(ValueError,'timezone'):self.normalized(self.event('bad','2026-10-20T19:00:00'))
 
 if __name__=='__main__':unittest.main()
