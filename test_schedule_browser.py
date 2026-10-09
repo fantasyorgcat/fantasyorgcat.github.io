@@ -94,6 +94,7 @@ def run(url,output):
             assert page.evaluate('activeWeek')=='WCustom'
             apply('2026-10-01','2026-11-01');assert page.locator('#period-error').is_visible()
             apply('2026-10-26','2026-10-26');assert page.locator('#comparison-body .comparison-matchup').count()==1
+            apply('2026-10-20','2026-11-19');assert page.locator('#comparison-body .comparison-matchup').count()==31
             page.locator('.tablinks').nth(3).click();assert page.evaluate('activeWeek')=='W4'
             assert page.locator('#comparison-body .comparison-matchup').count()==7
             page.locator('#season-week').select_option('0');assert page.evaluate('activeWeek')=='WSeason'
@@ -103,7 +104,7 @@ def run(url,output):
             assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+1')
             page.screenshot(path=str(Path(output)/('schedule-preview-'+str(width)+'.png')),full_page=False)
             assert not errors,errors;assert not failed,failed
-            results.append(dict(width=width,custom_days=[1,7,14],cross_year=True,invalid_range_rejected=True,remaining_b2b_light_verified=True,statistics_unchanged=True,js_errors=errors,failed_requests=failed))
+            results.append(dict(width=width,custom_days=[1,7,14,31],cross_year=True,invalid_range_rejected=True,remaining_b2b_light_verified=True,statistics_unchanged=True,js_errors=errors,failed_requests=failed))
             context.close()
         browser.close()
     Path(output,'schedule-browser-result.json').write_text(json.dumps(dict(fixture=True,url=url,results=results),indent=2))

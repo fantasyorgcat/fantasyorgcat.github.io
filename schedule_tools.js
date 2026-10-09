@@ -2,6 +2,7 @@
 (function(){
  'use strict';
  const byId=id=>document.getElementById(id),DAY=86400000,excluded=new Set(['cancelled','postponed','suspended']);
+ const statusLabels={scheduled:'未開賽',in_progress:'進行中',final:'已完賽',postponed:'延賽',cancelled:'取消',suspended:'暫停',delayed:'延遲',unknown:'狀態待確認'};
  let customPeriod=null;
  function parseDate(value){const stamp=Date.parse(value+'T12:00:00Z');return Number.isFinite(stamp)&&new Date(stamp).toISOString().slice(0,10)===value?stamp:null;}
  function dates(start,end){const out=[];for(let stamp=parseDate(start);stamp<=parseDate(end);stamp+=DAY)out.push(new Date(stamp).toISOString().slice(0,10));return out;}
@@ -38,7 +39,7 @@
   for(const data of rows){const tr=body.insertRow();tr.dataset.team=data.team;for(const value of [data.team,data.games,data.remaining,data.b2b,data.light,data.pending])tr.insertCell().textContent=String(value);}
   if(!rows.length){const td=body.insertRow().insertCell();td.colSpan=6;td.textContent='這個期間沒有已公布日期的球隊賽程。';}box.appendChild(table);
   const pending=scheduleEvents.filter(e=>!e.date_et||excluded.has(e.status)),pendingBox=byId('schedule-pending');pendingBox.replaceChildren();
-  if(pending.length){const p=document.createElement('p');p.textContent='當季待定／延賽／取消／暫停：'+pending.length+' 場，未計入尚未開賽。未公布的 NBA Cup 賽事不補造。';pendingBox.appendChild(p);const list=document.createElement('ul');for(const e of pending.slice(0,10)){const li=document.createElement('li');li.textContent=e.away+' @ '+e.home+' · '+(e.date_et||'日期待定')+' · '+e.status;list.appendChild(li);}pendingBox.appendChild(list);}
+  if(pending.length){const p=document.createElement('p');p.textContent='當季待定／延賽／取消／暫停：'+pending.length+' 場，未計入尚未開賽。未公布的 NBA Cup 賽事不補造。';pendingBox.appendChild(p);const list=document.createElement('ul');for(const e of pending.slice(0,10)){const li=document.createElement('li');li.textContent=e.away+' @ '+e.home+' · '+(e.date_et||'日期待定')+' · '+statusLabels[e.status];list.appendChild(li);}pendingBox.appendChild(list);}
   const age=(now-Date.parse(scheduleGeneratedAt.replace(' UTC',':00Z').replace(' ','T')))/DAY;
   byId('schedule-freshness').textContent='資料快照：'+scheduleGeneratedAt+(age>2?' · 已超過 48 小時；狀態與改期可能已變更。':' · 賽事狀態以快照為準，非即時比分。');
  }

@@ -169,7 +169,8 @@ def get_season_schedule():
 def get_schedule(start_date, end_date):
     full=get_season_schedule()
     selected=full.loc[(full['GAME_DATE']>=start_date)&(full['GAME_DATE']<=end_date)].copy()
-    PROVENANCE['schedule'].update(start=str(start_date),end=str(end_date),events_in_window=len(selected)//2)
+    count=sum(r['STATUS'] not in ['cancelled','postponed','suspended'] for r in selected.to_dict('records'))//2
+    PROVENANCE['schedule'].update(start=str(start_date),end=str(end_date),events_in_window=count)
     return selected
 
 

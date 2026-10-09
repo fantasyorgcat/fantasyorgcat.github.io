@@ -102,6 +102,8 @@ class Schedule(unittest.TestCase):
             utils.get_season_schedule.cache_clear();event=self.event(name,'2026-10-21T01:00Z')
             event['competitions'][0]['status']={'type':dict(name=name,state=state,completed=completed)}
             frame=self.normalized(event);self.assertEqual(frame.iloc[0].STATUS,expected)
+            utils.get_schedule(date(2026,10,19),date(2026,10,25))
+            self.assertEqual(utils.PROVENANCE['schedule']['events_in_window'],count)
             payload=season_schedule_payload(frame,utils.season_weeks(frame),{})
             self.assertEqual(payload[0]['teams']['LAL']['games'],count)
 

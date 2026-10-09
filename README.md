@@ -2,7 +2,7 @@
 
 公開網站：https://fantasyorgcat.github.io/
 
-每日 08:00 UTC 更新。daily workflow 先測試、產生真實報告、檢查並提交，再由同一次 workflow 的獨立 deploy job 發布该報告的確切 commit。產生工作維持 contents:write；發布工作限 contents:read、pages:write、id-token:write，使用既有僅允許 main 的 github-pages environment。沒有新增 token。來源失敗時停止產生與發布，保留上次有效網站。
+每日 08:17 UTC 排程（台灣 16:17）；排程設定不代表每次已成功更新，請核對頁面快照時間及 Actions 結果。daily workflow 先測試、產生真實報告、檢查並提交，再由同一次 workflow 的獨立 deploy job 發布该報告的確切 commit。產生工作維持 contents:write；發布工作限 contents:read、pages:write、id-token:write，使用既有僅允許 main 的 github-pages environment。沒有新增 token。來源失敗時停止產生與發布，保留上次有效網站。
 
 ## 資料與介面
 
@@ -40,3 +40,21 @@ Rank：九個PR（PTS、REB、AST、3PM、STL、BLK、FG%、FT%、TO）未四捨
 
 
 TO（失誤）：AVG使用ESPN avgTurnovers，TOT使用原始turnovers總數，近7/14天沿既有完整日曆窗口的逐場失誤計算。失誤越少PR越高；缺失誤資料不當0、不推估，不新增出賽門檻。Rank含TO、排除MIN。
+
+## 賽程與自訂期間
+
+NBA 比賽事件與 Fantasy 計分期間分開：保留 ESPN event ID、UTC 開賽時間、狀態、例行賽類型與時間確認旗標；美東日期決定歸屬，格內同時顯示美東／台北時間。未排定日期／時間不補造；延賽、取消與暫停保留提示，排程場數排除這三種狀態。下次成功產生時，改期沿同一 event ID 的新日期呈現；沒有宣稱即時更新或保留完整改期歷史。
+
+「美東日曆週」仍是本站週一至週日編號，不是 Yahoo／ESPN 官方 matchup period。當季官方全期間尚未核實，因此沒有提供冒稱官方的七天預設。可以依聯盟設定輸入 1–31 天自訂美東起訖（含迄日），主表與比較表同步日期／對手／場數，統計期間、AVG/TOT 與 PR 不隨期間重算。第一個快捷區段不足七天時，比較表只列真實日期欄。整季與自訂控制均保留既有比較名單。
+
+收合的排程資訊提供球隊期間場數、尚未開賽、剩餘背靠背組數與低比賽日（全聯盟美東當日 1–5 場）。尚未開賽只納入快照狀態為 scheduled、時間已確認、UTC 開賽時間晚於瀏覽時間的場次。時間已過但狀態仍未開賽、未知狀態、延賽、暫停與開賽時間待定另列待確認；取消不算剩餘。資料超過 48 小時會提示。這些是球隊排程，未套用使用者陣容、健康、位置資格、增員或 GP 上限，不能當成可用先發場數／最佳化結果。
+
+離線合成資料驗收（需 Python requirements、已安裝 Playwright 與 Chromium）：
+
+```sh
+CHROMIUM_PATH=/path/to/chromium python test_schedule_browser.py /tmp/fantasy-schedule-preview
+```
+
+該測試將預覽、snapshot、桌面／手機截圖和結果寫入指定的隔離目錄，不改正式 index.html 或 data_snapshot.json。預覽醒目標示 UI TEST ONLY，發布 gate 會拒絕它。不能將這個合成預覽當作當日真資料驗收。測試涵蓋短週、1／7／14／31 天、跨年、無賽程、剩餘／背靠背／低比賽日、非法期間、統計不變與 390px 水平捲動；UTC／DST／未排定／取消狀態另由 test_schedule 單元測試驗證。
+
+下一批優先做現有資料的上場時間／出手趨勢與小樣本提示、自訂 counting points 及類別偏好；先補命中／出手分母再做百分比貢獻。沒有傷病、usage 或私人聯盟來源時，不推斷角色變化的因果，也不承諾二換一的空格價值或最佳先發已可計算。

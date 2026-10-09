@@ -19,7 +19,7 @@ def run(url):
    assert page.locator('[data-pick="roster"],#roster-panel,#show-roster,#import-roster,#export-roster').count()==0
    pair=page.evaluate("()=>{const a=Object.keys(playerCatalog)[0];return[a,Object.keys(playerCatalog).find(id=>playerCatalog[id].team!==playerCatalog[a].team)]}")
    for pid in pair:
-    page.evaluate('(id)=>tables.W1.search(playerCatalog[id].name,false,false).draw()',pid)
+    page.evaluate(r"(id)=>tables.W1.column(0).search('^'+$.fn.dataTable.util.escapeRegex(playerCatalog[id].name)+'(?=\\s|$)',true,false).draw()",pid)
     cb=page.locator('#Week1 input[data-pick="compare"][data-player-id="'+pid+'"]');cb.focus();cb.press('Space');assert cb.is_checked()
    assert page.locator('#comparison-body tr').count()==2
    assert page.evaluate('!!(document.querySelector("#comparison-panel").compareDocumentPosition(document.querySelector("#Week1"))&Node.DOCUMENT_POSITION_FOLLOWING)')
