@@ -38,4 +38,16 @@ Against that cloud/local fixture URL, run the three existing browser scripts wit
 - Existing ESPN/PBP redistribution uncertainty remains. No new provider, subscription, credentials or persistent permission was introduced.
 - Merge, fresh-source production generation and production deployment require final acceptance. No performance improvement is promised; no browser profiling was performed.
 
+## Production release sequence after acceptance
+
+The PR has no pull_request CI trigger. The checks above were executed in the cloud workspace, not GitHub Actions for this branch. Also, pages.yml only stages the tracked index.html on a main push: merging this source-only PR alone does not generate the new UI, because index.html/data_snapshot.json are intentionally unchanged.
+
+1. Review the final branch and fixture evidence, confirm the intended production authorization and existing data-use risk, and restore permitted upstream/network access or use the already authorized GitHub runner. Do not publish the synthetic preview.
+2. On the accepted production source, use the Daily NBA Fantasy Update generation path: install pinned requirements; run test_sources/test_defense/test_schedule/test_player_catalog; run generate_report.py against actual ESPN/PBP sources; run security_gate.py --generated. A source failure must retain the old valid report.
+3. Review the generated real snapshot's timestamp, event IDs/statuses/timezones, period populations and non-fixture marker; smoke-test the real generated UI and custom-period/comparison controls in an authorized cloud preview when reachable. Fixture-only assumptions in legacy browser tests must not be mistaken for actual live-data expectations.
+4. Commit only the real index.html/data_snapshot.json, record the actual report commit and both hashes, and deploy that exact report_sha through the existing separate deploy job, which checks/stages its allowlist before publishing.
+5. Check the completed generation and deploy jobs, then read the actual public Pages snapshot/index to compare generated_at/hash and exercise quick weeks, season weeks, custom 14-day dates, both timezones, comparison, rank/stat invariance and mobile scrolling. If readback remains blocked, report that validation gap instead of declaring live acceptance.
+
+The daily workflow already provides unit/generation/security checks and exact-report-commit deployment; this batch does not alter that workflow or trigger it. A real-data generation and final website smoke check remain release gates, not completed claims.
+
 Next small batch: counting-points/category preferences with explicit GP and sample-size context; preserve made/attempted denominators before percentage contribution tools. Role/usage/health causes and two-for-one open-slot value require additional data and league context.
