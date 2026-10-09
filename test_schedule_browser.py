@@ -50,8 +50,8 @@ def run(url,output):
         browser=p.chromium.launch(executable_path=os.environ.get('CHROMIUM_PATH','/usr/bin/chromium'),headless=True)
         for width in [1500,390]:
             context=browser.new_context(viewport={'width':width,'height':1000 if width==1500 else 844})
-            context.add_init_script("Date.now=()=>Date.parse('2026-10-25T12:00:00Z');")
             page=context.new_page();errors=[];failed=[]
+            page.clock.install(time='2026-10-25T12:00:00Z')
             page.on('pageerror',lambda e:errors.append(str(e)));page.on('requestfailed',lambda r:failed.append(r.url))
             assert page.goto(url,wait_until='load').status==200
             page.wait_for_function('Object.keys(tables).length===4')
@@ -77,6 +77,24 @@ def run(url,output):
             page.locator('.period-tools summary').click()
             values=page.locator('#schedule-insights tr[data-team="LAL"] td').all_text_contents()
             assert values==['LAL','4','2','1','2','2'],values
+            # Crossing tipoff needs no click or table redraw: the minute timer removes
+            # the started game and its now-ineligible future B2B pair.
+            page.clock.set_system_time('2026-10-27T00:59:30Z')
+            assert page.locator('#schedule-insights tr[data-team="LAL"] td').nth(2).inner_text()=='2'
+            page.clock.fast_forward(60000)
+            values=page.locator('#schedule-insights tr[data-team="LAL"] td').all_text_contents()
+            assert values==['LAL','4','1','0','1','3'],values
+            assert '2026-10-27 01:00 UTC' in page.locator('#schedule-period-context').inner_text()
+            # Background tabs can throttle timers. Returning to visible refreshes
+            # the cutoff immediately, even before the next interval.
+            page.clock.set_system_time('2026-10-28T01:00:30Z')
+            page.evaluate("Object.defineProperty(document,'visibilityState',{configurable:true,value:'hidden'});document.dispatchEvent(new Event('visibilitychange'))")
+            assert page.locator('#schedule-insights tr[data-team="LAL"] td').nth(2).inner_text()=='1'
+            page.evaluate("Object.defineProperty(document,'visibilityState',{configurable:true,value:'visible'});document.dispatchEvent(new Event('visibilitychange'))")
+            values=page.locator('#schedule-insights tr[data-team="LAL"] td').all_text_contents()
+            assert values==['LAL','4','0','0','0','4'],values
+            assert '2026-10-28 01:00 UTC' in page.locator('#schedule-period-context').inner_text()
+            page.clock.set_system_time('2026-10-25T12:00:00Z')
             assert 'tbd' not in page.locator('#schedule-pending').inner_text() # IDs are retained in data, not noisy product labels.
             assert '日期待定' in page.locator('#schedule-pending').inner_text()
             page.locator('#WeekCustom [data-period="LS"]').click();page.locator('#WeekCustom [data-mode="TOT"]').click()
@@ -99,12 +117,23 @@ def run(url,output):
             assert page.locator('#comparison-body .comparison-matchup').count()==7
             page.locator('#season-week').select_option('0');assert page.evaluate('activeWeek')=='WSeason'
             assert page.locator('#comparison-body .comparison-matchup').count()==7
+            # The empty placeholder cannot become numeric index zero on a draw.
+            # All three surfaces keep the applied closing week.
+            page.locator('#season-week').select_option('24')
+            season_before=page.evaluate("JSON.stringify({headers:tables.WSeason.columns('[data-schedule-day]').indexes().toArray().map(i=>tables.WSeason.column(i).header().textContent),rows:tables.WSeason.rows().data().toArray(),comparison:document.getElementById('comparison-body').innerHTML,heading:document.getElementById('season-week-heading').textContent})")
+            page.locator('#season-week').select_option('')
+            page.evaluate('tables.WSeason.draw(false)')
+            assert page.locator('#season-week').input_value()=='24'
+            assert page.evaluate('appliedSeasonWeek')==24
+            assert '2027-04-05–2027-04-11' in page.locator('#schedule-period-context').inner_text()
+            assert page.locator('#schedule-insights tr[data-team="LAL"] td').all_text_contents()==['LAL','1','1','0','1','0']
+            assert season_before==page.evaluate("JSON.stringify({headers:tables.WSeason.columns('[data-schedule-day]').indexes().toArray().map(i=>tables.WSeason.column(i).header().textContent),rows:tables.WSeason.rows().data().toArray(),comparison:document.getElementById('comparison-body').innerHTML,heading:document.getElementById('season-week-heading').textContent})")
             assert original==page.evaluate("JSON.stringify(playerCatalog['1'].periods)")
             apply('2026-10-20','2026-11-02');page.locator('#show-all-players').click()
             assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+1')
             page.screenshot(path=str(Path(output)/('schedule-preview-'+str(width)+'.png')),full_page=False)
             assert not errors,errors;assert not failed,failed
-            results.append(dict(width=width,custom_days=[1,7,14,31],cross_year=True,invalid_range_rejected=True,remaining_b2b_light_verified=True,statistics_unchanged=True,js_errors=errors,failed_requests=failed))
+            results.append(dict(width=width,custom_days=[1,7,14,31],cross_year=True,invalid_range_rejected=True,remaining_b2b_light_verified=True,tipoff_timer_refresh=True,foreground_refresh=True,empty_season_selection_preserves_applied_period=True,statistics_unchanged=True,js_errors=errors,failed_requests=failed))
             context.close()
         browser.close()
     Path(output,'schedule-browser-result.json').write_text(json.dumps(dict(fixture=True,url=url,results=results),indent=2))

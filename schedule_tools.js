@@ -8,7 +8,7 @@
  function dates(start,end){const out=[];for(let stamp=parseDate(start);stamp<=parseDate(end);stamp+=DAY)out.push(new Date(stamp).toISOString().slice(0,10));return out;}
  function selectedPeriod(){
   if(activeWeek==='WCustom')return customPeriod;
-  if(activeWeek==='WSeason')return seasonWeeks[Number(byId('season-week').value)];
+  if(activeWeek==='WSeason')return appliedSeasonWeek===null?null:seasonWeeks[appliedSeasonWeek];
   return quickPeriods[activeWeek];
  }
  function selectedEvents(period){return scheduleEvents.filter(e=>e.season_type===2&&e.date_et&&e.date_et>=period.start&&e.date_et<=period.end);}
@@ -88,5 +88,11 @@
   if(order){const mapped=order.map(o=>{const index=table.columns().indexes().toArray().find(i=>headerKey(table.column(i).header())===o.key);return [index===undefined?2:index,o.direction];});table.order(mapped);}
   table.columns.adjust().draw(false);document.dispatchEvent(new Event('active-week-changed'));
  }
- $(document).ready(function(){byId('apply-custom-period').addEventListener('click',applyCustom);document.addEventListener('active-week-changed',renderInsights);$(document).on('draw.dt',renderInsights);renderInsights();});
+ $(document).ready(function(){
+  byId('apply-custom-period').addEventListener('click',applyCustom);
+  document.addEventListener('active-week-changed',renderInsights);$(document).on('draw.dt',renderInsights);
+  setInterval(renderInsights,60000);
+  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')renderInsights();});
+  renderInsights();
+ });
 })();

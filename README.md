@@ -17,7 +17,7 @@
 
 ```sh
 pip install -r requirements.txt
-python -m unittest test_sources test_defense test_schedule
+python -m unittest test_sources test_defense test_schedule test_player_catalog
 python generate_report.py
 python security_gate.py --generated
 ```
@@ -47,7 +47,7 @@ NBA 比賽事件與 Fantasy 計分期間分開：保留 ESPN event ID、UTC 開�
 
 「美東日曆週」仍是本站週一至週日編號，不是 Yahoo／ESPN 官方 matchup period。當季官方全期間尚未核實，因此沒有提供冒稱官方的七天預設。可以依聯盟設定輸入 1–31 天自訂美東起訖（含迄日），主表與比較表同步日期／對手／場數，統計期間、AVG/TOT 與 PR 不隨期間重算。第一個快捷區段不足七天時，比較表只列真實日期欄。整季與自訂控制均保留既有比較名單。
 
-收合的排程資訊提供球隊期間場數、尚未開賽、剩餘背靠背組數與低比賽日（全聯盟美東當日 1–5 場）。尚未開賽只納入快照狀態為 scheduled、時間已確認、UTC 開賽時間晚於瀏覽時間的場次。時間已過但狀態仍未開賽、未知狀態、延賽、暫停與開賽時間待定另列待確認；取消不算剩餘。資料超過 48 小時會提示。這些是球隊排程，未套用使用者陣容、健康、位置資格、增員或 GP 上限，不能當成可用先發場數／最佳化結果。
+收合的排程資訊提供球隊期間場數、尚未開賽、剩餘背靠背組數與低比賽日（全聯盟美東當日 1–5 場）。尚未開賽只納入快照狀態為 scheduled、時間已確認、UTC 開賽時間晚於瀏覽時間的場次。每分鐘及頁面回到前景時重算，並顯示計算截止 UTC；重算不會抓取新的比分或狀態。時間已過但狀態仍未開賽、未知狀態、延賽、暫停與開賽時間待定另列待確認；取消不算剩餘。資料超過 48 小時會提示。這些是球隊排程，未套用使用者陣容、健康、位置資格、增員或 GP 上限，不能當成可用先發場數／最佳化結果。
 
 離線合成資料驗收（需 Python requirements、已安裝 Playwright 與 Chromium）：
 
@@ -55,6 +55,6 @@ NBA 比賽事件與 Fantasy 計分期間分開：保留 ESPN event ID、UTC 開�
 CHROMIUM_PATH=/path/to/chromium python test_schedule_browser.py /tmp/fantasy-schedule-preview
 ```
 
-該測試將預覽、snapshot、桌面／手機截圖和結果寫入指定的隔離目錄，不改正式 index.html 或 data_snapshot.json。預覽醒目標示 UI TEST ONLY，發布 gate 會拒絕它。不能將這個合成預覽當作當日真資料驗收。測試涵蓋短週、1／7／14／31 天、跨年、無賽程、剩餘／背靠背／低比賽日、非法期間、統計不變與 390px 水平捲動；UTC／DST／未排定／取消狀態另由 test_schedule 單元測試驗證。
+該測試將預覽、snapshot、桌面／手機截圖和結果寫入指定的隔離目錄，不改正式 index.html 或 data_snapshot.json。預覽醒目標示 UI TEST ONLY，發布 gate 會拒絕它。不能將這個合成預覽當作當日真資料驗收。測試涵蓋短週、1／7／14／31 天、跨年、無賽程、剩餘／背靠背／低比賽日、跨開賽時間的自動更新、背景回前景更新、空白整季選項保留已套用週次、非法期間、統計不變與 390px 水平捲動；UTC／DST／未排定／取消狀態另由 test_schedule 單元測試驗證。
 
 下一批優先做現有資料的上場時間／出手趨勢與小樣本提示、自訂 counting points 及類別偏好；先補命中／出手分母再做百分比貢獻。沒有傷病、usage 或私人聯盟來源時，不推斷角色變化的因果，也不承諾二換一的空格價值或最佳先發已可計算。

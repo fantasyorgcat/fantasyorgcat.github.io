@@ -503,6 +503,7 @@ def generate_html_report():
             var activeWeek = "W1";
             var teamSelection = {{}};
             var seasonWeeks = {season_json};
+            var appliedSeasonWeek = null;
             var playerCatalog = {catalog_json};
             var playerToolsMeta = {tools_meta_json};
             var scheduleEvents = {events_json};
@@ -543,9 +544,13 @@ def generate_html_report():
             }}
 
             function selectSeasonWeek(value) {{
-                if (value === '') return;
+                if (value === '') {{
+                    if (activeWeek === 'WSeason' && appliedSeasonWeek !== null) document.getElementById('season-week').value=String(appliedSeasonWeek);
+                    return;
+                }}
                 var week = seasonWeeks[Number(value)];
                 if (!week) return;
+                appliedSeasonWeek=Number(value);
                 openWeek({{currentTarget:document.getElementById('season-week')}}, 'WeekSeason');
                 document.getElementById('season-week-heading').textContent=week.label;
                 document.getElementById('season-week-empty').hidden=week.events !== 0;
