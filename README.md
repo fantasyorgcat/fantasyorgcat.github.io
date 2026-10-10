@@ -26,11 +26,13 @@ python security_gate.py --generated
 
 部署 gate 檢查 HTML 資產完整性、公開來源摘要、測試資料排除與發布檔案中的秘密模式。Pages 僅上傳首頁、資料摘要、三個固定版本本地 JS/CSS 與 `.nojekyll`。瀏覽器互動測試可使用已安裝的 Playwright 執行 `python test_dashboard_browser.py <網址>`；該測試不屬於網站發布內容。
 
-週次控制只保留 YAHOO／ESPN／NBA 三個按鈕及一個下拉選單。NBA 是本站美東週一至週日的賽程週：開季第一場所在週為 Week 1，跨年不歸零，換季重設。Yahoo 使用經核對的當季公開 Game Dates 預設週表，私人聯盟可能自訂；ESPN fantasy 完整當季週表未核實，按鈕停用並標示「待核」。NBA 比賽事件仍取自 ESPN sports API，選擇 Yahoo 不會更換比賽資料源。平台切換用選週時的起日定位，首次載入用美東今天；保留該定位日，長週往返切換不丟失原NBA週。無包含週時找下一週／季末週，不保留可能代表不同日期的週號。
+週次控制只保留 YAHOO／ESPN／NBA 三個按鈕及一個下拉選單。NBA 是本站美東週一至週日的賽程週：開季第一場所在週為 Week 1，跨年不歸零，換季重設。Yahoo 使用經核對的當季公開 Game Dates 預設週表；ESPN 使用官方全季 Weekly 週曆，聯盟 matchup／季後賽日期可自訂。未核實球季的按鈕停用並標示「待核」，可依聯盟設定套用自訂期間。NBA 比賽事件仍取自 ESPN sports API，選擇平台不會更換比賽資料源。平台切換用選週時的起日定位，首次載入用美東今天；保留該定位日，長週往返切換不丟失原NBA週。無包含週時找下一週／季末週，不保留可能代表不同日期的週號。
 
 2026–27 Yahoo 預設共23週，首週10/20–10/25，第7週11/30–12/13、第17週2/15–2/28各14天，預設季後賽為第20–22週（3/15–4/4）；NBA 賽程週共25週，首週10/19–10/25。來源：[Yahoo Game Dates](https://basketball.fantasysports.yahoo.com/nba/gamedates)，2026-10-10核對；明確日期保存於 `yahoo_game_dates_2026_27.json`。`fantasy_periods.py` 驗證連續、無重疊與週號，季別不同時不沿用舊表、不推算未核實新賽季。snapshot 逐平台保留來源與核對時間。
 
-所有平台和自訂期間共用一個動態球員表，沿用原始統計及PR；不再輸出額外完整的整季球員HTML。平台切換保留搜尋、球隊、統計期間、AVG/TOT、按統計欄位排序及比較名單。來源尚未安排日期的 NBA Cup 等賽事不虛構，不保證开季前已有每隊82場。可執行 `python test_season_browser.py <網址>` 核對所有25個NBA週與23個Yahoo週的實際日期、場數、對手及手機操作。
+2026–27 ESPN 全季 Weekly 週曆共24個例行週，source season為2027。首週10/20–10/25；Cup第7週11/30–12/6與第8週12/7–12/13分開；明星賽第18週2/15–2/28合併；末週4/5–4/11。來源為官方 [season-level metadata](https://lm-api-reads.fantasy.espn.com/apis/v3/games/fba/seasons/2027?view=chui_default) 與 [pro-team schedules](https://lm-api-reads.fantasy.espn.com/apis/v3/games/fba/seasons/2027?view=proTeamSchedules_wl)，2026-10-10核對。日期、scoring period與來源摘要保存在 `espn_weekly_dates_2026_27.json`；postSeason scoring period175排除，沒有推定私人聯盟的季後賽輪次。核對方法與回歸見 [ESPN_WEEK_QA.md](ESPN_WEEK_QA.md)。
+
+所有平台和自訂期間共用一個動態球員表，沿用原始統計及PR；不再輸出額外完整的整季球員HTML。平台切換保留搜尋、球隊、統計期間、AVG/TOT、按統計欄位排序及比較名單。來源尚未安排日期的 NBA Cup 等賽事不虛構，不保證开季前已有每隊82場。可執行 `python test_season_browser.py <網址>` 核對所有25個NBA週、23個Yahoo週及24個ESPN週的實際日期、場數、對手及手機操作。
 
 球員比較：勾選「比較」，即可在名單上方比較跨隊球員。賽程直接沿用目前週次主表的日期、場次、主客與防守標示；近四週與整季切換後同步。統計可獨立切換期間、AVG/TOT及排序，PR沿用完整聯盟母體。比較僅保留在本次頁面，不讀寫瀏覽器儲存；移除陣容與備份功能，不刪除使用者原本儲存的資料。
 

@@ -1,0 +1,205 @@
+{
+  "season": "2026-27",
+  "source_season": 2027,
+  "timezone": "America/New_York",
+  "source_url": "https://lm-api-reads.fantasy.espn.com/apis/v3/games/fba/seasons/2027?view=chui_default",
+  "schedule_source_url": "https://lm-api-reads.fantasy.espn.com/apis/v3/games/fba/seasons/2027?view=proTeamSchedules_wl",
+  "verified_at": "2026-10-10T16:16:14Z",
+  "scope": "ESPN season-level Weekly calendar for the NBA regular season; league matchup and fantasy playoff schedules may differ",
+  "source_segment_id": 0,
+  "period_type": {
+    "id": 2,
+    "description": "Weekly"
+  },
+  "scoring_period_1_date": "2026-10-20",
+  "regular_scoring_period_range": [
+    1,
+    174
+  ],
+  "source_sha256": {
+    "metadata": "96b6b8380b3f82d3f6e3ebeae653b883be4ac1b5e6593fef2b0eb8f253e7e441",
+    "schedule": "356e2532ed2e4c0fedd80e4c566579a492c9adf0877e708a79f7fc4d031b4c4f"
+  },
+  "mapping_verification": {
+    "unique_games": 1200,
+    "date_mismatches": 0
+  },
+  "excluded_periods": [
+    {
+      "number": 25,
+      "scoring_period_start": 175,
+      "scoring_period_end": 175,
+      "post_season": true
+    }
+  ],
+  "periods": [
+    {
+      "number": 1,
+      "start": "2026-10-20",
+      "end": "2026-10-25",
+      "scoring_period_start": 1,
+      "scoring_period_end": 6
+    },
+    {
+      "number": 2,
+      "start": "2026-10-26",
+      "end": "2026-11-01",
+      "scoring_period_start": 7,
+      "scoring_period_end": 13
+    },
+    {
+      "number": 3,
+      "start": "2026-11-02",
+      "end": "2026-11-08",
+      "scoring_period_start": 14,
+      "scoring_period_end": 20
+    },
+    {
+      "number": 4,
+      "start": "2026-11-09",
+      "end": "2026-11-15",
+      "scoring_period_start": 21,
+      "scoring_period_end": 27
+    },
+    {
+      "number": 5,
+      "start": "2026-11-16",
+      "end": "2026-11-22",
+      "scoring_period_start": 28,
+      "scoring_period_end": 34
+    },
+    {
+      "number": 6,
+      "start": "2026-11-23",
+      "end": "2026-11-29",
+      "scoring_period_start": 35,
+      "scoring_period_end": 41
+    },
+    {
+      "number": 7,
+      "start": "2026-11-30",
+      "end": "2026-12-06",
+      "scoring_period_start": 42,
+      "scoring_period_end": 48
+    },
+    {
+      "number": 8,
+      "start": "2026-12-07",
+      "end": "2026-12-13",
+      "scoring_period_start": 49,
+      "scoring_period_end": 55
+    },
+    {
+      "number": 9,
+      "start": "2026-12-14",
+      "end": "2026-12-20",
+      "scoring_period_start": 56,
+      "scoring_period_end": 62
+    },
+    {
+      "number": 10,
+      "start": "2026-12-21",
+      "end": "2026-12-27",
+      "scoring_period_start": 63,
+      "scoring_period_end": 69
+    },
+    {
+      "number": 11,
+      "start": "2026-12-28",
+      "end": "2027-01-03",
+      "scoring_period_start": 70,
+      "scoring_period_end": 76
+    },
+    {
+      "number": 12,
+      "start": "2027-01-04",
+      "end": "2027-01-10",
+      "scoring_period_start": 77,
+      "scoring_period_end": 83
+    },
+    {
+      "number": 13,
+      "start": "2027-01-11",
+      "end": "2027-01-17",
+      "scoring_period_start": 84,
+      "scoring_period_end": 90
+    },
+    {
+      "number": 14,
+      "start": "2027-01-18",
+      "end": "2027-01-24",
+      "scoring_period_start": 91,
+      "scoring_period_end": 97
+    },
+    {
+      "number": 15,
+      "start": "2027-01-25",
+      "end": "2027-01-31",
+      "scoring_period_start": 98,
+      "scoring_period_end": 104
+    },
+    {
+      "number": 16,
+      "start": "2027-02-01",
+      "end": "2027-02-07",
+      "scoring_period_start": 105,
+      "scoring_period_end": 111
+    },
+    {
+      "number": 17,
+      "start": "2027-02-08",
+      "end": "2027-02-14",
+      "scoring_period_start": 112,
+      "scoring_period_end": 118
+    },
+    {
+      "number": 18,
+      "start": "2027-02-15",
+      "end": "2027-02-28",
+      "scoring_period_start": 119,
+      "scoring_period_end": 132
+    },
+    {
+      "number": 19,
+      "start": "2027-03-01",
+      "end": "2027-03-07",
+      "scoring_period_start": 133,
+      "scoring_period_end": 139
+    },
+    {
+      "number": 20,
+      "start": "2027-03-08",
+      "end": "2027-03-14",
+      "scoring_period_start": 140,
+      "scoring_period_end": 146
+    },
+    {
+      "number": 21,
+      "start": "2027-03-15",
+      "end": "2027-03-21",
+      "scoring_period_start": 147,
+      "scoring_period_end": 153
+    },
+    {
+      "number": 22,
+      "start": "2027-03-22",
+      "end": "2027-03-28",
+      "scoring_period_start": 154,
+      "scoring_period_end": 160
+    },
+    {
+      "number": 23,
+      "start": "2027-03-29",
+      "end": "2027-04-04",
+      "scoring_period_start": 161,
+      "scoring_period_end": 167
+    },
+    {
+      "number": 24,
+      "start": "2027-04-05",
+      "end": "2027-04-11",
+      "scoring_period_start": 168,
+      "scoring_period_end": 174
+    }
+  ]
+}

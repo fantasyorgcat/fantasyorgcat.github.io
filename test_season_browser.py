@@ -17,7 +17,7 @@ def run(url):
         events=page.evaluate('scheduleEvents');groups=page.evaluate('platformPeriods')
         signature=page.evaluate("JSON.stringify(Object.values(playerCatalog).map(p=>p.periods))")
         tested={}
-        for key in ['NBA','YAHOO']:
+        for key in ['NBA','YAHOO','ESPN']:
             page.locator('[data-platform="'+key+'"]').click()
             weeks=groups[key]['periods'];tested[key]=len(weeks)
             assert select.locator('option').count()==len(weeks)+1
