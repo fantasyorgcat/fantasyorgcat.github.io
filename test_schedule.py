@@ -3,6 +3,8 @@ from datetime import date,timedelta
 from unittest.mock import patch
 import pandas as pd
 import utils
+from fantasy_periods import build_platform_periods, validate_calendar, YAHOO_DATES
+import copy, json
 from generate_report import season_schedule_payload, schedule_event_payload, scheduled_matchup
 
 class Schedule(unittest.TestCase):
@@ -109,5 +111,40 @@ class Schedule(unittest.TestCase):
 
     def test_naive_timestamp_rejected(self):
         with self.assertRaisesRegex(ValueError,'timezone'):self.normalized(self.event('bad','2026-10-20T19:00:00'))
+
+    def test_platform_calendars_use_verified_distinct_boundaries(self):
+        weeks=utils.season_weeks(self.frame([date(2026,10,20),date(2027,4,11)]))
+        groups=build_platform_periods('2026-27',weeks,[])
+        yahoo,nba=groups['YAHOO']['periods'],groups['NBA']['periods']
+        self.assertEqual((len(yahoo),len(nba)),(23,25))
+        self.assertEqual((yahoo[0]['start'],nba[0]['start']),('2026-10-20','2026-10-19'))
+        self.assertEqual((yahoo[6]['start'],yahoo[6]['end']),('2026-11-30','2026-12-13'))
+        self.assertEqual((yahoo[16]['start'],yahoo[16]['end']),('2027-02-15','2027-02-28'))
+        self.assertEqual((yahoo[9]['start'],yahoo[9]['end']),('2026-12-28','2027-01-03'))
+        self.assertEqual([p['number'] for p in yahoo if p['default_playoff']],[20,21,22])
+        self.assertTrue(groups['YAHOO']['official_platform_mapping'])
+        self.assertFalse(groups['NBA']['official_platform_mapping'])
+        self.assertFalse(groups['ESPN']['available'])
+        self.assertEqual(groups['ESPN']['periods'],[])
+
+    def test_future_season_never_reuses_current_yahoo_dates(self):
+        weeks=utils.season_weeks(self.frame([date(2027,10,20)]))
+        groups=build_platform_periods('2027-28',weeks,[])
+        self.assertFalse(groups['YAHOO']['available'])
+        self.assertEqual(groups['YAHOO']['periods'],[])
+        self.assertTrue(groups['NBA']['available'])
+        self.assertEqual(groups['NBA']['periods'][0]['number'],1)
+
+    def test_calendar_rejects_gap_overlap_length_and_number_errors(self):
+        calendar=json.loads(YAHOO_DATES.read_text())
+        for key,value in [('start','2026-10-25'),('start','2026-10-27'),('end','2026-12-01'),('number',7)]:
+            invalid=copy.deepcopy(calendar);invalid['periods'][1][key]=value
+            with self.assertRaises(ValueError):validate_calendar(invalid)
+
+    def test_unpublished_nba_dates_do_not_invent_games(self):
+        groups=build_platform_periods('2026-27',[],[])
+        self.assertFalse(groups['NBA']['available'])
+        self.assertEqual(groups['NBA']['periods'],[])
+        self.assertEqual(len(groups['YAHOO']['periods']),23)
 
 if __name__=='__main__':unittest.main()

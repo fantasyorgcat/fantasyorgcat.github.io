@@ -9,7 +9,8 @@ def run(url):
   page=browser.new_page(viewport={'width':1500,'height':1000});errors=[];failed=[]
   page.on('pageerror',lambda e:errors.append(str(e)));page.on('requestfailed',lambda r:failed.append(r.url))
   response=page.goto(url,wait_until='load',timeout=90000);assert response.status==200
-  page.wait_for_function('Object.keys(tables).length===4',timeout=30000)
+  page.wait_for_function('Object.keys(tables).length>=4',timeout=30000)
+  page.locator('#schedule-extras summary').click()
   assert not page.locator('.data-notice').is_visible() and not page.locator('.defense-notice').is_visible()
   page.locator('.data-details summary').click();assert page.locator('.data-notice').is_visible();page.locator('.data-details summary').click()
   total=page.evaluate('tables.W4.rows().count()');assert total>500

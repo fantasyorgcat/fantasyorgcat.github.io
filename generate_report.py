@@ -10,6 +10,7 @@ from pathlib import Path
 import hashlib
 import base64
 from player_catalog import build_catalog, add_pr_ranks, metric_pr
+from fantasy_periods import build_platform_periods
 
 IDENTITY_COLUMNS = ['PLAYER_ID','PLAYER_NAME','TEAM_ID','TEAM_ABBREVIATION']
 
@@ -412,16 +413,17 @@ def generate_html_report():
         current_start = current_end + timedelta(days=1)
         current_end = current_start + timedelta(days=6)
 
-    season_payload=season_schedule_payload(season_schedule,all_weeks,def_ratings)
     events_payload=schedule_event_payload(season_schedule,def_ratings)
+    platform_periods=build_platform_periods(stats_dict['metadata']['season'],all_weeks,events_payload)
+    season_payload=platform_periods['NBA']['periods']
     season_json=json.dumps(season_payload,ensure_ascii=False).replace('<','\\u003c')
-    season_content=''
-    if all_weeks:
-        first=all_weeks[0]
-        t,p,d=process_week_grid(first['start'],first['end'],season_schedule,stats_dict,def_ratings)
-        season_content=generate_html(t,p,d,'WSeason')
-    season_options=''.join(f'<option value="{i}">{escape(w["label"])}</option>' for i,w in enumerate(all_weeks))
-    season_select=(f'<label class="season-picker" for="season-week">美東日曆週<select id="season-week" onchange="selectSeasonWeek(this.value)" {"disabled" if not all_weeks else ""}><option value="">{"選擇整季日曆週" if all_weeks else "當季尚無已公布賽程"}</option>{season_options}</select></label>')
+    platforms_json=json.dumps(platform_periods,ensure_ascii=False).replace('<','\\u003c')
+    platform_buttons=''.join(
+        f'<button type="button" class="platform-button" data-platform="{key}" aria-pressed="false" '
+        f'aria-describedby="platform-note" {"disabled" if not platform_periods[key]["available"] else ""}>'
+        f'{key}{" <small>待核</small>" if not platform_periods[key]["available"] and key != "NBA" else ""}</button>'
+        for key in ['YAHOO','ESPN','NBA'])
+    season_select='<label class="season-picker" for="season-week">週次<select id="season-week" onchange="selectSeasonWeek(this.value)" aria-describedby="platform-note"><option value="">選擇週次</option></select></label>'
     tab_buttons = ''.join(
         f"<button class='tablinks' onclick=\"openWeek(event, '{w['id']}')\" "
         f"id='{ 'defaultOpen' if i == 0 else '' }'>{w['label']}</button>"
@@ -431,7 +433,6 @@ def generate_html_report():
         f"<div id='{w['id']}' class='tabcontent'>{w['content']}</div>"
         for w in weeks_data
     )
-    week_panels += f'<div id="WeekSeason" class="tabcontent"><h3 id="season-week-heading"></h3><p id="season-week-empty" hidden>本週沒有已公布的例行賽賽程。</p>{season_content}</div>'
     week_panels += '<div id="WeekCustom" class="tabcontent"><h3 id="custom-period-heading"></h3><div id="custom-period-content"></div></div>'
     table_initializers = ''.join(
         f"tables['W{i+1}'] = $('#playerTableW{i+1}').DataTable({{order:[[2,'desc']],pageLength:25,scrollX:true,language:{{search:'搜尋',lengthMenu:'每頁 _MENU_ 人',info:'_START_–_END_ / _TOTAL_ 人',infoFiltered:'（全體 _MAX_ 人）',zeroRecords:'沒有符合球員，按全體球員清除篩選',infoEmpty:'0 人'}}}});"
@@ -446,13 +447,13 @@ def generate_html_report():
     provenance.update(generated_at=generated_at, stats_source='ESPN', defense_source='PBP Stats',
                       period_populations={k:len(stats_dict[k]) for k in ['Season','L7','L14','LastSeason']})
     provenance['schedule_events']=[{k:v for k,v in e.items() if not k.endswith('_html')} for e in events_payload]
-    provenance['fantasy_periods']=dict(kind='site_eastern_calendar',official_platform_mapping=False,
-        timezone='America/New_York',quick_periods=quick_periods)
+    provenance['fantasy_periods']=dict(timezone='America/New_York',quick_periods=quick_periods,
+        platforms=platform_periods)
     last_period = provenance.get('players_' + str(int(metadata['last_season'][:4])+1), {})
     last_end = last_period.get('source_period_end','未查得')[:10]
     data_notice = (
         "選週只切換賽程，統計與PR維持報告更新時的資料。 "
-        "整季採美東日期週一至週日，首場當季例行賽所在週為 Week 1；跨年連續，換季重設。近1週從今天起至週日。僅列來源已公布日期，尚未排定賽事不虛構；無比賽週仍保留。 "
+        "NBA 賽程週採美東週一至週日，首場當季例行賽所在週為 Week 1；Yahoo 採經核對的當季公開預設週表，私人聯盟設定可能不同；ESPN fantasy 週表未核實前不開放。近1週從今天起至週日。僅列來源已公布日期，尚未排定賽事不虛構；無比賽週仍保留。 "
         f"報告產生時間：{generated_at}。ESPN 球員資料：當季 {metadata['season']}，上季 {metadata['last_season']} "
         f"例行賽來源期間至 {last_end}。近期窗口為美東日期 {today} 前完整7／14天。"
         f"球隊／球員名單取自本次 ESPN roster；比賽日期使用美東時間，四週範圍 {w1_start}–{final_end}。"
@@ -503,6 +504,7 @@ def generate_html_report():
             var activeWeek = "W1";
             var teamSelection = {{}};
             var seasonWeeks = {season_json};
+            var platformPeriods = {platforms_json};
             var appliedSeasonWeek = null;
             var playerCatalog = {catalog_json};
             var playerToolsMeta = {tools_meta_json};
@@ -537,55 +539,14 @@ def generate_html_report():
                 document.getElementById('apply-custom-period').classList.remove('active');
                 evt.currentTarget.className += " active";
                 activeWeek = weekName.replace('Week','W');
-                if (activeWeek !== 'WSeason') document.getElementById('season-week').value = '';
+                if (activeWeek !== 'WCustom' && window.clearPlatformSelection) window.clearPlatformSelection();
                 if (tables[activeWeek]) tables[activeWeek].columns.adjust();
                 updateSelection(activeWeek);
                 document.dispatchEvent(new Event('active-week-changed'));
             }}
 
             function selectSeasonWeek(value) {{
-                if (value === '') {{
-                    if (activeWeek === 'WSeason' && appliedSeasonWeek !== null) document.getElementById('season-week').value=String(appliedSeasonWeek);
-                    return;
-                }}
-                var week = seasonWeeks[Number(value)];
-                if (!week) return;
-                appliedSeasonWeek=Number(value);
-                openWeek({{currentTarget:document.getElementById('season-week')}}, 'WeekSeason');
-                document.getElementById('season-week-heading').textContent=week.label;
-                document.getElementById('season-week-empty').hidden=week.events !== 0;
-                if (!tables.WSeason) {{
-                    tables.WSeason=$('#playerTableWSeason').DataTable({{order:[[2,'desc']],pageLength:25,scrollX:true}});
-                    tables.WSeason.column(1).visible(false);
-                    tables.WSeason.on('draw',function() {{ updateSelection('WSeason'); }});
-                    switchStats('{default_period}','WSeason');
-                }}
-                var table=tables.WSeason;
-                for (var day=0;day<7;day++) $(table.column(day+3).header()).text(week.headers[day]);
-                table.rows().every(function() {{
-                    var row=this.data();
-                    var team=week.teams[row[1]] || {{games:0,days:['','','','','','','']}};
-                    row[2]=String(team.games);
-                    for (var day=0;day<7;day++) row[day+3]=team.days[day];
-                    this.data(row);
-                }});
-                var teamTable=document.getElementById('teamTableWSeason');
-                if (teamTable) {{
-                    for (var day=0;day<7;day++) teamTable.tHead.rows[0].cells[day+2].textContent=week.headers[day];
-                    teamTable.tBodies[0].replaceChildren();
-                    Object.keys(week.teams).sort().forEach(function(abbr) {{
-                        var data=week.teams[abbr],tr=document.createElement('tr');
-                        tr.className='team-row';tr.dataset.team=abbr;
-                        tr.onclick=function() {{ filterTeam(tr,abbr,'WSeason'); }};
-                        [abbr,String(data.games)].forEach(function(text) {{ var td=tr.insertCell();td.textContent=text; }});
-                        data.days.forEach(function(html) {{ tr.insertCell().innerHTML=html; }});
-                        if (teamSelection.WSeason===abbr) tr.classList.add('selected');
-                        teamTable.tBodies[0].appendChild(tr);
-                    }});
-                }}
-                table.columns.adjust().draw(false);
-                updateSelection('WSeason');
-                document.dispatchEvent(new Event('active-week-changed'));
+                if (window.selectPlatformWeek) window.selectPlatformWeek(value);
             }}
 
             // --- Feature: Switch Stats (period x display mode) ---
@@ -688,8 +649,8 @@ def generate_html_report():
                 <div class="metric-card"><span>上季 PR 母體</span><strong>{len(stats_dict['LastSeason'])}</strong><small>人</small></div>
             </div>
             <details class="data-details"><summary>資料說明 · {escape(fixture_caption)} · 防守近10場跨季接續</summary><p class="data-notice">{escape(data_notice)}</p><p class="defense-notice">{escape(defense_notice)}</p></details>
-            <div class="workspace-bar"><nav class="tab" aria-label="選擇週次">{tab_buttons}</nav>{season_select}<div class="filter-tools"><span id="active-selection" class="selection-label">全體球員</span><button id="show-all-players" class="global-reset" onclick="resetActiveTeamFilter()" aria-pressed="true" title="清除球隊與搜尋，保留統計期間及AVG/TOT">全體球員</button></div></div>
-            <section class="period-tools" aria-label="自訂計分期間"><p>日期以美東歸屬；日曆週未對應 Yahoo／ESPN 官方計分週。可依聯盟設定輸入 1–31 天期間。</p><div class="period-inputs"><label>起日（美東）<input id="period-start" type="date" value="{w1_start}"></label><label>迄日（含，美東）<input id="period-end" type="date" value="{w1_end}"></label><button id="apply-custom-period" class="btn-stat" type="button">套用自訂期間</button></div><p id="period-error" role="alert" hidden></p><p id="schedule-freshness" role="status"></p><details><summary>剩餘排程、背靠背與低比賽日</summary><p>依目前快照與瀏覽時間計算球隊排程；未套用傷病、陣容、位置或 GP 上限，不代表可用上場場次。低比賽日指美東當日全聯盟 1–5 場。</p><p id="schedule-period-context"></p><div id="schedule-insights" class="schedule-scroll"></div><div id="schedule-pending"></div></details></section>
+            <div class="workspace-bar"><nav class="platform-switch" aria-label="週次類型">{platform_buttons}</nav>{season_select}<div class="filter-tools"><span id="active-selection" class="selection-label">全體球員</span><button id="show-all-players" class="global-reset" onclick="resetActiveTeamFilter()" aria-pressed="true" title="清除球隊與搜尋，保留統計期間及AVG/TOT">全體球員</button></div><p id="platform-note" class="platform-note" role="status"></p></div>
+            <section class="period-tools" aria-label="賽程資訊"><details id="schedule-extras"><summary>自訂期間／近期快捷</summary><nav class="tab" aria-label="近期週次">{tab_buttons}</nav><p>美東日期，含迄日；可依自己的聯盟設定輸入 1–31 天。</p><div class="period-inputs"><label>起日（美東）<input id="period-start" type="date" value="{w1_start}"></label><label>迄日（含，美東）<input id="period-end" type="date" value="{w1_end}"></label><button id="apply-custom-period" class="btn-stat" type="button">套用自訂期間</button></div><p id="period-error" role="alert" hidden></p></details><p id="schedule-freshness" role="status"></p><details id="schedule-metrics"><summary>剩餘排程、背靠背與低比賽日</summary><p>依目前快照與瀏覽時間計算球隊排程；未套用傷病、陣容、位置或 GP 上限，不代表可用上場場次。低比賽日指美東當日全聯盟 1–5 場。</p><p id="schedule-period-context"></p><div id="schedule-insights" class="schedule-scroll"></div><div id="schedule-pending"></div></details></section>
             <div class="legend"><b>近10場對手防守</b><span><i class="dot" style="background:#ccffcc"></i>較好打</span><span><i class="dot" style="background:#ffffcc"></i>中段</span><span><i class="dot" style="background:#ffcccc"></i>較難打</span><span><i class="dot" style="background:#eee"></i>暫缺</span></div>
             <section id="comparison-panel" class="player-section" hidden><div class="player-heading"><h3>球員比較</h3><button id="clear-comparison" type="button" class="btn-stat">清空比較</button></div><div class="controls"><label>統計期間 <select id="comparison-period"><option value="season">本季</option><option value="l7">近7天</option><option value="l14">近14天</option><option value="ls">上季</option></select></label><label>顯示 <select id="comparison-mode"><option value="avg">AVG</option><option value="tot">TOT</option></select></label></div><p id="comparison-meta"></p><div class="comparison-scroll"><table id="comparison-table"><thead id="comparison-head"></thead><tbody id="comparison-body"></tbody></table></div></section>
             {week_panels}
