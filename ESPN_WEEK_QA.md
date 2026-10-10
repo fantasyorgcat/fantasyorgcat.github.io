@@ -43,7 +43,16 @@ The existing schedule renderer is shared by all three platforms. Continuous-swit
 
 Tests use the isolated, watermarked UI TEST ONLY fixture: 605 roster players, 578 prior-season players, 12 dated events and one undated event. Separate events in each Cup and All-Star half verify aggregation and splitting; this fixture is not real published NBA data.
 
-Current draft validation: 45 unit tests, both JavaScript syntax checks, the real checked-in report security gate, the schedule suite at 1500/390px, and the existing dashboard suite pass. The fixture is correctly refused by the publication gate with `Test fixture cannot be published`. The all-player season and cross-team comparison suites are still running; their results will be recorded before this draft is offered for merge approval.
+Final local validation completed 2026-10-10T16:36:41Z. The candidate source is commit `8d239d850723e009bf76e95f1bb8f02a316038a6`; the subsequent QA update changes documentation only.
+
+- 45 unit tests pass; both JavaScript syntax checks pass.
+- The real checked-in report security gate passes. The isolated fixture is correctly refused with `Test fixture cannot be published`.
+- `test_schedule_browser.py` passes at 1500/390px: all ESPN24 weeks, four three-platform anchor round trips, Cup splitting, All-Star merging, cleared jQuery data on every retired table, filter/search/mode/order preservation, custom ranges, timer/foreground refresh, and empty-selection preservation.
+- `test_season_browser.py` passes all NBA25/Yahoo23/ESPN24 periods: every roster row's dates, counts and matchup HTML; unchanged statistics/PR; sorting, filters/modes, mobile scrolling and sticky controls.
+- `test_player_tools_browser.py` passes all 72 periods at both 1500/390px: cross-team schedule/date/opponent synchronization, keyboard selection, global ranks, independent comparison period/mode controls, zero/missing schedules, no storage calls and preserved existing storage. No external requests, JS errors or failed resources.
+- `test_dashboard_browser.py` passes the existing 605-player dashboard, independent team/search/period/mode controls, numeric percentages/integer totals, collapsed details, mobile page width and reachable columns.
+
+All four browser suites report no JS errors or failed requests. These are executor-local checks, not GitHub CI or live-site acceptance. The new calendar has not been generated or deployed to production, and the PR remains draft awaiting review of its exact final head. No performance bound is claimed from fixture tests.
 
 ## Reproduction
 
