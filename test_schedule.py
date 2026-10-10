@@ -3,7 +3,7 @@ from datetime import date,timedelta
 from unittest.mock import patch
 import pandas as pd
 import utils
-from fantasy_periods import build_platform_periods, validate_calendar, YAHOO_DATES
+from fantasy_periods import build_platform_periods, validate_calendar, validate_espn_calendar, YAHOO_DATES, ESPN_DATES
 import copy, json
 from generate_report import season_schedule_payload, schedule_event_payload, scheduled_matchup
 
@@ -124,14 +124,17 @@ class Schedule(unittest.TestCase):
         self.assertEqual([p['number'] for p in yahoo if p['default_playoff']],[20,21,22])
         self.assertTrue(groups['YAHOO']['official_platform_mapping'])
         self.assertFalse(groups['NBA']['official_platform_mapping'])
-        self.assertFalse(groups['ESPN']['available'])
-        self.assertEqual(groups['ESPN']['periods'],[])
+        self.assertTrue(groups['ESPN']['available'])
+        self.assertTrue(groups['ESPN']['official_platform_mapping'])
+        self.assertEqual(len(groups['ESPN']['periods']),24)
 
-    def test_future_season_never_reuses_current_yahoo_dates(self):
+    def test_future_season_never_reuses_verified_platform_dates(self):
         weeks=utils.season_weeks(self.frame([date(2027,10,20)]))
         groups=build_platform_periods('2027-28',weeks,[])
         self.assertFalse(groups['YAHOO']['available'])
         self.assertEqual(groups['YAHOO']['periods'],[])
+        self.assertFalse(groups['ESPN']['available'])
+        self.assertEqual(groups['ESPN']['periods'],[])
         self.assertTrue(groups['NBA']['available'])
         self.assertEqual(groups['NBA']['periods'][0]['number'],1)
 
@@ -140,6 +143,30 @@ class Schedule(unittest.TestCase):
         for key,value in [('start','2026-10-25'),('start','2026-10-27'),('end','2026-12-01'),('number',7)]:
             invalid=copy.deepcopy(calendar);invalid['periods'][1][key]=value
             with self.assertRaises(ValueError):validate_calendar(invalid)
+
+    def test_espn_weekly_boundaries_and_source_scope(self):
+        group=build_platform_periods('2026-27',[],[])['ESPN'];weeks=group['periods']
+        self.assertEqual(group['source_season'],2027)
+        self.assertEqual(group['period_type'],dict(id=2,description='Weekly'))
+        self.assertIn('?view=chui_default',group['source_url'])
+        self.assertIn('league matchup',group['scope'])
+        self.assertEqual((weeks[0]['start'],weeks[0]['end']),('2026-10-20','2026-10-25'))
+        self.assertEqual((weeks[6]['start'],weeks[6]['end']),('2026-11-30','2026-12-06'))
+        self.assertEqual((weeks[7]['start'],weeks[7]['end']),('2026-12-07','2026-12-13'))
+        self.assertEqual((weeks[17]['start'],weeks[17]['end']),('2027-02-15','2027-02-28'))
+        self.assertEqual((weeks[-1]['number'],weeks[-1]['start'],weeks[-1]['end'],weeks[-1]['scoring_period_end']),(24,'2027-04-05','2027-04-11',174))
+        self.assertTrue(all('default_playoff' not in w for w in weeks))
+
+    def test_espn_calendar_rejects_wrong_source_and_postseason(self):
+        calendar=json.loads(ESPN_DATES.read_text())
+        invalid=copy.deepcopy(calendar);invalid['source_season']=2026
+        with self.assertRaisesRegex(ValueError,'source season'):validate_espn_calendar(invalid)
+        invalid=copy.deepcopy(calendar);invalid['period_type']['id']=1
+        with self.assertRaisesRegex(ValueError,'period type'):validate_espn_calendar(invalid)
+        invalid=copy.deepcopy(calendar);invalid['periods'][-1].update(end='2027-04-12',scoring_period_end=175)
+        with self.assertRaisesRegex(ValueError,'non-regular'):validate_espn_calendar(invalid)
+        invalid=copy.deepcopy(calendar);invalid['periods'][-1]['scoring_period_start']=167
+        with self.assertRaisesRegex(ValueError,'do not match'):validate_espn_calendar(invalid)
 
     def test_unpublished_nba_dates_do_not_invent_games(self):
         groups=build_platform_periods('2026-27',[],[])

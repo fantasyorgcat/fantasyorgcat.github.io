@@ -41,9 +41,13 @@ def run(url):
    page.locator('#comparison-head button[data-sort="Rank"]').click()
    values=page.locator('#comparison-body tr td').evaluate_all('(nodes)=>nodes.filter(n=>n.cellIndex===20).map(n=>Number(n.dataset.value)).filter(n=>n>0)');assert values==sorted(values)
    weeks=page.evaluate('seasonWeeks');assert len(weeks)==25
+   tested_platforms={}
+   for key,count in [('NBA',25),('YAHOO',23),('ESPN',24)]:
+    page.locator('[data-platform="'+key+'"]').click();assert page.locator('#season-week option').count()==count+1
+    for i in range(count):
+     page.locator('#season-week').select_option(str(i));assert exact()=='WCustom';assert page.locator('#comparison-body tr').count()==2;assert ranks()==before
+    tested_platforms[key]=count
    page.locator('[data-platform="NBA"]').click()
-   for i in range(len(weeks)):
-    page.locator('#season-week').select_option(str(i));assert exact()=='WCustom';assert page.locator('#comparison-body tr').count()==2;assert ranks()==before
    page.locator('#season-week').select_option('0');exact()
    assert page.evaluate('seasonWeeks[0].start') if 'start' in weeks[0] else weeks[0]['number']==1
    page.locator('#comparison-mode').select_option('tot');page.locator('#comparison-head button[data-sort="PTS"]').click()
@@ -66,7 +70,7 @@ def run(url):
    assert page.evaluate('storageCalls')==[];assert page.evaluate('savedRoster()')=='existing-user-data'
    page.reload(wait_until='load');page.wait_for_function('Object.keys(tables).length===5');assert not page.locator('#comparison-panel').is_visible();assert page.evaluate('storageCalls')==[]
    assert not errors,errors;assert not failed,failed;assert not external,external
-   results.append(dict(width=width,season_weeks=len(weeks),cross_team_ids=pair,exact_schedule_all_weeks=True,storage_calls=[],existing_storage_preserved=True,zero_games_and_missing=True,rank_global_and_week_invariant=True,rank_numeric_sort=True,rank_missing_is_unranked=True,js_errors=errors,failed_requests=failed,external_requests=external));ctx.close()
+   results.append(dict(width=width,season_weeks=len(weeks),tested_platforms=tested_platforms,cross_team_ids=pair,exact_schedule_all_weeks=True,storage_calls=[],existing_storage_preserved=True,zero_games_and_missing=True,rank_global_and_week_invariant=True,rank_numeric_sort=True,rank_missing_is_unranked=True,js_errors=errors,failed_requests=failed,external_requests=external));ctx.close()
   browser.close()
  result=dict(url=url,results=results);Path('../comparison-schedule-browser-result.json').write_text(json.dumps(result,indent=2),encoding='utf-8');print(json.dumps(result))
 if __name__=='__main__':run(sys.argv[1])

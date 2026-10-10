@@ -20,7 +20,7 @@
   byId('season-week').classList.toggle('active',!!(period&&period.platform));
   byId('apply-custom-period').classList.toggle('active',!!(period&&period.kind==='custom'));
   const note=period&&period.platform?platformPeriods[period.platform].note:period?'美東 '+period.start+'–'+period.end+' · '+(period.kind==='custom'?'自訂期間':'近期快捷'):'';
-  byId('platform-note').textContent=note+' ESPN fantasy 週表待核。';
+  byId('platform-note').textContent=note+(platformPeriods.ESPN.available?'':' ESPN fantasy 週表待核。');
  }
  function fillWeekOptions(){
   const select=byId('season-week'),group=platformPeriods[platformKey];select.replaceChildren(new Option('選擇週次',''));
@@ -101,7 +101,7 @@
   viewState.WCustom={...state};if(chosen)teamSelection.WCustom=chosen;else delete teamSelection.WCustom;
   function headerKey(h){return h.textContent+'|'+h.className.split(' ').filter(c=>c.startsWith('stat-')||c.startsWith('rank-')).join(' ');}
   let order=source?source.order().map(([i,direction])=>({key:headerKey(source.column(i).header()),direction})):null;
-  if(old){old.destroy();delete tables.WCustom;}
+  if(old){old.destroy(true);delete tables.WCustom;}
   const section=customPlayerTemplate.cloneNode(true),sourceDays=section.querySelectorAll('th[data-schedule-day]').length;
   for(const node of section.querySelectorAll('[id],[onclick]')){
    if(node.id)node.id=node.id.replace('W1','WCustom');

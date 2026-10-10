@@ -59,8 +59,8 @@ def run(url,output):
             page.wait_for_function('Object.keys(tables).length===5')
             assert page.locator('[data-platform]').count()==3
             assert page.locator('[data-platform="NBA"]').get_attribute('aria-pressed')=='true'
-            assert page.locator('[data-platform="ESPN"]').is_disabled()
-            assert '待核' in page.locator('[data-platform="ESPN"]').inner_text()
+            assert page.locator('[data-platform="ESPN"]').is_enabled()
+            assert '待核' not in page.locator('[data-platform="ESPN"]').inner_text()
             assert page.locator('#season-week option').count()==26
             assert 'active' not in page.locator('#apply-custom-period').get_attribute('class')
             assert not page.locator('#schedule-extras').get_attribute('open')
@@ -178,12 +178,49 @@ def run(url,output):
                     assert merged_schedule()==single
                     page.locator('[data-platform="YAHOO"]').click()
                 long_week_results.append(dict(yahoo_week=int(index)+1,nba_weeks=[int(i)+1 for i in nba_indices],event_dates=event_dates,merged_games=2,nba_games=[1,1],comparison_verified=True,roundtrips_verified=True))
+            # ESPN's source Weekly calendar has 24 regular periods, not Yahoo's 23.
+            page.locator('[data-platform="ESPN"]').focus();page.locator('[data-platform="ESPN"]').press('Enter')
+            assert page.locator('#season-week option').count()==25
+            assert '聯盟 matchup／季後賽日期可自訂' in page.locator('#platform-note').inner_text()
+            assert '待核' not in page.locator('#platform-note').inner_text()
+            espn_periods=page.evaluate('platformPeriods.ESPN.periods');events=page.evaluate('scheduleEvents')
+            for index,period in enumerate(espn_periods):
+                page.evaluate('window.retiredPeriodTable=tables.WCustom.table().node()')
+                page.locator('#season-week').select_option(str(index))
+                assert page.evaluate('!retiredPeriodTable.isConnected&&!$.hasData(retiredPeriodTable)')
+                selected=[e for e in events if e['date_et'] and period['start']<=e['date_et']<=period['end'] and 'LAL' in [e['home'],e['away']]]
+                expected=dict(games=sum(e['status'] not in ['cancelled','postponed','suspended'] for e in selected),dates=sorted({e['date_et'] for e in selected}))
+                current=merged_schedule()
+                assert current==dict(**expected,comparisonGames=expected['games'],comparisonDates=expected['dates']),current
+                assert page.locator('#custom-period-heading').inner_text()==period['label']
+                assert original==page.evaluate("JSON.stringify(playerCatalog['1'].periods)")
+            # Both Cup halves stay separate in ESPN; both All-Star halves map to ESPN18.
+            espn_roundtrips=[]
+            for nba_index,espn_index,yahoo_index in [('6','6','6'),('7','7','6'),('17','17','16'),('18','17','16')]:
+                page.locator('[data-platform="NBA"]').click();page.locator('#season-week').select_option(nba_index)
+                single=merged_schedule();assert single['games']==1
+                page.locator('[data-platform="ESPN"]').click()
+                assert page.locator('#season-week').input_value()==espn_index
+                expected_espn=merged_schedule()
+                assert expected_espn['games']==(2 if espn_index=='17' else 1)
+                assert page.evaluate("tables.WCustom.columns('[data-schedule-day]').count()") == (14 if espn_index=='17' else 7)
+                page.locator('[data-platform="YAHOO"]').click();assert page.locator('#season-week').input_value()==yahoo_index
+                assert merged_schedule()['games']==2
+                page.locator('[data-platform="ESPN"]').click();assert page.locator('#season-week').input_value()==espn_index
+                assert merged_schedule()==expected_espn
+                page.locator('[data-platform="NBA"]').click();assert page.locator('#season-week').input_value()==nba_index
+                assert merged_schedule()==single
+                espn_roundtrips.append(dict(nba_week=int(nba_index)+1,espn_week=int(espn_index)+1,yahoo_week=int(yahoo_index)+1,espn_games=expected_espn['games'],verified=True))
+            page.locator('[data-platform="YAHOO"]').click()
             page.locator('#season-week').select_option('19')
             assert '預設季後賽' in page.locator('#comparison-meta').inner_text()
             page.locator('#season-week').select_option('7')
             page.evaluate("filterTeam(null,'LAL','WCustom')")
             page.locator('#WeekCustom [data-period="LS"]').click();page.locator('#WeekCustom [data-mode="TOT"]').click()
             page.evaluate("tables.WCustom.page.len(50).search('Fixture Alpha',false,false).order([tables.WCustom.column('.rank-ls-tot').index(),'asc']).draw()")
+            page.locator('[data-platform="ESPN"]').click()
+            assert page.locator('#season-week').input_value()=='8'
+            assert page.evaluate("viewState.WCustom.mode==='tot'&&viewState.WCustom.period==='ls'&&teamSelection.WCustom==='LAL'&&tables.WCustom.search()==='Fixture Alpha'")
             # Date anchoring maps Yahoo 8 to NBA 9 rather than preserving a number.
             page.locator('[data-platform="NBA"]').click()
             assert page.locator('#season-week').input_value()=='8'
@@ -202,7 +239,7 @@ def run(url,output):
             assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+1')
             page.screenshot(path=str(Path(output)/('schedule-preview-'+str(width)+'.png')),full_page=False)
             assert not errors,errors;assert not failed,failed
-            results.append(dict(width=width,nba_weeks=25,yahoo_weeks=23,yahoo_short_opening_and_double_weeks=True,long_week_event_regressions=long_week_results,espn_disabled_unverified=True,date_anchored_platform_switch=True,filters_search_mode_order_preserved=True,custom_days=[1,7,14,31],cross_year=True,invalid_range_rejected=True,remaining_b2b_light_verified=True,tipoff_timer_refresh=True,foreground_refresh=True,empty_season_selection_preserves_applied_period=True,statistics_unchanged=True,js_errors=errors,failed_requests=failed))
+            results.append(dict(width=width,nba_weeks=25,yahoo_weeks=23,espn_weeks=24,yahoo_short_opening_and_double_weeks=True,long_week_event_regressions=long_week_results,espn_all_periods_verified=True,retired_table_jquery_data_released=True,three_platform_roundtrips=espn_roundtrips,date_anchored_platform_switch=True,filters_search_mode_order_preserved=True,custom_days=[1,7,14,31],cross_year=True,invalid_range_rejected=True,remaining_b2b_light_verified=True,tipoff_timer_refresh=True,foreground_refresh=True,empty_season_selection_preserves_applied_period=True,statistics_unchanged=True,js_errors=errors,failed_requests=failed))
             context.close()
         browser.close()
     Path(output,'schedule-browser-result.json').write_text(json.dumps(dict(fixture=True,url=url,results=results),indent=2))

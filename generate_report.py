@@ -453,7 +453,7 @@ def generate_html_report():
     last_end = last_period.get('source_period_end','未查得')[:10]
     data_notice = (
         "選週只切換賽程，統計與PR維持報告更新時的資料。 "
-        "NBA 賽程週採美東週一至週日，首場當季例行賽所在週為 Week 1；Yahoo 採經核對的當季公開預設週表，私人聯盟設定可能不同；ESPN fantasy 週表未核實前不開放。近1週從今天起至週日。僅列來源已公布日期，尚未排定賽事不虛構；無比賽週仍保留。 "
+        "NBA 賽程週採美東週一至週日，首場當季例行賽所在週為 Week 1；Yahoo 採經核對的當季公開預設週表；ESPN 採已核實當季的全季 Weekly 週曆，未核實球季不開放。聯盟 matchup／季後賽日期可自訂。近1週從今天起至週日。僅列來源已公布日期，尚未排定賽事不虛構；無比賽週仍保留。 "
         f"報告產生時間：{generated_at}。ESPN 球員資料：當季 {metadata['season']}，上季 {metadata['last_season']} "
         f"例行賽來源期間至 {last_end}。近期窗口為美東日期 {today} 前完整7／14天。"
         f"球隊／球員名單取自本次 ESPN roster；比賽日期使用美東時間，四週範圍 {w1_start}–{final_end}。"
