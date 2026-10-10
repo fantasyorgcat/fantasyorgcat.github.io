@@ -942,7 +942,7 @@
       "events": 57
     }
   ],
-  "generated_at": "2026-10-10 11:28 UTC",
+  "generated_at": "2026-10-10 13:11 UTC",
   "stats_source": "ESPN",
   "defense_source": "PBP Stats",
   "period_populations": {
@@ -12954,8 +12954,6 @@
     }
   ],
   "fantasy_periods": {
-    "kind": "site_eastern_calendar",
-    "official_platform_mapping": false,
     "timezone": "America/New_York",
     "quick_periods": {
       "W1": {
@@ -12977,6 +12975,467 @@
         "start": "2026-10-26",
         "end": "2026-11-01",
         "label": "近4週 (10/26 - 11/01)"
+      }
+    },
+    "platforms": {
+      "NBA": {
+        "available": true,
+        "official_platform_mapping": false,
+        "periods": [
+          {
+            "number": 1,
+            "start": "2026-10-19",
+            "end": "2026-10-25",
+            "label": "NBA Week 1 · 2026-10-19–2026-10-25",
+            "platform": "NBA",
+            "kind": "site_eastern_calendar",
+            "events": 43
+          },
+          {
+            "number": 2,
+            "start": "2026-10-26",
+            "end": "2026-11-01",
+            "label": "NBA Week 2 · 2026-10-26–2026-11-01",
+            "platform": "NBA",
+            "kind": "site_eastern_calendar",
+            "events": 49
+          },
+          {
+            "number": 3,
+            "start": "2026-11-02",
+            "end": "2026-11-08",
+            "label": "NBA Week 3 · 2026-11-02–2026-11-08",
+            "platform": "NBA",
+            "kind": "site_eastern_calendar",
+            "events": 54
+          },
+          {
+            "number": 4,
+            "start": "2026-11-09",
+            "end": "2026-11-15",
+            "label": "NBA Week 4 · 2026-11-09–2026-11-15",
+            "platform": "NBA",
+            "kind": "site_eastern_calendar",
+            "events": 51
+          },
+          {
+            "number": 5,
+            "start": "2026-11-16",
+            "end": "2026-11-22",
+            "label": "NBA Week 5 · 2026-11-16–2026-11-22",
+            "platform": "NBA",
+            "kind": "site_eastern_calendar",
+            "events": 51
+          },
+          {
+            "number": 6,
+            "start": "2026-11-23",
+            "end": "2026-11-29",
+            "label": "NBA Week 6 · 2026-11-23–2026-11-29",
+            "platform": "NBA",
+            "kind": "site_eastern_calendar",
+            "events": 48
+          },
+          {
+            "number": 7,
+            "start": "2026-11-30",
+            "end": "2026-12-06",
+            "label": "NBA Week 7 · 2026-11-30–2026-12-06",
+            "platform": "NBA",
+            "kind": "site_eastern_calendar",
+            "events": 29
+          },
+          {
+            "number": 8,
+            "start": "2026-12-07",
+            "end": "2026-12-13",
+            "label": "NBA Week 8 · 2026-12-07–2026-12-13",
+            "platform": "NBA",
+            "kind": "site_eastern_calendar",
+            "events": 14
+          },
+          {
+            "number": 9,
+            "start": "2026-12-14",
+            "end": "2026-12-20",
+            "label": "NBA Week 9 · 2026-12-14–2026-12-20",
+            "platform": "NBA",
+            "kind": "site_eastern_calendar",
+            "events": 55
+          },
+          {
+            "number": 10,
+            "start": "2026-12-21",
+            "end": "2026-12-27",
+            "label": "NBA Week 10 · 2026-12-21–2026-12-27",
+            "platform": "NBA",
+            "kind": "site_eastern_calendar",
+            "events": 53
+          },
+          {
+            "number": 11,
+            "start": "2026-12-28",
+            "end": "2027-01-03",
+            "label": "NBA Week 11 · 2026-12-28–2027-01-03",
+            "platform": "NBA",
+            "kind": "site_eastern_calendar",
+            "events": 52
+          },
+          {
+            "number": 12,
+            "start": "2027-01-04",
+            "end": "2027-01-10",
+            "label": "NBA Week 12 · 2027-01-04–2027-01-10",
+            "platform": "NBA",
+            "kind": "site_eastern_calendar",
+            "events": 54
+          },
+          {
+            "number": 13,
+            "start": "2027-01-11",
+            "end": "2027-01-17",
+            "label": "NBA Week 13 · 2027-01-11–2027-01-17",
+            "platform": "NBA",
+            "kind": "site_eastern_calendar",
+            "events": 52
+          },
+          {
+            "number": 14,
+            "start": "2027-01-18",
+            "end": "2027-01-24",
+            "label": "NBA Week 14 · 2027-01-18–2027-01-24",
+            "platform": "NBA",
+            "kind": "site_eastern_calendar",
+            "events": 52
+          },
+          {
+            "number": 15,
+            "start": "2027-01-25",
+            "end": "2027-01-31",
+            "label": "NBA Week 15 · 2027-01-25–2027-01-31",
+            "platform": "NBA",
+            "kind": "site_eastern_calendar",
+            "events": 54
+          },
+          {
+            "number": 16,
+            "start": "2027-02-01",
+            "end": "2027-02-07",
+            "label": "NBA Week 16 · 2027-02-01–2027-02-07",
+            "platform": "NBA",
+            "kind": "site_eastern_calendar",
+            "events": 54
+          },
+          {
+            "number": 17,
+            "start": "2027-02-08",
+            "end": "2027-02-14",
+            "label": "NBA Week 17 · 2027-02-08–2027-02-14",
+            "platform": "NBA",
+            "kind": "site_eastern_calendar",
+            "events": 53
+          },
+          {
+            "number": 18,
+            "start": "2027-02-15",
+            "end": "2027-02-21",
+            "label": "NBA Week 18 · 2027-02-15–2027-02-21",
+            "platform": "NBA",
+            "kind": "site_eastern_calendar",
+            "events": 30
+          },
+          {
+            "number": 19,
+            "start": "2027-02-22",
+            "end": "2027-02-28",
+            "label": "NBA Week 19 · 2027-02-22–2027-02-28",
+            "platform": "NBA",
+            "kind": "site_eastern_calendar",
+            "events": 32
+          },
+          {
+            "number": 20,
+            "start": "2027-03-01",
+            "end": "2027-03-07",
+            "label": "NBA Week 20 · 2027-03-01–2027-03-07",
+            "platform": "NBA",
+            "kind": "site_eastern_calendar",
+            "events": 49
+          },
+          {
+            "number": 21,
+            "start": "2027-03-08",
+            "end": "2027-03-14",
+            "label": "NBA Week 21 · 2027-03-08–2027-03-14",
+            "platform": "NBA",
+            "kind": "site_eastern_calendar",
+            "events": 53
+          },
+          {
+            "number": 22,
+            "start": "2027-03-15",
+            "end": "2027-03-21",
+            "label": "NBA Week 22 · 2027-03-15–2027-03-21",
+            "platform": "NBA",
+            "kind": "site_eastern_calendar",
+            "events": 52
+          },
+          {
+            "number": 23,
+            "start": "2027-03-22",
+            "end": "2027-03-28",
+            "label": "NBA Week 23 · 2027-03-22–2027-03-28",
+            "platform": "NBA",
+            "kind": "site_eastern_calendar",
+            "events": 54
+          },
+          {
+            "number": 24,
+            "start": "2027-03-29",
+            "end": "2027-04-04",
+            "label": "NBA Week 24 · 2027-03-29–2027-04-04",
+            "platform": "NBA",
+            "kind": "site_eastern_calendar",
+            "events": 55
+          },
+          {
+            "number": 25,
+            "start": "2027-04-05",
+            "end": "2027-04-11",
+            "label": "NBA Week 25 · 2027-04-05–2027-04-11",
+            "platform": "NBA",
+            "kind": "site_eastern_calendar",
+            "events": 57
+          }
+        ],
+        "note": "NBA 賽程週：美東週一至週日；首場例行賽所在週為 Week 1。"
+      },
+      "YAHOO": {
+        "available": true,
+        "official_platform_mapping": true,
+        "periods": [
+          {
+            "number": 1,
+            "start": "2026-10-20",
+            "end": "2026-10-25",
+            "platform": "YAHOO",
+            "kind": "yahoo_public_default",
+            "default_playoff": false,
+            "label": "Yahoo Week 1 · 2026-10-20–2026-10-25"
+          },
+          {
+            "number": 2,
+            "start": "2026-10-26",
+            "end": "2026-11-01",
+            "platform": "YAHOO",
+            "kind": "yahoo_public_default",
+            "default_playoff": false,
+            "label": "Yahoo Week 2 · 2026-10-26–2026-11-01"
+          },
+          {
+            "number": 3,
+            "start": "2026-11-02",
+            "end": "2026-11-08",
+            "platform": "YAHOO",
+            "kind": "yahoo_public_default",
+            "default_playoff": false,
+            "label": "Yahoo Week 3 · 2026-11-02–2026-11-08"
+          },
+          {
+            "number": 4,
+            "start": "2026-11-09",
+            "end": "2026-11-15",
+            "platform": "YAHOO",
+            "kind": "yahoo_public_default",
+            "default_playoff": false,
+            "label": "Yahoo Week 4 · 2026-11-09–2026-11-15"
+          },
+          {
+            "number": 5,
+            "start": "2026-11-16",
+            "end": "2026-11-22",
+            "platform": "YAHOO",
+            "kind": "yahoo_public_default",
+            "default_playoff": false,
+            "label": "Yahoo Week 5 · 2026-11-16–2026-11-22"
+          },
+          {
+            "number": 6,
+            "start": "2026-11-23",
+            "end": "2026-11-29",
+            "platform": "YAHOO",
+            "kind": "yahoo_public_default",
+            "default_playoff": false,
+            "label": "Yahoo Week 6 · 2026-11-23–2026-11-29"
+          },
+          {
+            "number": 7,
+            "start": "2026-11-30",
+            "end": "2026-12-13",
+            "platform": "YAHOO",
+            "kind": "yahoo_public_default",
+            "default_playoff": false,
+            "label": "Yahoo Week 7 · 2026-11-30–2026-12-13 · 14天"
+          },
+          {
+            "number": 8,
+            "start": "2026-12-14",
+            "end": "2026-12-20",
+            "platform": "YAHOO",
+            "kind": "yahoo_public_default",
+            "default_playoff": false,
+            "label": "Yahoo Week 8 · 2026-12-14–2026-12-20"
+          },
+          {
+            "number": 9,
+            "start": "2026-12-21",
+            "end": "2026-12-27",
+            "platform": "YAHOO",
+            "kind": "yahoo_public_default",
+            "default_playoff": false,
+            "label": "Yahoo Week 9 · 2026-12-21–2026-12-27"
+          },
+          {
+            "number": 10,
+            "start": "2026-12-28",
+            "end": "2027-01-03",
+            "platform": "YAHOO",
+            "kind": "yahoo_public_default",
+            "default_playoff": false,
+            "label": "Yahoo Week 10 · 2026-12-28–2027-01-03"
+          },
+          {
+            "number": 11,
+            "start": "2027-01-04",
+            "end": "2027-01-10",
+            "platform": "YAHOO",
+            "kind": "yahoo_public_default",
+            "default_playoff": false,
+            "label": "Yahoo Week 11 · 2027-01-04–2027-01-10"
+          },
+          {
+            "number": 12,
+            "start": "2027-01-11",
+            "end": "2027-01-17",
+            "platform": "YAHOO",
+            "kind": "yahoo_public_default",
+            "default_playoff": false,
+            "label": "Yahoo Week 12 · 2027-01-11–2027-01-17"
+          },
+          {
+            "number": 13,
+            "start": "2027-01-18",
+            "end": "2027-01-24",
+            "platform": "YAHOO",
+            "kind": "yahoo_public_default",
+            "default_playoff": false,
+            "label": "Yahoo Week 13 · 2027-01-18–2027-01-24"
+          },
+          {
+            "number": 14,
+            "start": "2027-01-25",
+            "end": "2027-01-31",
+            "platform": "YAHOO",
+            "kind": "yahoo_public_default",
+            "default_playoff": false,
+            "label": "Yahoo Week 14 · 2027-01-25–2027-01-31"
+          },
+          {
+            "number": 15,
+            "start": "2027-02-01",
+            "end": "2027-02-07",
+            "platform": "YAHOO",
+            "kind": "yahoo_public_default",
+            "default_playoff": false,
+            "label": "Yahoo Week 15 · 2027-02-01–2027-02-07"
+          },
+          {
+            "number": 16,
+            "start": "2027-02-08",
+            "end": "2027-02-14",
+            "platform": "YAHOO",
+            "kind": "yahoo_public_default",
+            "default_playoff": false,
+            "label": "Yahoo Week 16 · 2027-02-08–2027-02-14"
+          },
+          {
+            "number": 17,
+            "start": "2027-02-15",
+            "end": "2027-02-28",
+            "platform": "YAHOO",
+            "kind": "yahoo_public_default",
+            "default_playoff": false,
+            "label": "Yahoo Week 17 · 2027-02-15–2027-02-28 · 14天"
+          },
+          {
+            "number": 18,
+            "start": "2027-03-01",
+            "end": "2027-03-07",
+            "platform": "YAHOO",
+            "kind": "yahoo_public_default",
+            "default_playoff": false,
+            "label": "Yahoo Week 18 · 2027-03-01–2027-03-07"
+          },
+          {
+            "number": 19,
+            "start": "2027-03-08",
+            "end": "2027-03-14",
+            "platform": "YAHOO",
+            "kind": "yahoo_public_default",
+            "default_playoff": false,
+            "label": "Yahoo Week 19 · 2027-03-08–2027-03-14"
+          },
+          {
+            "number": 20,
+            "start": "2027-03-15",
+            "end": "2027-03-21",
+            "platform": "YAHOO",
+            "kind": "yahoo_public_default",
+            "default_playoff": true,
+            "label": "Yahoo Week 20 · 2027-03-15–2027-03-21 · 預設季後賽"
+          },
+          {
+            "number": 21,
+            "start": "2027-03-22",
+            "end": "2027-03-28",
+            "platform": "YAHOO",
+            "kind": "yahoo_public_default",
+            "default_playoff": true,
+            "label": "Yahoo Week 21 · 2027-03-22–2027-03-28 · 預設季後賽"
+          },
+          {
+            "number": 22,
+            "start": "2027-03-29",
+            "end": "2027-04-04",
+            "platform": "YAHOO",
+            "kind": "yahoo_public_default",
+            "default_playoff": true,
+            "label": "Yahoo Week 22 · 2027-03-29–2027-04-04 · 預設季後賽"
+          },
+          {
+            "number": 23,
+            "start": "2027-04-05",
+            "end": "2027-04-11",
+            "platform": "YAHOO",
+            "kind": "yahoo_public_default",
+            "default_playoff": false,
+            "label": "Yahoo Week 23 · 2027-04-05–2027-04-11"
+          }
+        ],
+        "source_url": "https://basketball.fantasysports.yahoo.com/nba/gamedates",
+        "verified_at": "2026-10-10T11:49:35Z",
+        "scope": "Yahoo public default game weeks; private league settings may differ",
+        "default_playoffs": {
+          "start": "2027-03-15",
+          "end": "2027-04-04"
+        },
+        "note": "Yahoo 公開預設週次；自訂聯盟日期可能不同。週表核對：2026-10-10。"
+      },
+      "ESPN": {
+        "available": false,
+        "official_platform_mapping": false,
+        "periods": [],
+        "note": "ESPN 2026-27 fantasy 週表待核；可用自訂期間。"
       }
     }
   }
