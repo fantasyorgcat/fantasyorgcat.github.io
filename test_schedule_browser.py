@@ -54,7 +54,16 @@ def run(url,output):
             page.clock.install(time='2026-10-25T12:00:00Z')
             page.on('pageerror',lambda e:errors.append(str(e)));page.on('requestfailed',lambda r:failed.append(r.url))
             assert page.goto(url,wait_until='load').status==200
-            page.wait_for_function('Object.keys(tables).length===4')
+            page.wait_for_function('Object.keys(tables).length===5')
+            assert page.locator('[data-platform]').count()==3
+            assert page.locator('[data-platform="NBA"]').get_attribute('aria-pressed')=='true'
+            assert page.locator('[data-platform="ESPN"]').is_disabled()
+            assert '待核' in page.locator('[data-platform="ESPN"]').inner_text()
+            assert page.locator('#season-week option').count()==26
+            assert 'active' not in page.locator('#apply-custom-period').get_attribute('class')
+            assert not page.locator('#schedule-extras').get_attribute('open')
+            page.locator('#schedule-extras summary').click()
+            page.locator('#defaultOpen').click()
             # Opening shortcut has four real date columns, no statistics masquerading as dates.
             assert page.evaluate("tables.W1.columns('[data-schedule-day]').count()") == 4
             page.evaluate("tables.W1.search('Fixture Alpha 0',false,false).draw()")
@@ -74,7 +83,7 @@ def run(url,output):
             assert '延賽' in page.locator('#comparison-body').inner_text()
             # Scheduled open + two B2B + final; postponed/cancelled do not inflate total.
             assert page.locator('#comparison-body tr td').nth(1).inner_text()=='4'
-            page.locator('.period-tools summary').click()
+            page.locator('#schedule-metrics summary').click()
             values=page.locator('#schedule-insights tr[data-team="LAL"] td').all_text_contents()
             assert values==['LAL','4','2','1','2','2'],values
             # Crossing tipoff needs no click or table redraw: the minute timer removes
@@ -108,6 +117,7 @@ def run(url,output):
             apply('2027-02-15','2027-02-28') # All-Star-shaped custom range is not an official platform claim.
             assert page.locator('#comparison-body tr td').nth(1).inner_text()=='0'
             assert page.locator('#comparison-body .comparison-matchup').count()==14
+            assert '沒有已公布日期' in page.locator('#teamTableWCustom').inner_text()
             apply('2026-11-02','2026-11-01');assert page.locator('#period-error').is_visible()
             assert page.evaluate('activeWeek')=='WCustom'
             apply('2026-10-01','2026-11-01');assert page.locator('#period-error').is_visible()
@@ -115,25 +125,60 @@ def run(url,output):
             apply('2026-10-20','2026-11-19');assert page.locator('#comparison-body .comparison-matchup').count()==31
             page.locator('.tablinks').nth(3).click();assert page.evaluate('activeWeek')=='W4'
             assert page.locator('#comparison-body .comparison-matchup').count()==7
-            page.locator('#season-week').select_option('0');assert page.evaluate('activeWeek')=='WSeason'
+            page.locator('[data-platform="NBA"]').click()
+            page.locator('#season-week').select_option('0');assert page.evaluate('activeWeek')=='WCustom'
             assert page.locator('#comparison-body .comparison-matchup').count()==7
             # The empty placeholder cannot become numeric index zero on a draw.
             # All three surfaces keep the applied closing week.
             page.locator('#season-week').select_option('24')
-            season_before=page.evaluate("JSON.stringify({headers:tables.WSeason.columns('[data-schedule-day]').indexes().toArray().map(i=>tables.WSeason.column(i).header().textContent),rows:tables.WSeason.rows().data().toArray(),comparison:document.getElementById('comparison-body').innerHTML,heading:document.getElementById('season-week-heading').textContent})")
+            season_before=page.evaluate("JSON.stringify({headers:tables.WCustom.columns('[data-schedule-day]').indexes().toArray().map(i=>tables.WCustom.column(i).header().textContent),rows:tables.WCustom.rows().data().toArray(),comparison:document.getElementById('comparison-body').innerHTML,heading:document.getElementById('custom-period-heading').textContent})")
             page.locator('#season-week').select_option('')
-            page.evaluate('tables.WSeason.draw(false)')
+            page.evaluate('tables.WCustom.draw(false)')
             assert page.locator('#season-week').input_value()=='24'
             assert page.evaluate('appliedSeasonWeek')==24
             assert '2027-04-05–2027-04-11' in page.locator('#schedule-period-context').inner_text()
             assert page.locator('#schedule-insights tr[data-team="LAL"] td').all_text_contents()==['LAL','1','1','0','1','0']
-            assert season_before==page.evaluate("JSON.stringify({headers:tables.WSeason.columns('[data-schedule-day]').indexes().toArray().map(i=>tables.WSeason.column(i).header().textContent),rows:tables.WSeason.rows().data().toArray(),comparison:document.getElementById('comparison-body').innerHTML,heading:document.getElementById('season-week-heading').textContent})")
+            assert season_before==page.evaluate("JSON.stringify({headers:tables.WCustom.columns('[data-schedule-day]').indexes().toArray().map(i=>tables.WCustom.column(i).header().textContent),rows:tables.WCustom.rows().data().toArray(),comparison:document.getElementById('comparison-body').innerHTML,heading:document.getElementById('custom-period-heading').textContent})")
+            # Official Yahoo defaults have their own week numbers and day counts.
+            page.locator('[data-platform="YAHOO"]').focus();page.locator('[data-platform="YAHOO"]').press('Enter')
+            assert page.locator('#season-week option').count()==24
+            assert page.locator('#season-week').input_value()=='22' # Apr 5 belongs to Yahoo 23, NBA 25.
+            page.locator('#season-week').select_option('0')
+            assert page.evaluate("tables.WCustom.columns('[data-schedule-day]').count()") == 6
+            assert page.locator('#comparison-body .comparison-matchup').count()==6
+            assert '2026-10-20–2026-10-25' in page.locator('#comparison-meta').inner_text()
+            for index,start,end in [('6','2026-11-30','2026-12-13'),('16','2027-02-15','2027-02-28')]:
+                page.locator('#season-week').select_option(index)
+                assert page.evaluate("tables.WCustom.columns('[data-schedule-day]').count()") == 14
+                assert page.locator('#comparison-body .comparison-matchup').count()==14
+                for selector in ['#custom-period-heading','#comparison-meta','#schedule-period-context']:
+                    assert start+'–'+end in page.locator(selector).inner_text()
+            page.locator('#season-week').select_option('19')
+            assert '預設季後賽' in page.locator('#comparison-meta').inner_text()
+            page.locator('#season-week').select_option('7')
+            page.evaluate("filterTeam(null,'LAL','WCustom')")
+            page.locator('#WeekCustom [data-period="LS"]').click();page.locator('#WeekCustom [data-mode="TOT"]').click()
+            page.evaluate("tables.WCustom.page.len(50).search('Fixture Alpha',false,false).order([tables.WCustom.column('.rank-ls-tot').index(),'asc']).draw()")
+            # Date anchoring maps Yahoo 8 to NBA 9 rather than preserving a number.
+            page.locator('[data-platform="NBA"]').click()
+            assert page.locator('#season-week').input_value()=='8'
+            assert page.evaluate("viewState.WCustom.mode==='tot'&&viewState.WCustom.period==='ls'&&teamSelection.WCustom==='LAL'&&tables.WCustom.search()==='Fixture Alpha'")
+            assert page.evaluate("tables.WCustom.column(tables.WCustom.order()[0][0]).header().classList.contains('rank-ls-tot')")
+            assert page.evaluate('tables.WCustom.page.len()')==50
+            page.locator('[data-platform="YAHOO"]').click()
+            assert page.locator('#season-week').input_value()=='7'
+            # A merged Yahoo week must not lose the second NBA week's anchor
+            # when switching back to NBA.
+            page.locator('[data-platform="NBA"]').click();page.locator('#season-week').select_option('18')
+            page.locator('[data-platform="YAHOO"]').click();assert page.locator('#season-week').input_value()=='16'
+            page.locator('[data-platform="NBA"]').click();assert page.locator('#season-week').input_value()=='18'
+            assert original==page.evaluate("JSON.stringify(playerCatalog['1'].periods)")
             assert original==page.evaluate("JSON.stringify(playerCatalog['1'].periods)")
             apply('2026-10-20','2026-11-02');page.locator('#show-all-players').click()
             assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+1')
             page.screenshot(path=str(Path(output)/('schedule-preview-'+str(width)+'.png')),full_page=False)
             assert not errors,errors;assert not failed,failed
-            results.append(dict(width=width,custom_days=[1,7,14,31],cross_year=True,invalid_range_rejected=True,remaining_b2b_light_verified=True,tipoff_timer_refresh=True,foreground_refresh=True,empty_season_selection_preserves_applied_period=True,statistics_unchanged=True,js_errors=errors,failed_requests=failed))
+            results.append(dict(width=width,nba_weeks=25,yahoo_weeks=23,yahoo_short_opening_and_double_weeks=True,espn_disabled_unverified=True,date_anchored_platform_switch=True,filters_search_mode_order_preserved=True,custom_days=[1,7,14,31],cross_year=True,invalid_range_rejected=True,remaining_b2b_light_verified=True,tipoff_timer_refresh=True,foreground_refresh=True,empty_season_selection_preserves_applied_period=True,statistics_unchanged=True,js_errors=errors,failed_requests=failed))
             context.close()
         browser.close()
     Path(output,'schedule-browser-result.json').write_text(json.dumps(dict(fixture=True,url=url,results=results),indent=2))

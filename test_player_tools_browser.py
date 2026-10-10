@@ -13,7 +13,8 @@ def run(url):
    page.on('pageerror',lambda e:errors.append(str(e)));page.on('requestfailed',lambda r:failed.append(r.url))
    page.on('request',lambda r:external.append(r.url) if not r.url.startswith(url.split('/fantasy_')[0].rstrip('/')+'/') else None)
    assert page.goto(url,wait_until='load',timeout=60000).status==200
-   page.wait_for_function('Object.keys(tables).length===4')
+   page.wait_for_function('Object.keys(tables).length===5')
+   page.locator('#schedule-extras summary').click();page.locator('#defaultOpen').click()
    page.evaluate('''()=>{const keys=['PTS','REB','AST','3PM','STL','BLK','FG%','FT%','TO'];for(const p of Object.values(playerCatalog))for(const period of Object.values(p.periods))for(const mode of ['avg','tot']){const pr=keys.map(k=>period[mode][k].pr),actual=period[mode].Rank.sum;if(pr.some(v=>v===null)){if(actual!==null)throw Error('Incomplete nine PRs excluding minutes ranked');}else{const expected=pr.reduce((a,b)=>a+b,0);if(actual===null||Math.abs(actual-expected)>1e-9)throw Error('Rank sum includes minutes or wrong metrics');}}}''')
    page.evaluate('''()=>{for(const period of ['season','l7','l14','ls'])for(const mode of ['avg','tot']){const cells=Object.values(playerCatalog).map(p=>p.periods[period][mode].TO).filter(c=>c.value!==null&&c.pr!==null).sort((a,b)=>a.value-b.value);for(let i=1;i<cells.length;i++){if(cells[i].pr>cells[i-1].pr||cells[i].value===cells[i-1].value&&cells[i].pr!==cells[i-1].pr)throw Error('TO PR direction/ties wrong');}}}''')
    assert page.locator('[data-pick="roster"],#roster-panel,#show-roster,#import-roster,#export-roster').count()==0
@@ -40,8 +41,9 @@ def run(url):
    page.locator('#comparison-head button[data-sort="Rank"]').click()
    values=page.locator('#comparison-body tr td').evaluate_all('(nodes)=>nodes.filter(n=>n.cellIndex===20).map(n=>Number(n.dataset.value)).filter(n=>n>0)');assert values==sorted(values)
    weeks=page.evaluate('seasonWeeks');assert len(weeks)==25
+   page.locator('[data-platform="NBA"]').click()
    for i in range(len(weeks)):
-    page.locator('#season-week').select_option(str(i));assert exact()=='WSeason';assert page.locator('#comparison-body tr').count()==2;assert ranks()==before
+    page.locator('#season-week').select_option(str(i));assert exact()=='WCustom';assert page.locator('#comparison-body tr').count()==2;assert ranks()==before
    page.locator('#season-week').select_option('0');exact()
    assert page.evaluate('seasonWeeks[0].start') if 'start' in weeks[0] else weeks[0]['number']==1
    page.locator('#comparison-mode').select_option('tot');page.locator('#comparison-head button[data-sort="PTS"]').click()
@@ -62,7 +64,7 @@ def run(url):
    page.locator('#comparison-body button').first.click();assert page.locator('#comparison-body tr').count()==1
    page.locator('#clear-comparison').click();assert not page.locator('#comparison-panel').is_visible()
    assert page.evaluate('storageCalls')==[];assert page.evaluate('savedRoster()')=='existing-user-data'
-   page.reload(wait_until='load');page.wait_for_function('Object.keys(tables).length===4');assert not page.locator('#comparison-panel').is_visible();assert page.evaluate('storageCalls')==[]
+   page.reload(wait_until='load');page.wait_for_function('Object.keys(tables).length===5');assert not page.locator('#comparison-panel').is_visible();assert page.evaluate('storageCalls')==[]
    assert not errors,errors;assert not failed,failed;assert not external,external
    results.append(dict(width=width,season_weeks=len(weeks),cross_team_ids=pair,exact_schedule_all_weeks=True,storage_calls=[],existing_storage_preserved=True,zero_games_and_missing=True,rank_global_and_week_invariant=True,rank_numeric_sort=True,rank_missing_is_unranked=True,js_errors=errors,failed_requests=failed,external_requests=external));ctx.close()
   browser.close()

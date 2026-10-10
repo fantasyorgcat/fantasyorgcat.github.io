@@ -25,7 +25,7 @@
    for(const metric of metrics){const td=row.insertCell(),v=value(p,metric);td.dataset.metric=metric;td.dataset.value=v===null?'':String(v);td.textContent=v===null?'—':['GP','Rank'].includes(metric)||(mode==='tot'&&['PTS','REB','AST','3PM','STL','BLK','TO'].includes(metric))?String(v):v.toFixed(1)+(metric.endsWith('%')?'%':'');if(metric!=='GP'&&v!==null){const pr=p.periods[period][mode][metric].pr;if(pr!==null){const small=document.createElement('small');small.textContent='PR '+Math.round(pr);td.appendChild(small);}}}body.appendChild(row);
   }
   const names={season:'本季 '+playerToolsMeta.season,l7:'近7天',l14:'近14天',ls:'上季 '+playerToolsMeta.lastSeason};
-  const label=activeWeek==='WSeason'?byId('season-week-heading').textContent:activeWeek==='WCustom'?byId('custom-period-heading').textContent:document.querySelector('.tablinks.active').textContent;
+  const label=activeWeek==='WCustom'?byId('custom-period-heading').textContent:document.querySelector('.tablinks.active').textContent;
   byId('comparison-meta').textContent=label+' · '+names[period]+' · '+mode.toUpperCase();
  }
  $(document).ready(function(){
