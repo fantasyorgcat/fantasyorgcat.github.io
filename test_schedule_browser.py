@@ -21,7 +21,9 @@ def build_fixture(target):
     shutil.copytree(ROOT/'assets',target/'assets',dirs_exist_ok=True)
     records=[]
     # 25 calendar weeks, four-day opening shortcut, cross-year and DST events.
-    for eid,stamp,status in [('open','2026-10-21T01:00:00Z','scheduled'),('b2b1','2026-10-27T01:00:00Z','scheduled'),('b2b2','2026-10-28T01:00:00Z','scheduled'),('winter','2027-01-01T02:30:00Z','scheduled'),('final','2026-10-22T01:00:00Z','final'),('late','2026-10-23T01:00:00Z','postponed'),('cancel','2026-10-24T01:00:00Z','cancelled'),('tbd',None,'scheduled'),('closing','2027-04-12T00:30:00Z','scheduled')]:
+    for eid,stamp,status in [('open','2026-10-21T01:00:00Z','scheduled'),('b2b1','2026-10-27T01:00:00Z','scheduled'),('b2b2','2026-10-28T01:00:00Z','scheduled'),('winter','2027-01-01T02:30:00Z','scheduled'),('final','2026-10-22T01:00:00Z','final'),('late','2026-10-23T01:00:00Z','postponed'),('cancel','2026-10-24T01:00:00Z','cancelled'),('tbd',None,'scheduled'),('closing','2027-04-12T00:30:00Z','scheduled'),
+            ('cup-first','2026-12-03T01:00:00Z','scheduled'),('cup-second','2026-12-10T01:00:00Z','scheduled'),
+            ('allstar-first','2027-02-19T01:00:00Z','scheduled'),('allstar-second','2027-02-26T01:00:00Z','scheduled')]:
         from datetime import datetime
         from zoneinfo import ZoneInfo
         day=datetime.fromisoformat(stamp.replace('Z','+00:00')).astimezone(ZoneInfo('America/New_York')).date() if stamp else None
@@ -37,7 +39,7 @@ def build_fixture(target):
     stats=dict(Season=pd.DataFrame(columns=utils.COLUMNS),L7=pd.DataFrame(columns=utils.COLUMNS),L14=pd.DataFrame(columns=utils.COLUMNS),LastSeason=pd.DataFrame(prior,columns=utils.COLUMNS),Roster=roster,metadata={'season':'2026-27','last_season':'2025-26'})
     old_cwd=Path.cwd();old_provenance=dict(utils.PROVENANCE)
     try:
-        os.chdir(target);utils.PROVENANCE.clear();utils.PROVENANCE.update(fixture=True,roster_players=605,schedule=dict(season='2026-27',published_events=8,undated_events=1),players_2026=dict(population=578,source_period_end='2026-04-13'),defense=dict(source='PBP Stats',eligible_teams=0))
+        os.chdir(target);utils.PROVENANCE.clear();utils.PROVENANCE.update(fixture=True,roster_players=605,schedule=dict(season='2026-27',published_events=12,undated_events=1),players_2026=dict(population=578,source_period_end='2026-04-13'),defense=dict(source='PBP Stats',eligible_teams=0))
         with patch.object(utils,'today',return_value=date(2026,10,1)),patch.object(utils,'get_season_schedule',return_value=schedule),patch.object(utils,'get_player_stats_multi_period',return_value=stats),patch.object(utils,'get_team_defensive_ratings',return_value={}):generate_html_report()
         path=target/'fantasy_nba_report_v2.html';html=path.read_text();html=html.replace('<title>','<title>UI TEST ONLY · ').replace('把下一場，排進你的陣容。','UI TEST ONLY · 合成資料驗證');path.write_text(html)
     finally:os.chdir(old_cwd);utils.PROVENANCE.clear();utils.PROVENANCE.update(old_provenance)
@@ -114,10 +116,12 @@ def run(url,output):
             assert page.evaluate("viewState.WCustom.mode==='tot'&&viewState.WCustom.period==='ls'&&teamSelection.WCustom==='LAL'")
             assert page.evaluate("tables.WCustom.column(tables.WCustom.order()[0][0]).header().classList.contains('rank-ls-tot')")
             assert original==page.evaluate("JSON.stringify(playerCatalog['1'].periods)")
-            apply('2027-02-15','2027-02-28') # All-Star-shaped custom range is not an official platform claim.
+            apply('2027-01-11','2027-01-24')
             assert page.locator('#comparison-body tr td').nth(1).inner_text()=='0'
             assert page.locator('#comparison-body .comparison-matchup').count()==14
             assert '沒有已公布日期' in page.locator('#teamTableWCustom').inner_text()
+            apply('2027-02-15','2027-02-28') # A custom range alone is not an official platform claim.
+            assert page.locator('#comparison-body tr td').nth(1).inner_text()=='2'
             apply('2026-11-02','2026-11-01');assert page.locator('#period-error').is_visible()
             assert page.evaluate('activeWeek')=='WCustom'
             apply('2026-10-01','2026-11-01');assert page.locator('#period-error').is_visible()
@@ -147,12 +151,33 @@ def run(url,output):
             assert page.evaluate("tables.WCustom.columns('[data-schedule-day]').count()") == 6
             assert page.locator('#comparison-body .comparison-matchup').count()==6
             assert '2026-10-20–2026-10-25' in page.locator('#comparison-meta').inner_text()
-            for index,start,end in [('6','2026-11-30','2026-12-13'),('16','2027-02-15','2027-02-28')]:
+            long_week_results=[]
+            for index,start,end,nba_indices,event_dates in [
+                    ('6','2026-11-30','2026-12-13',['6','7'],['2026-12-02','2026-12-09']),
+                    ('16','2027-02-15','2027-02-28',['17','18'],['2027-02-18','2027-02-25'])]:
                 page.locator('#season-week').select_option(index)
                 assert page.evaluate("tables.WCustom.columns('[data-schedule-day]').count()") == 14
                 assert page.locator('#comparison-body .comparison-matchup').count()==14
                 for selector in ['#custom-period-heading','#comparison-meta','#schedule-period-context']:
                     assert start+'–'+end in page.locator(selector).inner_text()
+                def merged_schedule():
+                    return page.evaluate("""()=>{const t=tables.WCustom,columns=t.columns('[data-schedule-day]').indexes().toArray(),r=t.rows({search:'none'}).data().toArray().find(r=>r[1]==='LAL');return {games:Number(r[2]),dates:columns.filter(i=>r[i]).map(i=>t.column(i).header().textContent.slice(0,10)),comparisonGames:Number(document.querySelector('#comparison-body tr').cells[1].textContent),comparisonDates:Array.from(document.querySelector('#comparison-body tr').cells).filter(c=>c.classList.contains('comparison-matchup')&&c.innerHTML).map(c=>document.querySelector('#comparison-head tr').cells[c.cellIndex].textContent.slice(0,10))};}""")
+                merged=merged_schedule()
+                assert merged==dict(games=2,dates=event_dates,comparisonGames=2,comparisonDates=event_dates),merged
+                assert page.locator('#teamTableWCustom tr[data-team="LAL"] td').nth(1).inner_text()=='2'
+                assert page.locator('#schedule-insights tr[data-team="LAL"] td').all_text_contents()==['LAL','2','2','0','2','0']
+                for nba_index,event_date in zip(nba_indices,event_dates):
+                    page.locator('[data-platform="NBA"]').click();page.locator('#season-week').select_option(nba_index)
+                    single=merged_schedule()
+                    assert single==dict(games=1,dates=[event_date],comparisonGames=1,comparisonDates=[event_date]),single
+                    page.locator('[data-platform="YAHOO"]').click()
+                    assert page.locator('#season-week').input_value()==index
+                    assert merged_schedule()==merged
+                    page.locator('[data-platform="NBA"]').click()
+                    assert page.locator('#season-week').input_value()==nba_index
+                    assert merged_schedule()==single
+                    page.locator('[data-platform="YAHOO"]').click()
+                long_week_results.append(dict(yahoo_week=int(index)+1,nba_weeks=[int(i)+1 for i in nba_indices],event_dates=event_dates,merged_games=2,nba_games=[1,1],comparison_verified=True,roundtrips_verified=True))
             page.locator('#season-week').select_option('19')
             assert '預設季後賽' in page.locator('#comparison-meta').inner_text()
             page.locator('#season-week').select_option('7')
@@ -173,12 +198,11 @@ def run(url,output):
             page.locator('[data-platform="YAHOO"]').click();assert page.locator('#season-week').input_value()=='16'
             page.locator('[data-platform="NBA"]').click();assert page.locator('#season-week').input_value()=='18'
             assert original==page.evaluate("JSON.stringify(playerCatalog['1'].periods)")
-            assert original==page.evaluate("JSON.stringify(playerCatalog['1'].periods)")
             apply('2026-10-20','2026-11-02');page.locator('#show-all-players').click()
             assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+1')
             page.screenshot(path=str(Path(output)/('schedule-preview-'+str(width)+'.png')),full_page=False)
             assert not errors,errors;assert not failed,failed
-            results.append(dict(width=width,nba_weeks=25,yahoo_weeks=23,yahoo_short_opening_and_double_weeks=True,espn_disabled_unverified=True,date_anchored_platform_switch=True,filters_search_mode_order_preserved=True,custom_days=[1,7,14,31],cross_year=True,invalid_range_rejected=True,remaining_b2b_light_verified=True,tipoff_timer_refresh=True,foreground_refresh=True,empty_season_selection_preserves_applied_period=True,statistics_unchanged=True,js_errors=errors,failed_requests=failed))
+            results.append(dict(width=width,nba_weeks=25,yahoo_weeks=23,yahoo_short_opening_and_double_weeks=True,long_week_event_regressions=long_week_results,espn_disabled_unverified=True,date_anchored_platform_switch=True,filters_search_mode_order_preserved=True,custom_days=[1,7,14,31],cross_year=True,invalid_range_rejected=True,remaining_b2b_light_verified=True,tipoff_timer_refresh=True,foreground_refresh=True,empty_season_selection_preserves_applied_period=True,statistics_unchanged=True,js_errors=errors,failed_requests=failed))
             context.close()
         browser.close()
     Path(output,'schedule-browser-result.json').write_text(json.dumps(dict(fixture=True,url=url,results=results),indent=2))

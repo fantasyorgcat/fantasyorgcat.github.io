@@ -24,11 +24,20 @@ Passed:
 - `test_dashboard_browser.py`: 605-player roster, all four original quick views, independent team filters, all/search reset, period/mode retention, numeric percentage and integer totals, collapsed controls, mobile overflow and scroll behavior; no JS errors or failed resources.
 - `test_player_tools_browser.py`, 1500px and 390px: cross-team keyboard selection, every NBA week comparison, invariant global ranks and numeric sorting, missing values, safe text, removal/clear, zero application storage calls and preserved existing browser data; no JS errors, failed or external requests.
 
-Browser tests use an isolated **605-player / 578-last-season, 9-event synthetic fixture**, clearly labelled UI TEST ONLY with fixture=true provenance. It does not claim fresh upstream availability, production rendering, real player projections or live acceptance. Screenshots and JSON outputs are review evidence and must not be deployed.
+Browser tests use an isolated **605-player / 578-last-season, 13-event synthetic fixture** (12 dated, 1 undated), clearly labelled UI TEST ONLY with fixture=true provenance. It does not claim fresh upstream availability, production rendering, real player projections or live acceptance. Screenshots and JSON outputs are review evidence and must not be deployed.
+
+The added event regression puts a real fixture event in **each half** of both Yahoo double weeks, rather than checking only 14 date columns:
+
+| Yahoo default period | NBA site weeks / event Eastern dates | Expected counts and round trips |
+|---|---|---|
+| Week7, Nov30–Dec13 | Week7: Dec2; Week8: Dec9 | Each NBA view has1 game; Yahoo merged view has2. Team table, player table, comparison game count and nonempty comparison dates agree. From either NBA week, NBA→Yahoo→NBA returns to the same week and event. |
+| Week17, Feb15–28 | Week18: Feb18; Week19: Feb25 | Same1+1→2 checks for both halves, including comparison and round trips. |
+
+Both cases run at1500px and390px; the merged insights row additionally verifies2 scheduled /2 remaining /0 B2B /2 light /0 pending. JSON records contain each Yahoo week, both NBA weeks, actual fixture dates, counts and comparison/round-trip checks. The43 unit command and all four browser scripts are rerun after this fixture expansion; no production source or scoring change is needed.
 
 ## Size and remaining limitations
 
-Real checked-in main index.html: **33,074,512 bytes**. Identical old/new synthetic fixture: **30,165,745 → 24,166,200 bytes** (5,999,545 bytes, about19.9% smaller). Removal of an extra complete season player panel and repeated rich season HTML avoids another Yahoo table copy. No performance profile or speed guarantee; final production-generated size has not been measured.
+Real checked-in main index.html: **33,074,512 bytes**. The initial identical old/new **9-event** synthetic fixture measured **30,165,745 → 24,166,200 bytes** (5,999,545 bytes, about19.9% smaller), before the later13-event regression expansion. Removal of an extra complete season player panel and repeated rich season HTML avoids another Yahoo table copy. No performance profile or speed guarantee; final production-generated size has not been measured.
 
 The Library reference screenshot `libfile_4e64515b8a2c819192a976d0486ecaa1` was resolved. Both the initial supported materialization and the single consumer-local retry failed to download; both expected files were confirmed absent. Native image read returned a pointer/caption without pixels, so the provided reference was **not visually inspected**. This draft follows the explicit three-button/dropdown request independently; it does not claim visual matching. Generated draft screenshots were inspected locally at desktop/mobile sizes.
 
