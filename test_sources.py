@@ -39,9 +39,9 @@ class Sources(unittest.TestCase):
         with patch.object(utils,'read_json',side_effect=[page,other]):
             with self.assertRaises(ValueError):utils.league_stats(2026)
     def test_color_missing_is_neutral(self):
-        self.assertEqual(utils.get_color_for_rank(None,0),'#eeeeee')
-        self.assertEqual(utils.get_color_for_rank(1,30),'#ffcccc')
-        self.assertEqual(utils.get_color_for_rank(30,30),'#ccffcc')
+        self.assertEqual(utils.get_color_for_rank(None,0),'#dedbd5')
+        self.assertEqual(utils.get_color_for_rank(1,30),'#dfc5c8')
+        self.assertEqual(utils.get_color_for_rank(30,30),'#c5d5dc')
     def test_turnover_numeric_strings_zero_null_and_invalid(self):
         self.assertEqual(utils.parse_turnovers('0',total=True),0)
         self.assertEqual(utils.parse_turnovers(' 2.5 '),2.5)
