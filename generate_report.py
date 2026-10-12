@@ -21,9 +21,10 @@ def matchup_badge(opp_abbr, is_home, ratings):
         rank,population=info['Rank'],info['Population']
         color=utils.get_color_for_rank(rank,population)
         note=f"PBP Stats 最近10場已完成例行賽 (可跨季): {info['DefRtg']:.1f}失分/100防守回合; 排名 {rank}/{population}; {info['Games']}/10場; {info['Start']}–{info['End']}"
-        detail=f"近10場 {rank}/{population} · {info['Games']}/10"
+        difficulty=['較難打','稍難打','中段','稍好打','較好打'][min(4,int((rank-1)/population*5))]
+        detail=f"{difficulty} {rank}/{population} · {info['Games']}/10"
     else:
-        color,note,detail='#eeeeee','最近10場例行賽防守資料暫缺','防守暫缺 · 0/10'
+        color,note,detail=utils.get_color_for_rank(None),'最近10場例行賽防守資料暫缺','防守暫缺 · 0/10'
     return f"<div class='matchup' style='background-color:{color};padding:4px;border-radius:4px;text-align:center;font-weight:bold' title='{escape(note,quote=True)}'>{label}<br><small>{escape(detail)}</small></div>"
 
 
@@ -201,7 +202,7 @@ def generate_html_report():
                     merged[c] = merged[c].fillna('-')
 
         # Format Player
-        merged['Player'] = merged.apply(lambda x: f"<b>{escape(str(x['PLAYER_NAME']))}</b> <br><span style='color:#888'>{escape(str(x['TEAM_ABBREVIATION']))}</span>", axis=1)
+        merged['Player'] = merged.apply(lambda x: f"<b>{escape(str(x['PLAYER_NAME']))}</b> <br><span style='color:var(--muted)'>{escape(str(x['TEAM_ABBREVIATION']))}</span>", axis=1)
 
         # Format Stats (Season)
         merged['FG%'] = (merged['FG_PCT'] * 100).map(lambda v: f'{v:.1f}%' if pd.notna(v) else pd.NA)
@@ -355,7 +356,7 @@ def generate_html_report():
                 pr_val = row.get(pr_key)
                 pr_html = ""
                 if pr_val is not None and not pd.isna(pr_val):
-                    pr_html = f"<br><span style='font-size:0.75em; color:#999;'>PR {int(round(pr_val))}</span>"
+                    pr_html = f"<br><span style='font-size:0.75em; color:var(--muted);'>PR {int(round(pr_val))}</span>"
 
                 style = "" if visible else "display:none"
                 return f"<td class='{css_class}' style='{style}' data-order='{sort_val}'>{display_val}{pr_html}</td>"
@@ -651,7 +652,7 @@ def generate_html_report():
             <details class="data-details"><summary>資料說明 · {escape(fixture_caption)} · 防守近10場跨季接續</summary><p class="data-notice">{escape(data_notice)}</p><p class="defense-notice">{escape(defense_notice)}</p></details>
             <div class="workspace-bar"><nav class="platform-switch" aria-label="週次類型">{platform_buttons}</nav>{season_select}<div class="filter-tools"><span id="active-selection" class="selection-label">全體球員</span><button id="show-all-players" class="global-reset" onclick="resetActiveTeamFilter()" aria-pressed="true" title="清除球隊與搜尋，保留統計期間及AVG/TOT">全體球員</button></div><p id="platform-note" class="platform-note" role="status"></p></div>
             <section class="period-tools" aria-label="賽程資訊"><details id="schedule-extras"><summary>自訂期間／近期快捷</summary><nav class="tab" aria-label="近期週次">{tab_buttons}</nav><p>美東日期，含迄日；可依自己的聯盟設定輸入 1–31 天。</p><div class="period-inputs"><label>起日（美東）<input id="period-start" type="date" value="{w1_start}"></label><label>迄日（含，美東）<input id="period-end" type="date" value="{w1_end}"></label><button id="apply-custom-period" class="btn-stat" type="button">套用自訂期間</button></div><p id="period-error" role="alert" hidden></p></details><p id="schedule-freshness" role="status"></p><details id="schedule-metrics"><summary>剩餘排程、背靠背與低比賽日</summary><p>依目前快照與瀏覽時間計算球隊排程；未套用傷病、陣容、位置或 GP 上限，不代表可用上場場次。低比賽日指美東當日全聯盟 1–5 場。</p><p id="schedule-period-context"></p><div id="schedule-insights" class="schedule-scroll"></div><div id="schedule-pending"></div></details></section>
-            <div class="legend"><b>近10場對手防守</b><span><i class="dot" style="background:#ccffcc"></i>較好打</span><span><i class="dot" style="background:#ffffcc"></i>中段</span><span><i class="dot" style="background:#ffcccc"></i>較難打</span><span><i class="dot" style="background:#eee"></i>暫缺</span></div>
+            <div class="legend"><b>近10場對手防守</b><span><i class="dot" style="background:{utils.get_color_for_rank(30)}"></i>較好打</span><span><i class="dot" style="background:{utils.get_color_for_rank(15)}"></i>中段</span><span><i class="dot" style="background:{utils.get_color_for_rank(1)}"></i>較難打</span><span><i class="dot" style="background:{utils.get_color_for_rank(None)}"></i>暫缺</span></div>
             <section id="comparison-panel" class="player-section" hidden><div class="player-heading"><h3>球員比較</h3><button id="clear-comparison" type="button" class="btn-stat">清空比較</button></div><div class="controls"><label>統計期間 <select id="comparison-period"><option value="season">本季</option><option value="l7">近7天</option><option value="l14">近14天</option><option value="ls">上季</option></select></label><label>顯示 <select id="comparison-mode"><option value="avg">AVG</option><option value="tot">TOT</option></select></label></div><p id="comparison-meta"></p><div class="comparison-scroll"><table id="comparison-table"><thead id="comparison-head"></thead><tbody id="comparison-body"></tbody></table></div></section>
             {week_panels}
             <footer class="footer">FANTASYORGCAT · 每日資料快照 · 球隊防守非位置別 DvP</footer>

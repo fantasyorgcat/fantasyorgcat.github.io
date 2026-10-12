@@ -374,6 +374,6 @@ def get_team_defensive_ratings():
 
 
 def get_color_for_rank(rank, population=30):
-    if not rank or not population:return '#eeeeee'
+    if not rank or not population:return '#dedbd5'
     fraction=(rank-1)/population
-    return ['#ffcccc','#ffe5cc','#ffffcc','#e5ffcc','#ccffcc'][min(4,int(fraction*5))]
+    return ['#dfc5c8','#e4cfbb','#e7dfcf','#d7e0df','#c5d5dc'][min(4,int(fraction*5))]
