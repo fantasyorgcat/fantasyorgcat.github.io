@@ -125,6 +125,7 @@
   }
   if(!byTeam.size){const empty=tbody.insertRow().insertCell();empty.colSpan=dayList.length+2;empty.textContent='本期間沒有已公布日期的例行賽賽程。';}
   scroll.appendChild(teamTable);teamSection.appendChild(scroll);content.append(teamSection,section);
+  window.setupTeamGamesSort(teamTable);
   byId('custom-period-heading').textContent=customPeriod.label;
   // Show the panel before DataTables measures its scroll columns.
   openWeek({currentTarget:byId('apply-custom-period')},'WeekCustom');

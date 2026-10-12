@@ -146,7 +146,7 @@ def generate_html_report():
 
         team_df = pd.DataFrame(team_grid_data)
         if not team_df.empty:
-            team_df = team_df.sort_values('Games', ascending=False)
+            team_df = team_df.sort_values('Games', ascending=False, kind='stable')
 
         # --- PLAYER STATS & SCHEDULE ---
         # Metric label -> raw stat column mapping, shared by all PR calculations below.
@@ -243,7 +243,7 @@ def generate_html_report():
                     <thead>
                         <tr>
                             <th>Team</th>
-                            <th>Games</th>
+                            <th data-dt-order="disable">Games</th>
                             {''.join([f'<th>{d}</th>' for d in day_cols])}
                         </tr>
                     </thead>
@@ -437,7 +437,7 @@ def generate_html_report():
     week_panels += '<div id="WeekCustom" class="tabcontent"><h3 id="custom-period-heading"></h3><div id="custom-period-content"></div></div>'
     table_initializers = ''.join(
         f"tables['W{i+1}'] = $('#playerTableW{i+1}').DataTable({{order:[[2,'desc']],pageLength:25,scrollX:true,language:{{search:'搜尋',lengthMenu:'每頁 _MENU_ 人',info:'_START_–_END_ / _TOTAL_ 人',infoFiltered:'（全體 _MAX_ 人）',zeroRecords:'沒有符合球員，按全體球員清除篩選',infoEmpty:'0 人'}}}});"
-        f"if ($('#teamTableW{i+1}').length) $('#teamTableW{i+1}').DataTable({{paging:false,info:false,searching:false}});"
+        f"if ($('#teamTableW{i+1}').length) {{ $('#teamTableW{i+1}').DataTable({{paging:false,info:false,searching:false,order:[],columnDefs:[{{targets:1,type:'team-games',orderable:false,render:function(data,type,row,meta){{return type==='sort'?window.teamGamesSortValue(data,meta.row):data;}}}}]}}); window.setupTeamGamesSort(document.getElementById('teamTableW{i+1}')); }}"
         for i in range(4)
     )
     metadata = stats_dict['metadata']
@@ -483,6 +483,7 @@ def generate_html_report():
     catalog_json=json.dumps(comparison_catalog,ensure_ascii=False,allow_nan=False).replace('<','\\u003c')
     tools_meta_json=json.dumps(dict(season=metadata['season'],lastSeason=metadata['last_season'],
         defaultPeriod=default_period.lower()),ensure_ascii=False).replace('<','\\u003c')
+    team_js=Path('team_tools.js').read_text(encoding='utf-8')
     tools_js=Path('player_tools.js').read_text(encoding='utf-8')
     schedule_js=Path('schedule_tools.js').read_text(encoding='utf-8')
     events_json=json.dumps(events_payload,ensure_ascii=False,allow_nan=False).replace('<','\\u003c')
@@ -635,6 +636,7 @@ def generate_html_report():
                 updateSelection(suffix);
             }}
             function resetActiveTeamFilter() {{ resetTeamFilter(activeWeek); }}
+            {team_js}
             {tools_js}
             {schedule_js}
         </script>

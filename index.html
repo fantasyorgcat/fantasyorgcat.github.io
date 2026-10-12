@@ -23,6 +23,7 @@
 .workspace-bar{flex-wrap:wrap;margin-bottom:10px}.platform-switch{display:flex;gap:6px;flex-shrink:0}.platform-button{min-height:44px;padding:10px 18px;border:1px solid var(--control-line);border-radius:10px;background:var(--paper);color:var(--ink);font-size:12px;font-weight:700}.platform-button.active{background:var(--accent);border-color:var(--accent);color:var(--paper)}.platform-button:disabled{cursor:default;color:var(--muted);background:#ded9d1}.platform-button small{display:block;font-size:9px;font-weight:500}.workspace-bar .season-picker{flex:1;min-width:0}.season-picker select{flex:1;min-width:0;max-width:none;min-height:44px}.platform-note{flex-basis:100%;margin:0 2px;font-size:11px;line-height:1.5;color:var(--muted)}#schedule-extras .tab{margin:8px 0}.period-tools details:first-child{margin-top:0}#custom-period-heading{line-height:1.6}@media(max-width:600px){.platform-switch{width:100%;display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}.platform-button{padding:8px}.workspace-bar .filter-tools{width:100%;min-height:44px}.platform-note{font-size:10px}.season-picker select{font-size:10px}.period-inputs button{min-height:44px}}
 
 /* Interaction states share the muted blue palette; labels and ranks carry meaning. */
+.team-games-sort{border:0;background:transparent;padding:0;min-height:28px;color:inherit;font:inherit;font-weight:650;white-space:nowrap}.team-games-sort [data-games-sort-arrow]{color:var(--accent);margin-left:4px}.team-games-sort:disabled{cursor:default;color:var(--muted)}.team-section table.dataTable thead th[aria-sort="none"]{box-shadow:none}
 #comparison-head button[aria-label*="目前"]{color:var(--accent);text-decoration:underline;text-underline-offset:3px}#comparison-head button[aria-label*="目前升序"]:after{content:' ↑'}#comparison-head button[aria-label*="目前降序"]:after{content:' ↓'}
 .platform-button:not(:disabled):not(.active):hover,.btn-stat:not(.active):hover{background:#e2e8e6;border-color:var(--accent)}.platform-button.active:hover{background:var(--accent-hover)}.platform-button:disabled{color:#555d62;border-style:dashed}.btn-stat.active,.season-picker select.active{box-shadow:inset 0 -2px var(--accent)}.metric-card:nth-child(2) strong{color:var(--warm-ink)}.metric-card:nth-child(4) strong{color:var(--rose-ink)}table.dataTable thead th[aria-sort]{box-shadow:inset 0 -3px var(--accent)}table.dataTable thead>tr>th.dt-ordering-asc span.dt-column-order:before,table.dataTable thead>tr>th.dt-ordering-desc span.dt-column-order:after{color:var(--accent);opacity:1}div.dt-container .dt-paging .dt-paging-button:hover{background:var(--accent)!important;border-color:var(--accent)!important;color:var(--paper)!important}div.dt-container .dt-paging .dt-paging-button.disabled{color:#555d62!important;background:transparent!important}.matchup small{color:var(--ink)}
 </style>
@@ -45,7 +46,7 @@
             $(document).ready( function () {
                 // Initialize DataTables for all weeks
                 customPlayerTemplate=document.querySelector('#Week1 .player-section').cloneNode(true);
-                tables['W1'] = $('#playerTableW1').DataTable({order:[[2,'desc']],pageLength:25,scrollX:true,language:{search:'搜尋',lengthMenu:'每頁 _MENU_ 人',info:'_START_–_END_ / _TOTAL_ 人',infoFiltered:'（全體 _MAX_ 人）',zeroRecords:'沒有符合球員，按全體球員清除篩選',infoEmpty:'0 人'}});if ($('#teamTableW1').length) $('#teamTableW1').DataTable({paging:false,info:false,searching:false});tables['W2'] = $('#playerTableW2').DataTable({order:[[2,'desc']],pageLength:25,scrollX:true,language:{search:'搜尋',lengthMenu:'每頁 _MENU_ 人',info:'_START_–_END_ / _TOTAL_ 人',infoFiltered:'（全體 _MAX_ 人）',zeroRecords:'沒有符合球員，按全體球員清除篩選',infoEmpty:'0 人'}});if ($('#teamTableW2').length) $('#teamTableW2').DataTable({paging:false,info:false,searching:false});tables['W3'] = $('#playerTableW3').DataTable({order:[[2,'desc']],pageLength:25,scrollX:true,language:{search:'搜尋',lengthMenu:'每頁 _MENU_ 人',info:'_START_–_END_ / _TOTAL_ 人',infoFiltered:'（全體 _MAX_ 人）',zeroRecords:'沒有符合球員，按全體球員清除篩選',infoEmpty:'0 人'}});if ($('#teamTableW3').length) $('#teamTableW3').DataTable({paging:false,info:false,searching:false});tables['W4'] = $('#playerTableW4').DataTable({order:[[2,'desc']],pageLength:25,scrollX:true,language:{search:'搜尋',lengthMenu:'每頁 _MENU_ 人',info:'_START_–_END_ / _TOTAL_ 人',infoFiltered:'（全體 _MAX_ 人）',zeroRecords:'沒有符合球員，按全體球員清除篩選',infoEmpty:'0 人'}});if ($('#teamTableW4').length) $('#teamTableW4').DataTable({paging:false,info:false,searching:false});
+                tables['W1'] = $('#playerTableW1').DataTable({order:[[2,'desc']],pageLength:25,scrollX:true,language:{search:'搜尋',lengthMenu:'每頁 _MENU_ 人',info:'_START_–_END_ / _TOTAL_ 人',infoFiltered:'（全體 _MAX_ 人）',zeroRecords:'沒有符合球員，按全體球員清除篩選',infoEmpty:'0 人'}});if ($('#teamTableW1').length) { $('#teamTableW1').DataTable({paging:false,info:false,searching:false,order:[],columnDefs:[{targets:1,type:'team-games',orderable:false,render:function(data,type,row,meta){return type==='sort'?window.teamGamesSortValue(data,meta.row):data;}}]}); window.setupTeamGamesSort(document.getElementById('teamTableW1')); }tables['W2'] = $('#playerTableW2').DataTable({order:[[2,'desc']],pageLength:25,scrollX:true,language:{search:'搜尋',lengthMenu:'每頁 _MENU_ 人',info:'_START_–_END_ / _TOTAL_ 人',infoFiltered:'（全體 _MAX_ 人）',zeroRecords:'沒有符合球員，按全體球員清除篩選',infoEmpty:'0 人'}});if ($('#teamTableW2').length) { $('#teamTableW2').DataTable({paging:false,info:false,searching:false,order:[],columnDefs:[{targets:1,type:'team-games',orderable:false,render:function(data,type,row,meta){return type==='sort'?window.teamGamesSortValue(data,meta.row):data;}}]}); window.setupTeamGamesSort(document.getElementById('teamTableW2')); }tables['W3'] = $('#playerTableW3').DataTable({order:[[2,'desc']],pageLength:25,scrollX:true,language:{search:'搜尋',lengthMenu:'每頁 _MENU_ 人',info:'_START_–_END_ / _TOTAL_ 人',infoFiltered:'（全體 _MAX_ 人）',zeroRecords:'沒有符合球員，按全體球員清除篩選',infoEmpty:'0 人'}});if ($('#teamTableW3').length) { $('#teamTableW3').DataTable({paging:false,info:false,searching:false,order:[],columnDefs:[{targets:1,type:'team-games',orderable:false,render:function(data,type,row,meta){return type==='sort'?window.teamGamesSortValue(data,meta.row):data;}}]}); window.setupTeamGamesSort(document.getElementById('teamTableW3')); }tables['W4'] = $('#playerTableW4').DataTable({order:[[2,'desc']],pageLength:25,scrollX:true,language:{search:'搜尋',lengthMenu:'每頁 _MENU_ 人',info:'_START_–_END_ / _TOTAL_ 人',infoFiltered:'（全體 _MAX_ 人）',zeroRecords:'沒有符合球員，按全體球員清除篩選',infoEmpty:'0 人'}});if ($('#teamTableW4').length) { $('#teamTableW4').DataTable({paging:false,info:false,searching:false,order:[],columnDefs:[{targets:1,type:'team-games',orderable:false,render:function(data,type,row,meta){return type==='sort'?window.teamGamesSortValue(data,meta.row):data;}}]}); window.setupTeamGamesSort(document.getElementById('teamTableW4')); }
 
                 Object.keys(tables).forEach(function(suffix) { tables[suffix].column(1).visible(false); switchStats('LS',suffix); });
                 Object.keys(tables).forEach(function(suffix) { tables[suffix].on('draw',function() { updateSelection(suffix); }); });
@@ -163,6 +164,55 @@
                 updateSelection(suffix);
             }
             function resetActiveTeamFilter() { resetTeamFilter(activeWeek); }
+            /* Sort the existing team table by its current period's game counts. */
+(function(){
+ 'use strict';
+ function gameCount(value){
+  if(typeof value==='number')return Number.isFinite(value)&&Number.isInteger(value)&&value>=0?value:null;
+  const text=String(value??'').trim();
+  if(!/^\d+(?:\.0+)?$/.test(text))return null;
+  const number=Number(text);return Number.isFinite(number)&&Number.isInteger(number)?number:null;
+ }
+ function compare(a,b,direction){
+  if(a===null)return b===null?0:1;
+  if(b===null)return -1;
+  return direction==='desc'?b-a:a-b;
+ }
+ if(typeof module==='object'&&module.exports){module.exports={gameCount,compare};return;}
+ const order=$.fn.dataTable.ext.type.order,records=new WeakMap();
+ window.teamGamesSortValue=(value,index)=>({games:gameCount(value),index});
+ order['team-games-pre']=value=>value&&typeof value==='object'?value:{games:gameCount(value),index:0};
+ order['team-games-asc']=(a,b)=>compare(a.games,b.games,'asc')||a.index-b.index;
+ order['team-games-desc']=(a,b)=>compare(a.games,b.games,'desc')||a.index-b.index;
+ window.setupTeamGamesSort=function(table){
+  if(records.has(table))return;
+  const header=table.tHead.rows[0].cells[1],title=header.querySelector('.dt-column-title')||header;
+  const button=document.createElement('button'),arrow=document.createElement('span');
+  button.type='button';button.className='team-games-sort';button.dataset.teamGamesSort='';button.append('Games ');
+  arrow.dataset.gamesSortArrow='';arrow.setAttribute('aria-hidden','true');button.appendChild(arrow);title.replaceChildren(button);
+  const rows=Array.from(table.tBodies[0].querySelectorAll('.team-row')),positions=new WeakMap(rows.map((row,index)=>[row,index]));
+  const api=$.fn.dataTable.isDataTable(table)?$(table).DataTable():null;
+  const record={direction:null};records.set(table,record);button.disabled=!rows.length;
+  function display(){
+   header.setAttribute('aria-sort',record.direction===null?'none':record.direction==='desc'?'descending':'ascending');
+   arrow.textContent=record.direction===null?'↕':record.direction==='desc'?'↓':'↑';
+   button.setAttribute('aria-label','比賽場次，'+(record.direction===null?'目前未排序；點選由多到少':record.direction==='desc'?'目前由多到少；點選由少到多':'目前由少到多；點選由多到少'));
+  }
+  if(api)api.on('order.dt',()=>{const current=api.order()[0];record.direction=current&&current[0]===1?current[1]:null;display();});
+  button.addEventListener('click',event=>{
+   event.stopPropagation();record.direction=record.direction==='desc'?'asc':'desc';
+   if(api)api.order([[1,record.direction]]).draw(false);
+   else{
+    const current=Array.from(table.tBodies[0].querySelectorAll('.team-row'));
+    current.sort((a,b)=>compare(gameCount(a.cells[1].textContent),gameCount(b.cells[1].textContent),record.direction)||positions.get(a)-positions.get(b));
+    table.tBodies[0].append(...current);
+   }
+   display();
+  });
+  display();
+ };
+})();
+
             /* Active-table schedule comparison; no storage, telemetry or requests. */
 (function(){
  'use strict';
@@ -327,6 +377,7 @@
   }
   if(!byTeam.size){const empty=tbody.insertRow().insertCell();empty.colSpan=dayList.length+2;empty.textContent='本期間沒有已公布日期的例行賽賽程。';}
   scroll.appendChild(teamTable);teamSection.appendChild(scroll);content.append(teamSection,section);
+  window.setupTeamGamesSort(teamTable);
   byId('custom-period-heading').textContent=customPeriod.label;
   // Show the panel before DataTables measures its scroll columns.
   openWeek({currentTarget:byId('apply-custom-period')},'WeekCustom');
@@ -443,7 +494,7 @@
                     <thead>
                         <tr>
                             <th>Team</th>
-                            <th>Games</th>
+                            <th data-dt-order="disable">Games</th>
                             <th>Mon (10/19)</th><th>Tue (10/20)</th><th>Wed (10/21)</th><th>Thu (10/22)</th><th>Fri (10/23)</th><th>Sat (10/24)</th><th>Sun (10/25)</th>
                         </tr>
                     </thead>
@@ -489,7 +540,7 @@
                     <thead>
                         <tr>
                             <th>Team</th>
-                            <th>Games</th>
+                            <th data-dt-order="disable">Games</th>
                             <th>Mon (10/26)</th><th>Tue (10/27)</th><th>Wed (10/28)</th><th>Thu (10/29)</th><th>Fri (10/30)</th><th>Sat (10/31)</th><th>Sun (11/01)</th>
                         </tr>
                     </thead>

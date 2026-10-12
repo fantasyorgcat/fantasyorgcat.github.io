@@ -17,7 +17,7 @@ ROOT=Path(__file__).resolve().parent
 
 def build_fixture(target):
     target=Path(target);target.mkdir(parents=True,exist_ok=True)
-    for name in ['dashboard.css','player_tools.js','schedule_tools.js']:shutil.copyfile(ROOT/name,target/name)
+    for name in ['dashboard.css','player_tools.js','schedule_tools.js','team_tools.js']:shutil.copyfile(ROOT/name,target/name)
     shutil.copytree(ROOT/'assets',target/'assets',dirs_exist_ok=True)
     records=[]
     # 25 calendar weeks, four-day opening shortcut, cross-year and DST events.
