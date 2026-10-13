@@ -29,6 +29,9 @@
   byId('comparison-meta').textContent=label+' · '+names[period]+' · '+mode.toUpperCase();
  }
  $(document).ready(function(){
+  const navigation=document.querySelector('.workspace-bar');
+  function headerOffset(){document.documentElement.style.setProperty('--workspace-height',navigation.getBoundingClientRect().height+'px');}
+  headerOffset();new ResizeObserver(headerOffset).observe(navigation);
   byId('comparison-period').value=period;byId('comparison-period').addEventListener('change',e=>{period=e.target.value;render();});byId('comparison-mode').addEventListener('change',e=>{mode=e.target.value;render();});byId('clear-comparison').addEventListener('click',()=>{compared.clear();render();});
   document.addEventListener('change',e=>{const input=e.target;if(!input.matches('input[data-pick="compare"]'))return;const id=input.dataset.playerId;if(!playerCatalog[id])return;if(input.checked)compared.add(id);else compared.delete(id);render();});
   $(document).on('draw.dt',render);document.addEventListener('active-week-changed',render);sync();
