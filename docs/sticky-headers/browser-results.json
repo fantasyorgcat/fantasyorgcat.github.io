@@ -1,0 +1,32 @@
+[
+  {
+    "width": 1500,
+    "height": 1000,
+    "real_data": true,
+    "actual_wheel_scroll": true,
+    "players_teams_comparison_headers_fixed": true,
+    "nav_clear": true,
+    "original_palette": true,
+    "horizontal_scroll_and_header_sync": true,
+    "original_sort_and_keyboard": true,
+    "period_mode_and_rebuilt_tables": true,
+    "data_preserved": true,
+    "js_errors": [],
+    "failed_requests": []
+  },
+  {
+    "width": 390,
+    "height": 844,
+    "real_data": true,
+    "actual_wheel_scroll": true,
+    "players_teams_comparison_headers_fixed": true,
+    "nav_clear": true,
+    "original_palette": true,
+    "horizontal_scroll_and_header_sync": true,
+    "original_sort_and_keyboard": true,
+    "period_mode_and_rebuilt_tables": true,
+    "data_preserved": true,
+    "js_errors": [],
+    "failed_requests": []
+  }
+]
