@@ -65,3 +65,9 @@ CHROMIUM_PATH=/path/to/chromium python test_schedule_browser.py /tmp/fantasy-sch
 該測試將預覽、snapshot、桌面／手機截圖和結果寫入指定的隔離目錄，不改正式 index.html 或 data_snapshot.json。預覽醒目標示 UI TEST ONLY，發布 gate 會拒絕它。不能將這個合成預覽當作當日真資料驗收。測試涵蓋短週、1／7／14／31 天、跨年、無賽程、剩餘／背靠背／低比賽日、跨開賽時間的自動更新、背景回前景更新、空白整季選項保留已套用週次、非法期間、統計不變與 390px 水平捲動；UTC／DST／未排定／取消狀態另由 test_schedule 單元測試驗證。
 
 資料补強與實作順序見 [DATA_CAPABILITIES.md](DATA_CAPABILITIES.md)。現有 ESPN gamelog 已解析逐場分鐘、命中及出手，尚未完整持久化；保存分母／逐場資料不必先找另一家廠商。先做賽程與低場次日、自訂排名／counting points、小樣本，再補分母與聯盟已計入總量後做 H2H／ROTO。沒有傷病、usage 或私人聯盟來源時，不推斷角色變化的因果，也不承諾二換一的空格價值或最佳先發已可計算。
+
+## ROTO 配隊草稿（尚未上線）
+
+`roto.html` 延伸現有比較勾選，以同一季上季實績比較原陣容、對手與多人換人後的最多三組雷達。支援兩種明示的數據口徑、未知值覆蓋及此裝置命名保存；無登入、私人聯盟或付費來源。固定尺度與加權FG／FT不代表真正聯盟積分或新季預測。
+
+目前可靠公開分母來源遭403，既有產物欠缺FGM／FGA／FTM／FTA，完整資料與發布gate未通過，因此不部署。功能、測試、來源錯誤及後續完整驗收見 [ROTO_QA.md](ROTO_QA.md)。本地資料匯出：`python roto_data.py --from-report index.html`；數學測試：`node test_roto_core.cjs`，Python：`python -m unittest test_roto_data`；真實介面：`python test_roto_browser.py <本地origin> <隔離結果目錄>`。不能以合成資料或手動ready flag補齊發布。

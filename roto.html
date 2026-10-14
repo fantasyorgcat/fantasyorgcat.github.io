@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src data:; connect-src 'none'; base-uri 'none'; form-action 'none'">
+<title>ROTO 配隊 · FantasyOrgCat</title>
+<link rel="stylesheet" href="dashboard.css"><link rel="stylesheet" href="roto.css">
+<script src="roto_data.js" defer></script><script src="roto_core.js" defer></script><script src="roto.js" defer></script>
+</head>
+<body class="roto-page"><main class="container">
+<header class="appbar"><a class="brand home-link" href="index.html"><span class="brand-mark">FC</span><span>FANTASYORGCAT<small>ROTO · ROSTER LAB</small></span></a><a href="index.html" class="btn-stat">回球員／賽程表</a></header>
+<section class="hero"><div><div class="eyebrow">ROSTER LAB</div><h1>看整隊，也看換人後。</h1><p id="period-label">上季例行賽實績 · 不代表新季預測或實際聯盟排名</p></div><div class="hero-meta"><strong>ROTO 配隊</strong><span id="snapshot-label"></span></div></section>
+<p id="data-warning" class="data-warning" role="status" hidden></p>
+<section class="roto-toolbar" aria-label="比較設定"><label>資料口徑 <select id="mode"><option value="perGame">每人 1 場合計</option><option value="totals">上季實績總量</option></select></label><div class="layers"><label><input type="checkbox" id="show-base" checked>原陣容</label><label><input type="checkbox" id="show-opponent" checked>對手</label><label><input type="checkbox" id="show-simulation" checked>換人後</label></div><button id="edit-base" class="btn-stat">編輯陣容</button></section>
+<p id="status" role="status" aria-live="polite"></p>
+<div class="roto-overview"><section class="radar-card"><div class="player-heading"><h3>九項體質</h3><span>最多三組 · 固定基準</span></div><p id="coverage"></p><svg id="radar" viewBox="0 0 460 380" role="img" aria-labelledby="radar-title radar-description"><title id="radar-title">陣容九項標準化雷達</title><desc id="radar-description">未知類別留白，不用零填補；實際數據見下方比較表。</desc></svg><div id="legend" class="radar-legend"></div><details class="basis"><summary>讀圖方式與固定基準</summary><p id="basis-label"></p><p>每軸為 50 + 15 × 標準差距，截在 0–100；TO 反向，越少越外側。計數項目先除以名單人數，用每位成員平均貢獻比較。FG／FT 由同一口徑合計命中 ÷ 合計出手計算。基準不隨你選的隊伍或換人而改動。</p><p>這是固定上季實績參考尺度，並非球員百分位、真正聯盟 ROTO 積分或預測。人數不等、分鐘與出賽樣本不同時，請一併看表格及覆蓋率。</p></details></section>
+<section class="differences-card"><div class="player-heading"><h3>九項實績與換人差異</h3></div><p id="unit-note"></p><div class="category-table"><table><thead><tr><th scope="col">類別</th><th scope="col">原陣容</th><th scope="col">對手</th><th scope="col">換人後</th><th scope="col">換人差異</th></tr></thead><tbody id="metrics-body"></tbody></table></div><p class="coverage-note">— 表示未知，不是 0。缺值類別不畫完整面積；命中率差異以百分點呈現，失誤減少為佳。</p></section></div>
+<div class="roster-editors">
+<details id="base-editor" class="editor" open><summary>原陣容 <span id="base-count"></span></summary><p>編輯原陣容會重設模擬；多人換人請使用「換人模擬」，原名單不會被改動。</p><div id="base-list" class="roster-list"></div><button id="clear-base" class="btn-stat">清空原陣容</button></details>
+<details id="opponent-editor" class="editor" open><summary>對手比較 <span id="opponent-count"></span></summary><p>手動選入對照陣容；不連接私人聯盟，也不判斷持有或可增員資格。</p><div id="opponent-list" class="roster-list"></div><button id="clear-opponent" class="btn-stat">清空對手</button></details>
+<details id="simulation-editor" class="editor" open><summary>換人模擬 <span id="simulation-count"></span></summary><p>勾選多人移出，再從搜尋加入替代球員。模擬不修改原陣容。</p><fieldset><legend>從原陣容移出</legend><div id="outgoing-list" class="roster-list"></div></fieldset><h4>加入的替代球員</h4><div id="incoming-list" class="roster-list"></div><button id="reset-simulation" class="btn-stat">重設模擬</button></details>
+</div>
+<section class="player-section search-panel"><div class="player-heading"><h3>搜尋與加入球員</h3></div><div class="search-controls"><label>球員／NBA 球隊 <input type="search" id="player-search" placeholder="例如 Jokic 或 DEN" autocomplete="off"></label><label>加入至 <select id="add-target"><option value="base">原陣容</option><option value="opponent">對手</option><option value="incoming">換人模擬：加入</option></select></label></div><p id="search-count"></p><div id="search-results" class="search-results"></div><button id="more-results" class="btn-stat" hidden>顯示更多</button></section>
+<section class="player-section saved-panel"><h3>此裝置的命名陣容</h3><p>儲存在此瀏覽器、此網域；不會上傳或跨裝置同步。只保存球員 ID，統計使用目前快照。</p><p id="storage-warning" role="status" hidden></p><div class="save-controls"><label>保存 <select id="save-target"><option value="base">原陣容</option><option value="opponent">對手</option><option value="simulation">換人後</option></select></label><label>名稱 <input id="roster-name" maxlength="80" placeholder="我的陣容"></label><button id="save-roster" class="btn-stat">保存／更新同名</button></div><div class="load-controls"><label>已保存 <select id="saved-rosters"><option value="">選擇陣容</option></select></label><label>載入至 <select id="load-target"><option value="base">原陣容</option><option value="opponent">對手</option></select></label><button id="load-roster" class="btn-stat">載入</button><button id="delete-roster" class="btn-stat">刪除此保存</button></div></section>
+<footer class="footer">FANTASYORGCAT · 上季實績參考 · 無私人聯盟連線、登入或付費來源</footer>
+</main></body></html>

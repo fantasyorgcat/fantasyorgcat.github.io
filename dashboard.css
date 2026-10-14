@@ -22,3 +22,5 @@
 .player-section,.player-section .dt-scroll{overflow:visible}
 .player-section .dt-scroll-head{position:sticky!important;top:var(--workspace-height,0px);z-index:10;background:#d7dedf;border-radius:9px 9px 0 0}
 .schedule-scroll thead{position:sticky;top:0;z-index:2}
+
+.roto-link{display:inline-block;color:var(--accent);font-size:11px;margin-top:4px;text-underline-offset:3px}
