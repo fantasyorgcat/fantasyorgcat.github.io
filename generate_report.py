@@ -12,7 +12,7 @@ import base64
 from player_catalog import build_catalog, add_pr_ranks, metric_pr
 from fantasy_periods import build_platform_periods
 from roto_data import build_data, source_reference, write_data
-from roto_boxscore import build_boxscore_data
+from roto_package import build_package
 
 IDENTITY_COLUMNS = ['PLAYER_ID','PLAYER_NAME','TEAM_ID','TEAM_ABBREVIATION']
 
@@ -449,6 +449,7 @@ def generate_html_report():
         events=season_payload[i]['events']) for i,w in enumerate(all_weeks)]
     provenance.update(generated_at=generated_at, stats_source='ESPN', defense_source='PBP Stats',
                       period_populations={k:len(stats_dict[k]) for k in ['Season','L7','L14','LastSeason']})
+    provenance['roto_references']={key:source_reference(stats_dict[key]) for key in ['Season','LastSeason']}
     provenance['schedule_events']=[{k:v for k,v in e.items() if not k.endswith('_html')} for e in events_payload]
     provenance['fantasy_periods']=dict(timezone='America/New_York',quick_periods=quick_periods,
         platforms=platform_periods)
@@ -670,7 +671,7 @@ def generate_html_report():
         f.write(html_template)
 
     Path("data_snapshot.json").write_text(json.dumps(provenance, ensure_ascii=False, indent=2), encoding="utf-8")
-    write_data(build_data(comparison_catalog,provenance,source_reference(stats_dict['LastSeason']),season=metadata['last_season']) if provenance.get('fixture') else build_boxscore_data(comparison_catalog,provenance))
+    write_data(build_data(comparison_catalog,provenance,source_reference(stats_dict['LastSeason']),season=metadata['last_season']) if provenance.get('fixture') else build_package(comparison_catalog,provenance))
     print(f"Report generated: {output_file}")
     if os.environ.get('OPEN_REPORT') == '1':
         webbrowser.open('file://' + os.path.realpath(output_file))

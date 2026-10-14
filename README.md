@@ -68,6 +68,8 @@ CHROMIUM_PATH=/path/to/chromium python test_schedule_browser.py /tmp/fantasy-sch
 
 ## ROTO 配隊
 
-`roto.html` 延伸現有比較勾選，以同一季2025–26實績比較原陣容、對手與多人換人後的最多三組雷達；支援兩種明示口徑、未知值覆蓋與此裝置命名保存。BoxScore Lab／CC BY4.0二手整理，非官方全表驗證；Jabari Smith Jr. FGA975／974來源差異標未知。固定尺度及加權FG／FT不是真正聯盟積分或新季預測，無登入、私人聯盟或付費來源。
+`roto.html` 延伸現有比較勾選，以所選季別實績比較原陣容、自訂多隊對手與多人換人後的雷達。預設整季總量合計，支援每人1場合計；這是名單球員實績，不是聯盟每日先發已計入的累計。資料表重用原球員catalog、Rank／PR和本地DataTables，在同一列勾選／解除；名單與換人後編輯目標明示。缺值顯示已知小計／覆蓋率，圖表標已知部分、不畫完整面積，不完整資料不計換人差值。黑體字、小字至少13px，對手可自由新增、命名、刪除與勾選比較；對手名單自動保存在獨立localStorage key，既有命名陣容可載入為新對手。保存／對手隊數不設固定上限，實際容量依瀏覽器儲存空間而定；損壞保存不覆寫，停用或滿額仍可在本次頁面編輯。
 
-已核原始CSV（582人）保留於`data/roto/`，同份資料整套計算，不拼接舊七項與新分母。610候選唯一匹配481，129不適用／未匹配保留unknown，0姓名歧義；benchmark不強湊舊ESPN578。來源、署名、映射及驗收見 [ROTO_QA.md](ROTO_QA.md)。本地匯出：`python roto_data.py`；數學：`node test_roto_core.cjs`；契約：`python -m unittest test_roto_data test_roto_boxscore`。年度來源須合法取得與核hash後更新，不重試被拒URL或硬改ready flag。
+2025–26封存CSV（582人）保留於`data/roto/`，同份資料整套計算，不拼接舊七項與新分母。610候選唯一匹配481，129不適用／未匹配保留unknown，0姓名歧義；benchmark不強湊舊ESPN578。封存來源、署名、映射見 [ROTO_QA.md](ROTO_QA.md)；新介面與季別迭代驗收見 [整合QA](docs/roto/named-opponents/QA.md)。本地匯出：`python roto_data.py`；數學：`node test_roto_core.cjs`；契約：`python -m unittest test_roto_data test_roto_boxscore test_roto_package`。年度來源須合法取得與核hash後更新，不重試被拒URL或硬改ready flag。
+
+`roto_package.py`串接既有每日管線的本季／上季及完整來源reference；有效本季例行賽實績出現後預設切到本季，封存資料保留真實季別，不跨季混用計數、投籃分母或基準。完整來源reference寫入snapshot供gate重現，未完整保存的母體不畫推定基準。來源更新失敗仍停更並保留有效報告，不保證来源永遠可用。本次沿用名單球員整季總量，未新增每日先發歷史或私人聯盟累計台帳。

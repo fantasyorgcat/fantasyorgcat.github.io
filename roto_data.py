@@ -1,4 +1,4 @@
-"""ROTO's immutable last-season reference; missing shots are never inferred from percentages."""
+"""ROTO reference helpers and legacy fixtures; missing shots are never inferred from rates."""
 import argparse
 import hashlib
 import json
@@ -20,10 +20,10 @@ def numeric(value):
     return value
 
 
-def records_from_catalog(catalog):
+def records_from_catalog(catalog,period_key="ls"):
     result={}
     for pid,p in catalog.items():
-        period=p['periods']['ls']
+        period=p['periods'][period_key]
         result[pid]=dict(id=pid,name=p['name'],team=p['team'],gp=numeric(period['gp']),
             minutes=numeric(period['avg']['MIN']['value']),
             totals={key:numeric(period['tot'][key]['value']) for key in COUNTING},
@@ -103,8 +103,8 @@ if __name__=='__main__':
     parser=argparse.ArgumentParser();parser.add_argument('--from-report',default='index.html');parser.add_argument('--output',default='roto_data.js');parser.add_argument('--legacy-espn',action='store_true');args=parser.parse_args()
     if args.legacy_espn:data=build_data(read_report(args.from_report),json.loads(Path('data_snapshot.json').read_text()))
     else:
-        from roto_boxscore import build_boxscore_data
-        data=build_boxscore_data(read_report(args.from_report),json.loads(Path('data_snapshot.json').read_text()))
+        from roto_package import build_package
+        data=build_package(read_report(args.from_report),json.loads(Path('data_snapshot.json').read_text()))
     write_data(data,args.output)
     summary={k:data[k] for k in ['season','generated_at','data_ready']};summary['reference']={k:v for k,v in data['reference'].items() if k!='records'}
     print(json.dumps(summary,ensure_ascii=False))

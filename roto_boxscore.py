@@ -68,10 +68,10 @@ def old_differences(player,record):
     return result
 
 
-def build_boxscore_data(catalog,snapshot,source=None,manifest=None):
+def build_boxscore_data(catalog,snapshot,source=None,manifest=None,allow_historical=False):
     if source is None:source,manifest=load_source()
     expected_season=f"{int(snapshot['schedule']['season'][:4])-1}-{snapshot['schedule']['season'][2:4]}"
-    if manifest['season']!=expected_season:raise ValueError('Archived ROTO season does not match last season; supply a new audited source')
+    if not allow_historical and manifest['season']!=expected_season:raise ValueError('Archived ROTO season does not match last season; supply a new audited source')
     source_names={normalized_name(r['source_name']):r for r in source};catalog_names={}
     for p in catalog.values():catalog_names.setdefault(normalized_name(p['name']),[]).append(p)
     players={};mapping=[];matched_source=set();disagreements=[]

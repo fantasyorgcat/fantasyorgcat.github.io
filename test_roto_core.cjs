@@ -20,3 +20,16 @@ const roster=[{id:'a',name:'Named',players:['1','2','2','999'],savedAt:'2026-10-
 assert.throws(()=>C.decodeSaved('{bad'));assert.throws(()=>C.decodeSaved('{"version":2,"rosters":[]}'));
 assert.throws(()=>C.save({setItem(){throw Error('Storage blocked');}},roster));
 console.log('Weighted FG/FT, per-player GP units, reverse TO, unknowns/coverage, duplicates, immutable replacements/reset, fixed baseline and local save/load passed.');
+
+// Hundreds of named opponents have no artificial count cap and keep legacy saves separate.
+const many=Array.from({length:1200},(_,i)=>({id:'opponent-'+i,name:'對手 '+i,players:['1','2','2'],savedAt:'2026-10-14'}));
+const legacy=memory.get(C.storageKey);C.saveOpponents(store,many);assert.equal(C.loadOpponents(store).length,1200);assert.deepEqual(C.loadOpponents(store)[1199].players,['1','2']);assert.equal(memory.get(C.storageKey),legacy);
+C.saveOpponents(store,[]);assert.deepEqual(C.loadOpponents(store),[]);
+memory.set(C.opponentsKey,C.encodeSaved([{...many[0],id:'base'}]));assert.throws(()=>C.loadOpponents(store));assert.equal(memory.get(C.storageKey),legacy);
+C.saveOpponents(store,many);const prior=memory.get(C.opponentsKey);assert.throws(()=>C.saveOpponents({setItem(){throw Error('QuotaExceededError');}},[]));assert.equal(memory.get(C.opponentsKey),prior);
+console.log('1200 named opponents, separate legacy storage, empty roster restoration, invalid IDs and storage quota failures passed.');
+
+const mixed=C.aggregate(['1','2','999'],data,'totals'),preview=C.knownView(mixed,data,'totals');
+assert.equal(mixed.cells.PTS.value,null);assert.equal(preview.cells.PTS.value,300);assert.equal(preview.cells.PTS.partial,true);assert.equal(preview.cells['FG%'].value,100*10/12);assert.equal(preview.size,3);assert.equal(preview.cells.PTS.known,2);assert.equal(preview.scores.PTS,C.aggregate(['1','2'],data,'totals').scores.PTS);
+assert.equal(C.differences(preview,C.knownView(C.aggregate(['1'],data,'totals'),data,'totals')).PTS,null);assert.equal(C.knownView(C.aggregate(['999'],data,'totals'),data,'totals').cells.PTS.value,null);
+console.log('Known subtotal remains usable with unknown members; weighted known denominators and incomplete deltas are explicit.');
