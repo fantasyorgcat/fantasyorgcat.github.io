@@ -1,0 +1,12 @@
+{
+  "url": "http://127.0.0.1:8766/index.html",
+  "status": 200,
+  "players": 610,
+  "team_a": "HOU",
+  "team_b": "ATL",
+  "team_a_count": 18,
+  "team_b_count": 20,
+  "checks": "A→all→B, week isolation, period/mode preservation, search clears, sticky all button, exact FG sort/integer TOT, collapsed details, mobile no page overflow and reachable right columns",
+  "js_errors": [],
+  "failed_requests": []
+}

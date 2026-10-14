@@ -1,0 +1,11 @@
+{
+  "url": "http://127.0.0.1:8767/index.html",
+  "tested_periods": {
+    "NBA": 25,
+    "YAHOO": 23,
+    "ESPN": 24
+  },
+  "checks": "Every period: actual dates/counts/opponents, exact unchanged statistics/PR, numeric game sorting; platform filter/mode preservation, mobile horizontal scrolling and sticky controls",
+  "js_errors": [],
+  "failed_requests": []
+}

@@ -50,6 +50,6 @@ def build_catalog(frame):
                 cells['Rank']=dict(value=number(row.get('PR_RANK'+rank_suffix+suffix)),pr=None,
                     sum=number(row.get('PR_SUM'+rank_suffix+suffix)))
                 modes[mode]=cells
-            player['periods'][period]=dict(gp=number(row.get('GP'+suffix)),**modes)
+            player['periods'][period]=dict(gp=number(row.get('GP'+suffix)),shooting={key:number(row.get(key+suffix)) for key in ['FGM','FGA','FTM','FTA']},**modes)
         catalog[pid]=player
     return catalog

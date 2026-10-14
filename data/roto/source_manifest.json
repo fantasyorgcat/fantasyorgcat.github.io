@@ -1,0 +1,43 @@
+{
+  "publisher": "BoxScore Lab",
+  "url": "https://www.boxscorelab.com/downloads/2025-26-player-season-totals.csv",
+  "license": "CC BY 4.0",
+  "license_url": "https://creativecommons.org/licenses/by/4.0/",
+  "source_basis": "Publisher reports NBA Stats; secondary compilation, not official full-table verification",
+  "season": "2025-26",
+  "season_type": "Regular Season",
+  "team_scope": "All teams combined once; final team is a label",
+  "publisher_build": "20261013T1130",
+  "publisher_build_timezone": null,
+  "sha256": "629839481dcb087aac9aa27f97fc1ef355cd93bc11e561b598ad680c38e446ee",
+  "size_bytes": 95924,
+  "row_count": 582,
+  "independent_checks": {
+    "provided_by_parent_research": true,
+    "against": "RealGM regular-season totals",
+    "players": [
+      "Luka Doncic",
+      "Nikola Jokic",
+      "Desmond Bane",
+      "James Harden",
+      "Jonathan Kuminga",
+      "Jayson Tatum"
+    ],
+    "traded_player_checks": {
+      "James Harden": "70 GP = 44 LAC + 26 CLE",
+      "Jonathan Kuminga": "36 GP = 20 GSW + 16 ATL"
+    },
+    "official_full_table_verified": false
+  },
+  "uncertainties": [
+    {
+      "name": "Jabari Smith Jr.",
+      "field": "FGA",
+      "publisher_value": 975,
+      "cross_check_source": "RealGM",
+      "cross_check_value": 974,
+      "resolution": "unknown; neither value selected as correct"
+    }
+  ],
+  "obtained_via": "Authorized user-provided artifact; original byte count and SHA256 independently matched"
+}

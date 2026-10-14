@@ -27,7 +27,7 @@ jobs:
         run: |
           python security_gate.py --stage _site
           git rev-parse HEAD
-          sha256sum _site/index.html
+          sha256sum _site/index.html _site/roto.html _site/roto_data.js
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

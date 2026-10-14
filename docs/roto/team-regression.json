@@ -1,0 +1,70 @@
+[
+  {
+    "width": 1500,
+    "real_data": true,
+    "tested_platforms": {
+      "NBA": [
+        0,
+        6,
+        7,
+        24
+      ],
+      "YAHOO": [
+        0,
+        6,
+        16,
+        22
+      ],
+      "ESPN": [
+        0,
+        6,
+        7,
+        17,
+        23
+      ]
+    },
+    "stable_ties": true,
+    "keyboard": true,
+    "unknown_last_and_zero_valid": true,
+    "original_rank_and_data_preserved": true,
+    "team_filter_and_comparison": true,
+    "recent_datatable": true,
+    "no_page_overflow": true,
+    "js_errors": [],
+    "failed_requests": []
+  },
+  {
+    "width": 390,
+    "real_data": true,
+    "tested_platforms": {
+      "NBA": [
+        0,
+        6,
+        7,
+        24
+      ],
+      "YAHOO": [
+        0,
+        6,
+        16,
+        22
+      ],
+      "ESPN": [
+        0,
+        6,
+        7,
+        17,
+        23
+      ]
+    },
+    "stable_ties": true,
+    "keyboard": true,
+    "unknown_last_and_zero_valid": true,
+    "original_rank_and_data_preserved": true,
+    "team_filter_and_comparison": true,
+    "recent_datatable": true,
+    "no_page_overflow": true,
+    "js_errors": [],
+    "failed_requests": []
+  }
+]

@@ -1,0 +1,9 @@
+{
+  "base": "dbe5622b118184d5ca1ec4e7a6e437b2e87e1cbd",
+  "html_only_embedded_css_and_nav_offset_js_changed": true,
+  "all_catalog_schedule_and_other_scripts_unchanged": true,
+  "snapshot_sha256": "6cde860d32e31b257ab739c2b06072903e59bf237d28a59d2e4ce01a1ace1894",
+  "source_css_and_js_match_embedded": true,
+  "original_main_player_scrollY_option": false,
+  "original_main_player_vertical_inner_scroll": false
+}

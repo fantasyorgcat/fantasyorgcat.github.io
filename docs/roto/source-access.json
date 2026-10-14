@@ -1,0 +1,29 @@
+[
+  {
+    "source": "NBA official bulk",
+    "url": "https://stats.nba.com/stats/leaguedashplayerstats?College=&Conference=&Country=&DateFrom=&DateTo=&Division=&DraftPick=&DraftYear=&GameScope=&GameSegment=&LastNGames=0&LeagueID=00&Location=&MeasureType=Base&Month=0&OpponentTeamID=0&Outcome=&PORound=0&PaceAdjust=N&PerMode=Totals&Period=0&PlayerExperience=&PlayerPosition=&PlusMinus=N&Rank=N&Season=2025-26&SeasonSegment=&SeasonType=Regular%20Season&ShotClockRange=&StarterBench=&TeamID=0&VsConference=&VsDivision=&Weight=0",
+    "error_type": "ProxyError",
+    "error": "HTTPSConnectionPool(host='stats.nba.com', port=443): Max retries exceeded with url: /stats/leaguedashplayerstats?College=&Conference=&Country=&DateFrom=&DateTo=&Division=&DraftPick=&DraftYear=&GameScope=&GameSegment=&LastNGames=0&LeagueID=00&Location=&MeasureType=Base&Month=0&OpponentTeamID=0&Outcome=&PORound=0&PaceAdjust=N&PerMode=Totals&Period=0&PlayerExperience=&PlayerPosition=&PlusMinus=N&Rank=N&Season=2025-26&SeasonSegment=&SeasonType=Regular%20Season&ShotClockRange=&StarterBench=&TeamID=0&VsConference=&VsDivision=&Weight=0 (Caused by ProxyError('Unable to connect to proxy', OSError('Tunnel connection failed: 403 Forbidden')))",
+    "time_utc": "2026-10-14T01:11:29.504604+00:00"
+  },
+  {
+    "source": "Basketball Reference",
+    "url": "https://www.basketball-reference.com/leagues/NBA_2026_totals.html",
+    "status": 403,
+    "tool": "web.open",
+    "retried": false
+  },
+  {
+    "source": "ESPN bulk",
+    "url": "https://site.web.api.espn.com/apis/common/v3/sports/basketball/nba/statistics/byathlete?season=2026&seasontype=2&limit=1000",
+    "status": 403,
+    "evidence": "prior task proxy denial",
+    "retried": false
+  },
+  {
+    "source": "CBS public season table",
+    "url": "https://www.cbssports.com/nba/stats/player/all/nba/regular/2025/all-pos/all-conf/all-team/all-players/",
+    "error_type": "ProxyError",
+    "error": "HTTPSConnectionPool(host='www.cbssports.com', port=443): Max retries exceeded with url: /nba/stats/player/all/nba/regular/2025/all-pos/all-conf/all-team/all-players/ (Caused by ProxyError('Unable to connect to proxy', OSError('Tunnel connection failed: 403 Forbidden')))"
+  }
+]

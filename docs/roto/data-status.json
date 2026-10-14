@@ -1,0 +1,10 @@
+{
+  "base_commit": "b4e072d4c5d493fb929063d2e2ccf8969e65cd19",
+  "snapshot_unchanged": true,
+  "snapshot_sha256": "6cde860d32e31b257ab739c2b06072903e59bf237d28a59d2e4ce01a1ace1894",
+  "roto_data_ready": false,
+  "reference_size": 479,
+  "expected_reference_size": 578,
+  "shooting_complete": 0,
+  "deployed": false
+}

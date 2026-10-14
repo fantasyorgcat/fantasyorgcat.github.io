@@ -65,3 +65,9 @@ CHROMIUM_PATH=/path/to/chromium python test_schedule_browser.py /tmp/fantasy-sch
 該測試將預覽、snapshot、桌面／手機截圖和結果寫入指定的隔離目錄，不改正式 index.html 或 data_snapshot.json。預覽醒目標示 UI TEST ONLY，發布 gate 會拒絕它。不能將這個合成預覽當作當日真資料驗收。測試涵蓋短週、1／7／14／31 天、跨年、無賽程、剩餘／背靠背／低比賽日、跨開賽時間的自動更新、背景回前景更新、空白整季選項保留已套用週次、非法期間、統計不變與 390px 水平捲動；UTC／DST／未排定／取消狀態另由 test_schedule 單元測試驗證。
 
 資料补強與實作順序見 [DATA_CAPABILITIES.md](DATA_CAPABILITIES.md)。現有 ESPN gamelog 已解析逐場分鐘、命中及出手，尚未完整持久化；保存分母／逐場資料不必先找另一家廠商。先做賽程與低場次日、自訂排名／counting points、小樣本，再補分母與聯盟已計入總量後做 H2H／ROTO。沒有傷病、usage 或私人聯盟來源時，不推斷角色變化的因果，也不承諾二換一的空格價值或最佳先發已可計算。
+
+## ROTO 配隊
+
+`roto.html` 延伸現有比較勾選，以同一季2025–26實績比較原陣容、對手與多人換人後的最多三組雷達；支援兩種明示口徑、未知值覆蓋與此裝置命名保存。BoxScore Lab／CC BY4.0二手整理，非官方全表驗證；Jabari Smith Jr. FGA975／974來源差異標未知。固定尺度及加權FG／FT不是真正聯盟積分或新季預測，無登入、私人聯盟或付費來源。
+
+已核原始CSV（582人）保留於`data/roto/`，同份資料整套計算，不拼接舊七項與新分母。610候選唯一匹配481，129不適用／未匹配保留unknown，0姓名歧義；benchmark不強湊舊ESPN578。來源、署名、映射及驗收見 [ROTO_QA.md](ROTO_QA.md)。本地匯出：`python roto_data.py`；數學：`node test_roto_core.cjs`；契約：`python -m unittest test_roto_data test_roto_boxscore`。年度來源須合法取得與核hash後更新，不重試被拒URL或硬改ready flag。

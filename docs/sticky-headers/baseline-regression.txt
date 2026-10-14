@@ -1,0 +1,1 @@
+Unmodified main fails fixed-header regression at assertion: (1500, {'x': 24, 'y': 0, 'width': 1452, 'height': 93.5}, {'x': 44, 'y': -499.9375, 'width': 1412, 'height': 41}) (original player header scrolls out of the viewport).

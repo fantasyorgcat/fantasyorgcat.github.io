@@ -17,3 +17,10 @@
 .team-games-sort{border:0;background:transparent;padding:0;min-height:28px;color:inherit;font:inherit;font-weight:650;white-space:nowrap}.team-games-sort [data-games-sort-arrow]{color:var(--accent);margin-left:4px}.team-games-sort:disabled{cursor:default;color:var(--muted)}.team-section table.dataTable thead th[aria-sort="none"]{box-shadow:none}
 #comparison-head button[aria-label*="目前"]{color:var(--accent);text-decoration:underline;text-underline-offset:3px}#comparison-head button[aria-label*="目前升序"]:after{content:' ↑'}#comparison-head button[aria-label*="目前降序"]:after{content:' ↓'}
 .platform-button:not(:disabled):not(.active):hover,.btn-stat:not(.active):hover{background:#e2e8e6;border-color:var(--accent)}.platform-button.active:hover{background:var(--accent-hover)}.platform-button:disabled{color:#555d62;border-style:dashed}.btn-stat.active,.season-picker select.active{box-shadow:inset 0 -2px var(--accent)}.metric-card:nth-child(2) strong{color:var(--warm-ink)}.metric-card:nth-child(4) strong{color:var(--rose-ink)}table.dataTable thead th[aria-sort]{box-shadow:inset 0 -3px var(--accent)}table.dataTable thead>tr>th.dt-ordering-asc span.dt-column-order:before,table.dataTable thead>tr>th.dt-ordering-desc span.dt-column-order:after{color:var(--accent);opacity:1}div.dt-container .dt-paging .dt-paging-button:hover{background:var(--accent)!important;border-color:var(--accent)!important;color:var(--paper)!important}div.dt-container .dt-paging .dt-paging-button.disabled{color:#555d62!important;background:transparent!important}.matchup small{color:var(--ink)}
+
+/* Page scrolling keeps the original DataTables header below the responsive navigation. */
+.player-section,.player-section .dt-scroll{overflow:visible}
+.player-section .dt-scroll-head{position:sticky!important;top:var(--workspace-height,0px);z-index:10;background:#d7dedf;border-radius:9px 9px 0 0}
+.schedule-scroll thead{position:sticky;top:0;z-index:2}
+
+.roto-link{display:inline-block;color:var(--accent);font-size:11px;margin-top:4px;text-underline-offset:3px}
