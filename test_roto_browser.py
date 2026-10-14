@@ -21,7 +21,18 @@ def run(origin,output):
             assert page.goto(origin+'/roto.html#players=1966,3195',wait_until='load').status==200
             assert page.locator('#mode').input_value()=='totals'
             assert page.locator('#table-mode').input_value()=='totals'
-            page.locator('#mode').select_option('perGame')
+            assert page.title()=='九項配隊分析 · FantasyOrgCat'
+            assert '歷史實績' in page.locator('#season-context').inner_text()
+            assert page.locator('.format-guides summary').count()==2
+            page.locator('.format-guides summary').last.click()
+            assert 'FGM／FGA／FTM／FTA' in page.locator('.format-guides details').last.inner_text()
+            assert '尚未提供聯盟名次' in page.locator('.format-guides details').last.inner_text()
+            page.locator('.format-guides summary').last.click()
+            radar_positions=page.locator('#radar [data-series="base"] circle').evaluate_all('(nodes)=>nodes.map(n=>[n.dataset.metric,n.getAttribute("cx"),n.getAttribute("cy")])')
+            page.locator('#compare-efficiency').click()
+            assert page.locator('#mode').input_value()=='perGame'
+            assert page.locator('#table-mode').input_value()=='perGame'
+            assert page.locator('#radar [data-series="base"] circle').evaluate_all('(nodes)=>nodes.map(n=>[n.dataset.metric,n.getAttribute("cx"),n.getAttribute("cy")])')==radar_positions
             assert page.locator('#base-count').inner_text()=='2 人'
             assert 'Noto Sans' in page.locator('body').evaluate('(e)=>getComputedStyle(e).fontFamily')
             assert float(page.locator('.category-table td small').first.evaluate('(e)=>getComputedStyle(e).fontSize').removesuffix('px'))>=13
@@ -57,7 +68,9 @@ def run(origin,output):
             assert page.locator('#radar [data-series]').count()==3
             assert page.locator('#radar [data-series="simulation"] circle').count()==9
             assert page.evaluate('JSON.stringify(ROTO_DATA.benchmark)')==baseline
+            radar_positions=page.locator('#radar [data-series]').evaluate_all('(nodes)=>nodes.map(n=>n.innerHTML)')
             page.locator('#table-mode').select_option('totals')
+            assert page.locator('#radar [data-series]').evaluate_all('(nodes)=>nodes.map(n=>n.innerHTML)')==radar_positions
             assert page.locator('#mode').input_value()=='totals'
             values=page.locator('tr[data-metric="PTS"] td').evaluate_all('(nodes)=>nodes.map(n=>n.dataset.value)')
             assert all(v and float(v).is_integer() for v in values[:3])
@@ -262,6 +275,7 @@ def run(origin,output):
         page=ctx.new_page();page.goto(origin+'/roto.html#players=1,2',wait_until='load')
         assert page.locator('#data-period').input_value()=='season'
         assert '2026-27' in page.locator('#period-label').inner_text()
+        assert '正在使用本季實績' in page.locator('#season-context').inner_text()
         assert 'UI TEST ONLY' in page.locator('#data-warning').inner_text()
         assert page.locator('tr[data-metric="PTS"] td[data-team="base"]').get_attribute('data-value')=='8'
         page.locator('#player-search').fill('Test 1')
@@ -284,10 +298,20 @@ def run(origin,output):
         page.locator('#mode').select_option('totals')
         value=float(page.locator('tr[data-metric="FG%"] td[data-team="base"]').get_attribute('data-value'))
         assert abs(value-100*10/12)<1e-10
+        # Radar always weights each player's per-game shots, even with a totals table.
+        circle=page.locator('#radar [data-series="base"] circle[data-metric="FG%"]')
+        radius=((float(circle.get_attribute('cx'))-230)**2+(float(circle.get_attribute('cy'))-184)**2)**.5
+        per_game_fg=100*(1/10+9/20)/(2/10+10/20)
+        assert abs(radius/123*100-(50+15*(per_game_fg-60)/20))<1e-10
+        radar_positions=page.locator('#radar [data-series="base"]').inner_html()
+        page.locator('#table-mode').select_option('perGame')
+        assert page.locator('#radar [data-series="base"]').inner_html()==radar_positions
+        assert abs(float(page.locator('tr[data-metric="FG%"] td[data-team="base"]').get_attribute('data-value'))-per_game_fg)<1e-10
+        page.locator('#table-mode').select_option('totals')
         assert page.locator('#radar [data-series="base"] circle').count()==9
         assert page.locator('#radar polygon[fill-opacity]').count()>=1
         page.screenshot(path=str(output/'roto-synthetic-math-390.png'))
-        ctx.close();results.append(dict(synthetic_math_only=True,production_data_unchanged=True,weighted_FG_pct=value,nine_axis_rendering=True))
+        ctx.close();results.append(dict(synthetic_math_only=True,production_data_unchanged=True,weighted_FG_pct=value,nine_axis_rendering=True,radar_always_per_game=True,weighted_radar_FG_pct=per_game_fg))
         browser.close()
     (output/'browser-results.json').write_text(json.dumps(results,indent=2))
     print(json.dumps(results))

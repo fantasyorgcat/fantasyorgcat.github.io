@@ -40,7 +40,7 @@
  }if(!state.base.length)host.append(element('small','先建立原陣容再選擇移出球員'));
  }
  function svg(tag,attributes,text){const e=document.createElementNS(NS,tag);for(const [key,v] of Object.entries(attributes))e.setAttribute(key,String(v));if(text!==undefined)e.textContent=text;return e;}
- function radar(teams){const host=$('radar');host.replaceChildren(svg('title',{id:'radar-title'},'固定所選季別實績參考雷達；未知類別留白'),svg('desc',{id:'radar-description'},'原陣容、自訂對手隊伍與換人後，TO低為佳。實際數字及未知原因在比較表。'));
+ function radar(teams){const host=$('radar');host.replaceChildren(svg('title',{id:'radar-title'},'固定所選季別每場產效雷達；未知類別留白'),svg('desc',{id:'radar-description'},'原陣容、自訂對手隊伍與換人後，以每場產效比較，TO低為佳。表格切換單位不改雷達口徑，實際數字及未知原因在比較表。'));
   const center=[230,184],radius=123,point=(i,score)=>{const angle=-Math.PI/2+i*2*Math.PI/9;return [center[0]+Math.cos(angle)*radius*score/100,center[1]+Math.sin(angle)*radius*score/100];},points=values=>values.map((v,i)=>point(i,v).join(',')).join(' ');
   for(const ring of [20,40,60,80,100])host.append(svg('polygon',{points:points(Array(9).fill(ring)),fill:'none',stroke:'#c9c2b8','stroke-width':1}));
   C.metrics.forEach((key,i)=>{const p=point(i,100),label=point(i,121);host.append(svg('line',{x1:center[0],y1:center[1],x2:p[0],y2:p[1],stroke:'#c9c2b8'}),svg('text',{x:label[0],y:label[1]+4,'text-anchor':'middle',fill:'#35434b','font-size':12},key==='TO'?'TO ↓':key));});
@@ -93,11 +93,13 @@
   $('base-count').textContent=teams.base.size+' 人';$('opponent-count').textContent=opponents.length+' 隊 · 目前 '+state.opponent.length+' 人';$('simulation-count').textContent=state.outgoing.length+' 移出／'+state.incoming.length+' 加入';
   $('coverage').textContent='原陣容 '+teams.base.size+' 人 · GP資料 '+teams.base.gpKnown+'/'+teams.base.size+' · 所選季別球員出賽合計 '+teams.base.gp+'（不是聯盟已計入場數）';
   $('unit-note').textContent=mode==='perGame'?'每人 1 場：逐員所選季別總量 ÷ 個人 GP 後合計；投籃同口徑加權，不平均百分比。':'所選季別整季總量：逐員實績總量合計，含個人不同出賽數；不是聯盟每日先發已計入成績。';
-  radar(teams);metrics(teams);rosterList('base');rosterList('opponent');rosterList('incoming');outgoingList();search(rebuild);
+  const radarTeams=mode==='perGame'?teams:Object.fromEntries(Object.entries(teams).map(([target,team])=>[target,C.knownView(C.aggregate(team.ids,data,'perGame'),data,'perGame')]));
+  radar(radarTeams);metrics(teams);rosterList('base');rosterList('opponent');rosterList('incoming');outgoingList();search(rebuild);
  }
  function savedOptions(selected=''){const host=$('saved-rosters');host.replaceChildren(element('option','選擇陣容'));host.firstChild.value='';for(const r of saved){const option=element('option',r.name+' · '+r.players.length+' 人');option.value=r.id;host.append(option);}host.value=selected;}
  function storageWarning(error){$('storage-warning').hidden=false;$('storage-warning').textContent='本地保存無法使用：'+error.message+'。本次編輯仍可繼續；既有資料未清除。';}
- for(const id of ['mode','table-mode'])$(id).addEventListener('change',e=>{mode=e.target.value;describeData();render(true);});for(const target of ['base','opponent','simulation'])$('show-'+target).addEventListener('change',render);
+ function setMode(value){mode=value;describeData();render(true);}
+ for(const id of ['mode','table-mode'])$(id).addEventListener('change',e=>setMode(e.target.value));$('compare-efficiency').addEventListener('click',()=>setMode('perGame'));for(const target of ['base','opponent','simulation'])$('show-'+target).addEventListener('change',render);
  $('player-search').addEventListener('input',()=>search());$('add-target').addEventListener('change',search);
  $('roto-player-table').addEventListener('change',e=>{if(e.target.dataset.rotoPick)togglePlayer(e.target.dataset.rotoPick,e.target.checked);});
  $('view-roto-comparison').addEventListener('click',()=>document.querySelector('.roto-overview').scrollIntoView({behavior:'smooth'}));
@@ -114,14 +116,15 @@
  });
  $('load-roster').addEventListener('click',()=>{const entry=saved.find(r=>r.id===$('saved-rosters').value);if(!entry){message('先選擇已保存的陣容。');return;}const target=$('load-target').value;if(target==='new-opponent')newOpponent(entry.name,entry.players);else{if(target==='opponent'&&activeTeam())activeTeam().name=entry.name;setRoster(target,entry.players);}message('已載入「'+entry.name+'」；使用目前快照，未知球員不補零。');});
  $('delete-roster').addEventListener('click',()=>{const entry=saved.find(r=>r.id===$('saved-rosters').value);if(!entry)return;const next=saved.filter(r=>r.id!==entry.id);try{C.save(localStorage,next);saved=next;savedOptions();message('已刪除這份本地保存。');}catch(e){storageWarning(e);}});
- function describeData(){$('period-label').textContent=data.season+' 例行賽實績 · 不代表新季預測或實際聯盟排名';$('snapshot-label').textContent=data.source_info?'來源 build '+data.source_info.publisher_build:'實績快照 '+data.generated_at;
+ function describeData(){$('period-label').textContent=data.season+' 例行賽實績 · 比較陣容體質與換人產效';$('snapshot-label').textContent=data.source_info?'來源 build '+data.source_info.publisher_build:'實績快照 '+data.generated_at;
+ $('season-context').textContent=period==='season'?(data.stats_available?'正在使用本季實績：平均產效反映目前樣本，請搭配 GP 與每場分鐘看。':'本季尚無例行賽實績。可切到上季參考歷史體質，開季後有有效資料時預設使用本季。'):'正在使用 '+data.season+' 歷史實績：適合回顧體質，球員角色、分鐘與健康可能改變；不能直接當作本季或剩餘球季預測。有效本季資料出現後，重新開啟此頁會預設使用本季。';
  $('data-warning').hidden=true;$('basis-label').textContent='基準 '+data.reference.size+' 位有所選季別實績的參考球員；來源完整母體 '+data.reference.expected+' 位，已保存分母 '+data.reference.shooting_complete+' 位。基準版本：'+data.reference.id+'。';
  if(data.source_period&&data.source_period.source_period_start&&data.source_period.source_period_end)$('basis-label').textContent+=' 來源 '+data.source+'；來源賽季範圍（'+(data.source_period.timezone||'UTC')+'）：'+data.source_period.source_period_start+' 至 '+data.source_period.source_period_end+'。';
  if(data.source_period?.stats_through_game)$('snapshot-label').textContent+=' · 已完賽統計至 '+data.source_period.stats_through_game;
  if(data.fixture){$('data-warning').hidden=false;$('data-warning').textContent='UI TEST ONLY · 合成資料驗證；不可發布或當作真實球員數據。';}
  else if(data.source_info){$('data-warning').hidden=false;const s=data.mapping.summary;$('data-warning').textContent='BoxScore Lab／CC BY 4.0 · 2025–26二手例行賽實績，非官方全表驗證。名單 '+s.matched+'/'+s.catalog+' 唯一映射；其餘 '+s.not_in_source+' 位此來源無適用資料，保持未知。Jabari Smith Jr. FGA 存975／974來源差異，未裁定，選入時FG%未知。';}
  else if(!data.data_ready){$('data-warning').hidden=false;$('data-warning').textContent='所選季別資料尚未完整，保留已知小計與覆蓋率；缺投籃分母或固定完整母體時，相關雷達留白，不當成0。';}
-  if(data.stats_available&&C.metrics.some(k=>data.benchmark[mode][k].sd===0)){$('data-warning').hidden=false;$('data-warning').textContent+=' 某些類別參考母體沒有變異，該雷達軸留白，實際數值仍可查看。';}
+  if(data.stats_available&&C.metrics.some(k=>data.benchmark.perGame[k].sd===0)){$('data-warning').hidden=false;$('data-warning').textContent+=' 某些類別參考母體沒有變異，該雷達軸留白，實際數值仍可查看。';}
  }
  const options=[...Object.entries(packageData.extra_periods||{}),[packageData.period_key||'ls',packageData]];for(const [key,entry] of options){const option=element('option',entry.season+(key==='season'?' 本季':key==='ls'?' 上季':' 封存')+(entry.stats_available===false?'（尚無例行賽實績）':''));option.value=key;$('data-period').append(option);}$('data-period').value=period;describeData();
  try{const stored=localStorage.getItem(C.opponentsKey);if(stored!==null){opponents=C.loadOpponents(localStorage);activeOpponent=opponents[0]?.id||'';}syncOpponent();}catch(e){opponentsWritable=false;$('opponents-status').textContent='對手保存無法讀取：'+e.message+'。既有內容不會覆寫，本次仍可編輯。';}
