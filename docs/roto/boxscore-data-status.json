@@ -1,0 +1,4778 @@
+{
+  "source": "BoxScore Lab",
+  "season": "2025-26",
+  "source_period": {
+    "source_period_start": "2025-10-21",
+    "source_period_end": "2026-04-12",
+    "timezone": "America/New_York",
+    "season_type": "Regular Season"
+  },
+  "data_ready": true,
+  "generated_at": "2026-10-10 17:34 UTC",
+  "mapping": {
+    "summary": {
+      "catalog": 610,
+      "matched": 481,
+      "not_in_source": 129,
+      "ambiguous": 0,
+      "source_unmapped": 101,
+      "declared_conflicts": 1,
+      "old_totals_disagreements": 0,
+      "old_comparable": 479
+    },
+    "records": [
+      {
+        "id": "4278039",
+        "name": "Nickeil Alexander-Walker",
+        "source_name": "Nickeil Alexander-Walker",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4712902",
+        "name": "Cameron Corhen",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4869342",
+        "name": "Dyson Daniels",
+        "source_name": "Dyson Daniels",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4431941",
+        "name": "RayJ Dennis",
+        "source_name": "RayJ Dennis",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4397020",
+        "name": "Luguentz Dort",
+        "source_name": "Luguentz Dort",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5106262",
+        "name": "Zuby Ejiofor",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "2578185",
+        "name": "Dorian Finney-Smith",
+        "source_name": "Dorian Finney-Smith",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5149077",
+        "name": "Kingston Flemings",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4585618",
+        "name": "Keshon Gilbert",
+        "source_name": "Keshon Gilbert",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4712863",
+        "name": "Mouhamed Gueye",
+        "source_name": "Mouhamed Gueye",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4701230",
+        "name": "Jalen Johnson",
+        "source_name": "Jalen Johnson",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4683857",
+        "name": "Kobe Johnson",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4280151",
+        "name": "Corey Kispert",
+        "source_name": "Corey Kispert",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "3146557",
+        "name": "Jock Landale",
+        "source_name": "Jock Landale",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "2490149",
+        "name": "CJ McCollum",
+        "source_name": "CJ McCollum",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4873201",
+        "name": "Asa Newell",
+        "source_name": "Asa Newell",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4431680",
+        "name": "Onyeka Okongwu",
+        "source_name": "Onyeka Okongwu",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5105571",
+        "name": "Henri Veesaar",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4397183",
+        "name": "Aaron Wiggins",
+        "source_name": "Aaron Wiggins",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4431714",
+        "name": "Jalen Wilson",
+        "source_name": "Jalen Wilson",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4433188",
+        "name": "Devin Carter",
+        "source_name": "Devin Carter",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5142621",
+        "name": "Chris Cenac Jr.",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "3195",
+        "name": "Mike Conley",
+        "source_name": "Mike Conley",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4837238",
+        "name": "Tucker DeVries",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4277951",
+        "name": "Luka Garza",
+        "source_name": "Luka Garza",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4251",
+        "name": "Paul George",
+        "source_name": "Paul George",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5175647",
+        "name": "Hugo Gonzalez",
+        "source_name": "Hugo González",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5176420",
+        "name": "Hayden Gray",
+        "source_name": "Hayden Gray",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4397251",
+        "name": "Ron Harper Jr.",
+        "source_name": "Ron Harper Jr.",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4065804",
+        "name": "Sam Hauser",
+        "source_name": "Sam Hauser",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4398356",
+        "name": "Gabe McGlothan",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "5106283",
+        "name": "Dillon Mitchell",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4066354",
+        "name": "Payton Pritchard",
+        "source_name": "Payton Pritchard",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4397424",
+        "name": "Neemias Queta",
+        "source_name": "Neemias Queta",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4351852",
+        "name": "Mitchell Robinson",
+        "source_name": "Mitchell Robinson",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4593841",
+        "name": "Baylor Scheierman",
+        "source_name": "Baylor Scheierman",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4065648",
+        "name": "Jayson Tatum",
+        "source_name": "Jayson Tatum",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5106272",
+        "name": "Milos Uzan",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4683689",
+        "name": "Jordan Walsh",
+        "source_name": "Jordan Walsh",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "3078576",
+        "name": "Derrick White",
+        "source_name": "Derrick White",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4702745",
+        "name": "Amari Williams",
+        "source_name": "Amari Williams",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5105626",
+        "name": "Tyler Bilodeau",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "5101761",
+        "name": "Mikel Brown Jr.",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4712896",
+        "name": "Noah Clowney",
+        "source_name": "Noah Clowney",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4432189",
+        "name": "Dain Dainja",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "5175643",
+        "name": "Egor Demin",
+        "source_name": "Egor Dëmin",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4702177",
+        "name": "Keon Ellis",
+        "source_name": "Keon Ellis",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4870564",
+        "name": "Joshua Jefferson",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "5174655",
+        "name": "Chaney Johnson",
+        "source_name": "Chaney Johnson",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "3907823",
+        "name": "Terance Mann",
+        "source_name": "Terance Mann",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4687718",
+        "name": "Josh Minott",
+        "source_name": "Josh Minott",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4702670",
+        "name": "Grant Nelson",
+        "source_name": "Grant Nelson",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4278104",
+        "name": "Michael Porter Jr.",
+        "source_name": "Michael Porter Jr.",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5037873",
+        "name": "Drake Powell",
+        "source_name": "Drake Powell",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "3064514",
+        "name": "Julius Randle",
+        "source_name": "Julius Randle",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5242502",
+        "name": "Ben Saraf",
+        "source_name": "Ben Saraf",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4432194",
+        "name": "Day'Ron Sharpe",
+        "source_name": "Day'Ron Sharpe",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5279130",
+        "name": "Nolan Traore",
+        "source_name": "Nolan Traore",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "3150844",
+        "name": "Moritz Wagner",
+        "source_name": "Moritz Wagner",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5107173",
+        "name": "Danny Wolf",
+        "source_name": "Danny Wolf",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "3135045",
+        "name": "Grayson Allen",
+        "source_name": "Grayson Allen",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5060701",
+        "name": "Christian Anderson",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4684269",
+        "name": "Kylan Boswell",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "2578239",
+        "name": "Pat Connaughton",
+        "source_name": "Pat Connaughton",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4433249",
+        "name": "Moussa Diabate",
+        "source_name": "Moussa Diabaté",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4897504",
+        "name": "Wyatt Fricks",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4701225",
+        "name": "PJ Hall",
+        "source_name": "PJ Hall",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4602025",
+        "name": "Sion James",
+        "source_name": "Sion James",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4278729",
+        "name": "Jarkel Joiner",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4576060",
+        "name": "Ryan Kalkbrenner",
+        "source_name": "Ryan Kalkbrenner",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5061575",
+        "name": "Kon Knueppel",
+        "source_name": "Kon Knueppel",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5239590",
+        "name": "Liam McNeeley",
+        "source_name": "Liam McNeeley",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4433287",
+        "name": "Brandon Miller",
+        "source_name": "Brandon Miller",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "2583632",
+        "name": "Royce O'Neale",
+        "source_name": "Royce O'Neale",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4396971",
+        "name": "Naz Reid",
+        "source_name": "Naz Reid",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5211176",
+        "name": "Tidjane Salaun",
+        "source_name": "Tidjane Salaün",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "3032979",
+        "name": "Dennis Schroder",
+        "source_name": "Dennis Schröder",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5281370",
+        "name": "Hannes Steinbach",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4395651",
+        "name": "Coby White",
+        "source_name": "Coby White",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4066218",
+        "name": "Grant Williams",
+        "source_name": "Grant Williams",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5105555",
+        "name": "Tobe Awaka",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4432162",
+        "name": "Brandon Boston Jr.",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4432946",
+        "name": "Jalen Bridges",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4711294",
+        "name": "Matas Buzelis",
+        "source_name": "Matas Buzelis",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4278067",
+        "name": "Nic Claxton",
+        "source_name": "Nic Claxton",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4066650",
+        "name": "Zach Collins",
+        "source_name": "Zach Collins",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5242496",
+        "name": "Noa Essengue",
+        "source_name": "Noa Essengue",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "unavailable"
+      },
+      {
+        "id": "4871145",
+        "name": "Josh Giddey",
+        "source_name": "Josh Giddey",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4683750",
+        "name": "Jordan Hawkins",
+        "source_name": "Jordan Hawkins",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "2990984",
+        "name": "Buddy Hield",
+        "source_name": "Buddy Hield",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4395626",
+        "name": "Tre Jones",
+        "source_name": "Tre Jones",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5044385",
+        "name": "Leonard Miller",
+        "source_name": "Leonard Miller",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4432822",
+        "name": "Isaac Okoro",
+        "source_name": "Isaac Okoro",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4397689",
+        "name": "Drew Peterson",
+        "source_name": "Drew Peterson",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "2595516",
+        "name": "Norman Powell",
+        "source_name": "Norman Powell",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4593049",
+        "name": "Orlando Robinson",
+        "source_name": "Orlando Robinson",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4898010",
+        "name": "Jaylin Sellers",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4397189",
+        "name": "Jalen Smith",
+        "source_name": "Jalen Smith",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4432117",
+        "name": "Isaiah Stevens",
+        "source_name": "Isaiah Stevens",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4848625",
+        "name": "Dailyn Swain",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4431687",
+        "name": "Patrick Williams",
+        "source_name": "Patrick Williams",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5095151",
+        "name": "Caleb Wilson",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4593815",
+        "name": "Rashaun Agee",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4066328",
+        "name": "Jarrett Allen",
+        "source_name": "Jarrett Allen",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4702099",
+        "name": "Zack Austin",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "3934723",
+        "name": "Thomas Bryant",
+        "source_name": "Thomas Bryant",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4997530",
+        "name": "Khalifa Diop",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4431734",
+        "name": "Tristan Enaruna",
+        "source_name": "Tristan Enaruna",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "3992",
+        "name": "James Harden",
+        "source_name": "James Harden",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "2995706",
+        "name": "Mario Hezonja",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4898369",
+        "name": "Curtis Jones",
+        "source_name": "Curtis Jones",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4066757",
+        "name": "Sam Merrill",
+        "source_name": "Sam Merrill",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5177362",
+        "name": "Riley Minix",
+        "source_name": "Riley Minix",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "3908809",
+        "name": "Donovan Mitchell",
+        "source_name": "Donovan Mitchell",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4432158",
+        "name": "Evan Mobley",
+        "source_name": "Evan Mobley",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4701233",
+        "name": "Craig Porter Jr.",
+        "source_name": "Craig Porter Jr.",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5023693",
+        "name": "Tyrese Proctor",
+        "source_name": "Tyrese Proctor",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4701845",
+        "name": "Kadary Richmond",
+        "source_name": "Kadary Richmond",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5041951",
+        "name": "Meleek Thomas",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "5106268",
+        "name": "Nae'Qwan Tomlin",
+        "source_name": "Nae'Qwan Tomlin",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4683747",
+        "name": "Jaylon Tyson",
+        "source_name": "Jaylon Tyson",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5106261",
+        "name": "Ernest Udeh Jr.",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4576087",
+        "name": "Peyton Watson",
+        "source_name": "Peyton Watson",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4593125",
+        "name": "Santi Aldama",
+        "source_name": "Santi Aldama",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5148538",
+        "name": "Tarik Biberovic",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4432582",
+        "name": "Max Christie",
+        "source_name": "Max Christie",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4701208",
+        "name": "Moussa Cisse",
+        "source_name": "Moussa Cisse",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5279129",
+        "name": "Sergio de Larrea",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "5041939",
+        "name": "Cooper Flagg",
+        "source_name": "Cooper Flagg",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4278049",
+        "name": "Daniel Gafford",
+        "source_name": "Daniel Gafford",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5105806",
+        "name": "Jett Howard",
+        "source_name": "Jett Howard",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "6442",
+        "name": "Kyrie Irving",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4873153",
+        "name": "Morez Johnson Jr.",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "5106040",
+        "name": "Tobi Lawal",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4683688",
+        "name": "Dereck Lively II",
+        "source_name": "Dereck Lively II",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4431775",
+        "name": "Seth Lundy",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4278594",
+        "name": "Naji Marshall",
+        "source_name": "Naji Marshall",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "3138160",
+        "name": "Caleb Martin",
+        "source_name": "Caleb Martin",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4898238",
+        "name": "John Poulakidas",
+        "source_name": "John Poulakidas",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "2531367",
+        "name": "Dwight Powell",
+        "source_name": "Dwight Powell",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5211175",
+        "name": "Zaccharie Risacher",
+        "source_name": "Zaccharie Risacher",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4432107",
+        "name": "Marcus Sasser",
+        "source_name": "Marcus Sasser",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4278078",
+        "name": "P.J. Washington",
+        "source_name": "P.J. Washington",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4277848",
+        "name": "Marvin Bagley III",
+        "source_name": "Marvin Bagley III",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4431767",
+        "name": "Christian Braun",
+        "source_name": "Christian Braun",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4698719",
+        "name": "Trevon Brazile",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "3978",
+        "name": "DeMar DeRozan",
+        "source_name": "DeMar DeRozan",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4065813",
+        "name": "Alpha Diallo",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4395667",
+        "name": "Dane Goodwin",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "3064290",
+        "name": "Aaron Gordon",
+        "source_name": "Aaron Gordon",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4432976",
+        "name": "Coleman Hawkins",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4433607",
+        "name": "DaRon Holmes II",
+        "source_name": "DaRon Holmes II",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4565698",
+        "name": "Bryce Hopkins",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "3138196",
+        "name": "Cameron Johnson",
+        "source_name": "Cameron Johnson",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "3112335",
+        "name": "Nikola Jokic",
+        "source_name": "Nikola Jokić",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4592427",
+        "name": "Spencer Jones",
+        "source_name": "Spencer Jones",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "3135046",
+        "name": "Tyus Jones",
+        "source_name": "Tyus Jones",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4432872",
+        "name": "Emanuel Miller",
+        "source_name": "Emanuel Miller",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "3936299",
+        "name": "Jamal Murray",
+        "source_name": "Jamal Murray",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4433629",
+        "name": "Ryan Nembhard",
+        "source_name": "Ryan Nembhard",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4431690",
+        "name": "Zeke Nnaji",
+        "source_name": "Zeke Nnaji",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4432181",
+        "name": "Julian Strawther",
+        "source_name": "Julian Strawther",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4277890",
+        "name": "Lonnie Walker IV",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "5105592",
+        "name": "Cam Whitmore",
+        "source_name": "Cam Whitmore",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "3908845",
+        "name": "John Collins",
+        "source_name": "John Collins",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4432166",
+        "name": "Cade Cunningham",
+        "source_name": "Cade Cunningham",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4433621",
+        "name": "Jalen Duren",
+        "source_name": "Jalen Duren",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "2596112",
+        "name": "Javonte Green",
+        "source_name": "Javonte Green",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4397449",
+        "name": "Elijah Harkless",
+        "source_name": "Elijah Harkless",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4683771",
+        "name": "Ronald Holland II",
+        "source_name": "Ronald Holland II",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4066372",
+        "name": "Kevin Huerter",
+        "source_name": "Kevin Huerter",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5107199",
+        "name": "Daniss Jenkins",
+        "source_name": "Daniss Jenkins",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4395702",
+        "name": "Isaiah Joe",
+        "source_name": "Isaiah Joe",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5107818",
+        "name": "Isaac Jones",
+        "source_name": "Isaac Jones",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4700852",
+        "name": "Chaz Lanier",
+        "source_name": "Chaz Lanier",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5258459",
+        "name": "Ebuka Okorie",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "5037878",
+        "name": "Ugonna Onyenso",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "2990962",
+        "name": "Taurean Prince",
+        "source_name": "Taurean Prince",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4278562",
+        "name": "Paul Reed",
+        "source_name": "Paul Reed",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "3157465",
+        "name": "Duncan Robinson",
+        "source_name": "Duncan Robinson",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4397882",
+        "name": "Tolu Smith",
+        "source_name": "Tolu Smith",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4684742",
+        "name": "Ausar Thompson",
+        "source_name": "Ausar Thompson",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4592843",
+        "name": "Brice Williams",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4397886",
+        "name": "Charles Bassey",
+        "source_name": "Charles Bassey",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "6430",
+        "name": "Jimmy Butler III",
+        "source_name": "Jimmy Butler III",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4433149",
+        "name": "LJ Cryer",
+        "source_name": "LJ Cryer",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "3975",
+        "name": "Stephen Curry",
+        "source_name": "Stephen Curry",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "6589",
+        "name": "Draymond Green",
+        "source_name": "Draymond Green",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "3213",
+        "name": "Al Horford",
+        "source_name": "Al Horford",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4703396",
+        "name": "Graham Ike",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4696317",
+        "name": "Miles Kelly",
+        "source_name": "Miles Kelly",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5175737",
+        "name": "Yaxel Lendeborg",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4897449",
+        "name": "Malevy Leons",
+        "source_name": "Malevy Leons",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4066436",
+        "name": "De'Anthony Melton",
+        "source_name": "De'Anthony Melton",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4432171",
+        "name": "Moses Moody",
+        "source_name": "Moses Moody",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "2990969",
+        "name": "Georges Niang",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "3134903",
+        "name": "Gary Payton II",
+        "source_name": "Gary Payton II",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4709138",
+        "name": "Brandin Podziemski",
+        "source_name": "Brandin Podziemski",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "3102531",
+        "name": "Kristaps Porzingis",
+        "source_name": "Kristaps Porziņģis",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4897262",
+        "name": "Will Richard",
+        "source_name": "Will Richard",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4997536",
+        "name": "Gui Santos",
+        "source_name": "Gui Santos",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4433159",
+        "name": "Dalen Terry",
+        "source_name": "Dalen Terry",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5170949",
+        "name": "Alex Toohey",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4397040",
+        "name": "Brandon Williams",
+        "source_name": "Brandon Williams",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "2991235",
+        "name": "Steven Adams",
+        "source_name": "Steven Adams",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "3037789",
+        "name": "Bogdan Bogdanovic",
+        "source_name": "Bogdan Bogdanović",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "3102529",
+        "name": "Clint Capela",
+        "source_name": "Clint Capela",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4683860",
+        "name": "Quadir Copeland",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4592857",
+        "name": "Isaiah Crawford",
+        "source_name": "Isaiah Crawford",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "3202",
+        "name": "Kevin Durant",
+        "source_name": "Kevin Durant",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4433192",
+        "name": "Tari Eason",
+        "source_name": "Tari Eason",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4709131",
+        "name": "Sean Pedulla",
+        "source_name": "Sean Pedulla",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5105553",
+        "name": "Julian Phillips",
+        "source_name": "Julian Phillips",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4871144",
+        "name": "Alperen Sengun",
+        "source_name": "Alperen Sengun",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4711272",
+        "name": "Reed Sheppard",
+        "source_name": "Reed Sheppard",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "2990992",
+        "name": "Marcus Smart",
+        "source_name": "Marcus Smart",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4432639",
+        "name": "Jabari Smith Jr.",
+        "source_name": "Jabari Smith Jr.",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "3136777",
+        "name": "Jae'Sean Tate",
+        "source_name": "Jae'Sean Tate",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4684740",
+        "name": "Amen Thompson",
+        "source_name": "Amen Thompson",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5105837",
+        "name": "Bruce Thornton",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4432827",
+        "name": "Oscar Tshiebwe",
+        "source_name": "Oscar Tshiebwe",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "2991230",
+        "name": "Fred VanVleet",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4431752",
+        "name": "Kobe Brown",
+        "source_name": "Kobe Brown",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5157066",
+        "name": "Johnny Furphy",
+        "source_name": "Johnny Furphy",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4396993",
+        "name": "Tyrese Haliburton",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4065731",
+        "name": "Jay Huff",
+        "source_name": "Jay Huff",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4592829",
+        "name": "Quenton Jackson",
+        "source_name": "Quenton Jackson",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "3999",
+        "name": "James Johnson",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "2530530",
+        "name": "T.J. McConnell",
+        "source_name": "T.J. McConnell",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "2580365",
+        "name": "Larry Nance Jr.",
+        "source_name": "Larry Nance Jr.",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4395712",
+        "name": "Andrew Nembhard",
+        "source_name": "Andrew Nembhard",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4396909",
+        "name": "Aaron Nesmith",
+        "source_name": "Aaron Nesmith",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "3133603",
+        "name": "Kelly Oubre Jr.",
+        "source_name": "Kelly Oubre Jr.",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4433076",
+        "name": "Ben Sheppard",
+        "source_name": "Ben Sheppard",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "3149673",
+        "name": "Pascal Siakam",
+        "source_name": "Pascal Siakam",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4398207",
+        "name": "Jalen Slawson",
+        "source_name": "Jalen Slawson",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5105854",
+        "name": "Braden Smith",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4278355",
+        "name": "Obi Toppin",
+        "source_name": "Obi Toppin",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5106060",
+        "name": "Jarace Walker",
+        "source_name": "Jarace Walker",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4017837",
+        "name": "Ivica Zubac",
+        "source_name": "Ivica Zubac",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "6580",
+        "name": "Bradley Beal",
+        "source_name": "Bradley Beal",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4845363",
+        "name": "Cam Christie",
+        "source_name": "Cam Christie",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5106258",
+        "name": "Gradey Dick",
+        "source_name": "Gradey Dick",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "2991139",
+        "name": "Kris Dunn",
+        "source_name": "Kris Dunn",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4396907",
+        "name": "Darius Garland",
+        "source_name": "Darius Garland",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4066648",
+        "name": "Rui Hachimura",
+        "source_name": "Rui Hachimura",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "3913176",
+        "name": "Brandon Ingram",
+        "source_name": "Brandon Ingram",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4432170",
+        "name": "Isaiah Jackson",
+        "source_name": "Isaiah Jackson",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "3936099",
+        "name": "Derrick Jones Jr.",
+        "source_name": "Derrick Jones Jr.",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5159895",
+        "name": "Yuki Kawamura",
+        "source_name": "Yuki Kawamura",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "3448",
+        "name": "Brook Lopez",
+        "source_name": "Brook Lopez",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5105832",
+        "name": "Nick Martinelli",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "5075626",
+        "name": "Baba Miller",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4396818",
+        "name": "Jordan Miller",
+        "source_name": "Jordan Miller",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5108024",
+        "name": "Yanic Konan Niederhauser",
+        "source_name": "Yanic Konan Niederhäuser",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4398390",
+        "name": "Jalen Pickett",
+        "source_name": "Jalen Pickett",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4702352",
+        "name": "Kobe Sanders",
+        "source_name": "Kobe Sanders",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4065778",
+        "name": "Max Strus",
+        "source_name": "Max Strus",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5254165",
+        "name": "Keaton Wagler",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4683935",
+        "name": "Blake Wesley",
+        "source_name": "Blake Wesley",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5113969",
+        "name": "Cameron Carr",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4684443",
+        "name": "Rafael Castro",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "3945274",
+        "name": "Luka Doncic",
+        "source_name": "Luka Dončić",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4397014",
+        "name": "Quentin Grimes",
+        "source_name": "Quentin Grimes",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4868423",
+        "name": "Jaden Hardy",
+        "source_name": "Jaden Hardy",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4683774",
+        "name": "Bronny James",
+        "source_name": "Bronny James",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4433599",
+        "name": "Arthur Kaluma",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4433136",
+        "name": "Walker Kessler",
+        "source_name": "Walker Kessler",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4897943",
+        "name": "Dalton Knecht",
+        "source_name": "Dalton Knecht",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4592691",
+        "name": "Jake LaRavia",
+        "source_name": "Jake LaRavia",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "3155535",
+        "name": "Kevon Looney",
+        "source_name": "Kevon Looney",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4278580",
+        "name": "Sandro Mamukelashvili",
+        "source_name": "Sandro Mamukelashvili",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4702972",
+        "name": "Chris Manon",
+        "source_name": "Chris Mañon",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5114350",
+        "name": "AK Okereke",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4066457",
+        "name": "Austin Reaves",
+        "source_name": "Austin Reaves",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4277811",
+        "name": "Collin Sexton",
+        "source_name": "Collin Sexton",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4397134",
+        "name": "Cole Swider",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "5060631",
+        "name": "Adou Thiero",
+        "source_name": "Adou Thiero",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "3907498",
+        "name": "Matisse Thybulle",
+        "source_name": "Matisse Thybulle",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4278077",
+        "name": "Jarred Vanderbilt",
+        "source_name": "Jarred Vanderbilt",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4433137",
+        "name": "Ziaire Williams",
+        "source_name": "Ziaire Williams",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5041935",
+        "name": "Cameron Boozer",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4896372",
+        "name": "Walter Clayton Jr.",
+        "source_name": "Walter Clayton Jr.",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5105817",
+        "name": "Carson Cooper",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4903027",
+        "name": "Cedric Coward",
+        "source_name": "Cedric Coward",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4600663",
+        "name": "Zach Edey",
+        "source_name": "Zach Edey",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "2991070",
+        "name": "Jerami Grant",
+        "source_name": "Jerami Grant",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4684806",
+        "name": "Taylor Hendricks",
+        "source_name": "Taylor Hendricks",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5105550",
+        "name": "GG Jackson",
+        "source_name": "GG Jackson",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4065733",
+        "name": "Ty Jerome",
+        "source_name": "Ty Jerome",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5231919",
+        "name": "Karim Lopez",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4683934",
+        "name": "Jahmai Mashack",
+        "source_name": "Jahmai Mashack",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4594326",
+        "name": "Kris Murray",
+        "source_name": "Kris Murray",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4432185",
+        "name": "Micah Peavy",
+        "source_name": "Micah Peavy",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4431785",
+        "name": "Scotty Pippen Jr.",
+        "source_name": "Scotty Pippen Jr.",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4593016",
+        "name": "Quinten Post",
+        "source_name": "Quinten Post",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4595400",
+        "name": "Olivier-Maxence Prosper",
+        "source_name": "Olivier-Maxence Prosper",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4781746",
+        "name": "Javon Small",
+        "source_name": "Javon Small",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4433083",
+        "name": "Cam Spencer",
+        "source_name": "Cam Spencer",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4432810",
+        "name": "Isaiah Stewart",
+        "source_name": "Isaiah Stewart",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5112087",
+        "name": "Jaylen Wells",
+        "source_name": "Jaylen Wells",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4066261",
+        "name": "Bam Adebayo",
+        "source_name": "Bam Adebayo",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "3032977",
+        "name": "Giannis Antetokounmpo",
+        "source_name": "Giannis Antetokounmpo",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5107157",
+        "name": "Ryan Conwell",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4837356",
+        "name": "Tre Donaldson",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "3899664",
+        "name": "Simone Fontecchio",
+        "source_name": "Simone Fontecchio",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4431772",
+        "name": "Myron Gardner",
+        "source_name": "Myron Gardner",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4700818",
+        "name": "Vladislav Goldin",
+        "source_name": "Vladislav Goldin",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "2528210",
+        "name": "Tim Hardaway Jr.",
+        "source_name": "Tim Hardaway Jr.",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4431786",
+        "name": "Keshad Johnson",
+        "source_name": "Keshad Johnson",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4997528",
+        "name": "Nikola Jovic",
+        "source_name": "Nikola Jović",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "3950760",
+        "name": "Kylor Kelley",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4601025",
+        "name": "Pelle Larsson",
+        "source_name": "Pelle Larsson",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4432753",
+        "name": "Gabe Madsen",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4898237",
+        "name": "Bez Mbeng",
+        "source_name": "Bez Mbeng",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4278053",
+        "name": "Davion Mitchell",
+        "source_name": "Davion Mitchell",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "3064482",
+        "name": "Bobby Portis",
+        "source_name": "Bobby Portis Jr.",
+        "status": "matched",
+        "method": "explicit_suffix_alias_plus_exact_GP_and_seven_totals",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4278076",
+        "name": "Nick Richards",
+        "source_name": "Nick Richards",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4693954",
+        "name": "Ian Schieffelin",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4066993",
+        "name": "Dru Smith",
+        "source_name": "Dru Smith",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "6475",
+        "name": "Klay Thompson",
+        "source_name": "Klay Thompson",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "3059319",
+        "name": "Andrew Wiggins",
+        "source_name": "Andrew Wiggins",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5164559",
+        "name": "Nate Ament",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4433569",
+        "name": "Johni Broome",
+        "source_name": "Johni Broome",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5082206",
+        "name": "Brayden Burries",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4997526",
+        "name": "Ousmane Dieng",
+        "source_name": "Ousmane Dieng",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4397475",
+        "name": "AJ Green",
+        "source_name": "AJ Green",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4395725",
+        "name": "Tyler Herro",
+        "source_name": "Tyler Herro",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5214640",
+        "name": "Kasparas Jakucionis",
+        "source_name": "Kasparas Jakučionis",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4432848",
+        "name": "Jaime Jaquez Jr.",
+        "source_name": "Jaime Jaquez Jr.",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4697268",
+        "name": "Kam Jones",
+        "source_name": "Kam Jones",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "3134907",
+        "name": "Kyle Kuzma",
+        "source_name": "Kyle Kuzma",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "2991043",
+        "name": "Caris LeVert",
+        "source_name": "Caris LeVert",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5214989",
+        "name": "Bogoljub Markovic",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4397233",
+        "name": "Pete Nance",
+        "source_name": "Pete Nance",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4397140",
+        "name": "Kevin Porter Jr.",
+        "source_name": "Kevin Porter Jr.",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4591725",
+        "name": "Ryan Rollins",
+        "source_name": "Ryan Rollins",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4397114",
+        "name": "Cormac Ryan",
+        "source_name": "Cormac Ryan",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4277922",
+        "name": "Jericho Sims",
+        "source_name": "Jericho Sims",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4398257",
+        "name": "Jake Stephens",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4277843",
+        "name": "Gary Trent Jr.",
+        "source_name": "Gary Trent Jr.",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "3133628",
+        "name": "Myles Turner",
+        "source_name": "Myles Turner",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5105623",
+        "name": "Kel'el Ware",
+        "source_name": "Kel'el Ware",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4432816",
+        "name": "LaMelo Ball",
+        "source_name": "LaMelo Ball",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5279133",
+        "name": "Joan Beringer",
+        "source_name": "Joan Beringer",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4432247",
+        "name": "Jaylen Clark",
+        "source_name": "Jaylen Clark",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "3934673",
+        "name": "Donte DiVincenzo",
+        "source_name": "Donte DiVincenzo",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4397002",
+        "name": "Ayo Dosunmu",
+        "source_name": "Ayo Dosunmu",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4594268",
+        "name": "Anthony Edwards",
+        "source_name": "Anthony Edwards",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5061585",
+        "name": "Isaiah Evans",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4592699",
+        "name": "Enrique Freeman",
+        "source_name": "Enrique Freeman",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "3032976",
+        "name": "Rudy Gobert",
+        "source_name": "Rudy Gobert",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4592492",
+        "name": "Bones Hyland",
+        "source_name": "Bones Hyland",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4433247",
+        "name": "Jonathan Kuminga",
+        "source_name": "Jonathan Kuminga",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "3136196",
+        "name": "Trey Lyles",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4431828",
+        "name": "KJ Martin",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4431671",
+        "name": "Jaden McDaniels",
+        "source_name": "Jaden McDaniels",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4702134",
+        "name": "Norchad Omier",
+        "source_name": "Norchad Omier",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4592979",
+        "name": "Zyon Pullin",
+        "source_name": "Zyon Pullin",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4592686",
+        "name": "Antonio Reeves",
+        "source_name": "Antonio Reeves",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4432847",
+        "name": "Terrence Shannon Jr.",
+        "source_name": "Terrence Shannon Jr",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4431695",
+        "name": "Drew Timme",
+        "source_name": "Drew Timme",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4895758",
+        "name": "Cody Williams",
+        "source_name": "Cody Williams",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5157587",
+        "name": "Rocco Zikarsky",
+        "source_name": "Rocco Zikarsky",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4397136",
+        "name": "Saddiq Bey",
+        "source_name": "Saddiq Bey",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4683736",
+        "name": "Kobe Bufkin",
+        "source_name": "Kobe Bufkin",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4712862",
+        "name": "Malik Dia",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "5144091",
+        "name": "Jeremiah Fears",
+        "source_name": "Jeremiah Fears",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4433623",
+        "name": "Caleb Houstan",
+        "source_name": "Caleb Houstan",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5170947",
+        "name": "AJ Johnson",
+        "source_name": "AJ Johnson",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4277813",
+        "name": "Herbert Jones",
+        "source_name": "Herbert Jones",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "3442",
+        "name": "DeAndre Jordan",
+        "source_name": "DeAndre Jordan",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4431778",
+        "name": "Christian Koloko",
+        "source_name": "Christian Koloko",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4683634",
+        "name": "Bennedict Mathurin",
+        "source_name": "Bennedict Mathurin",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4997538",
+        "name": "Karlo Matkovic",
+        "source_name": "Karlo Matković",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4576086",
+        "name": "Bryce McGowens",
+        "source_name": "Bryce McGowens",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5061589",
+        "name": "Yves Missi",
+        "source_name": "Yves Missi",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4397688",
+        "name": "Trey Murphy III",
+        "source_name": "Trey Murphy III",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "3907497",
+        "name": "Dejounte Murray",
+        "source_name": "Dejounte Murray",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4703115",
+        "name": "Jaron Pierre Jr.",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4277956",
+        "name": "Jordan Poole",
+        "source_name": "Jordan Poole",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4869780",
+        "name": "Derik Queen",
+        "source_name": "Derik Queen",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4683742",
+        "name": "Julian Reese",
+        "source_name": "Julian Reese",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4431675",
+        "name": "Trendon Watford",
+        "source_name": "Trendon Watford",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4395628",
+        "name": "Zion Williamson",
+        "source_name": "Zion Williamson",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4397018",
+        "name": "Ochai Agbaji",
+        "source_name": "Ochai Agbaji",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4683730",
+        "name": "Jaden Akins",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4277869",
+        "name": "Jose Alvarado",
+        "source_name": "Jose Alvarado",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "3934719",
+        "name": "OG Anunoby",
+        "source_name": "OG Anunoby",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4065673",
+        "name": "Tony Bradley",
+        "source_name": "Tony Bradley",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "3147657",
+        "name": "Mikal Bridges",
+        "source_name": "Mikal Bridges",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4065670",
+        "name": "Bruce Brown",
+        "source_name": "Bruce Brown",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "3934672",
+        "name": "Jalen Brunson",
+        "source_name": "Jalen Brunson",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "2528426",
+        "name": "Jordan Clarkson",
+        "source_name": "Jordan Clarkson",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5211983",
+        "name": "Pacome Dadiet",
+        "source_name": "Pacôme Dadiet",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5289900",
+        "name": "Mohamed Diawara",
+        "source_name": "Mohamed Diawara",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "6585",
+        "name": "Andre Drummond",
+        "source_name": "Andre Drummond",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "3914285",
+        "name": "Drew Eubanks",
+        "source_name": "Drew Eubanks",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "3062679",
+        "name": "Josh Hart",
+        "source_name": "Josh Hart",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4433225",
+        "name": "Tyler Kolek",
+        "source_name": "Tyler Kolek",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4431823",
+        "name": "Miles McBride",
+        "source_name": "Miles McBride",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4411057",
+        "name": "Kevin McCullar Jr.",
+        "source_name": "Kevin McCullar Jr.",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4838721",
+        "name": "Tyler Nickel",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "3914044",
+        "name": "Landry Shamet",
+        "source_name": "Landry Shamet",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "3136195",
+        "name": "Karl-Anthony Towns",
+        "source_name": "Karl-Anthony Towns",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4432808",
+        "name": "James Wiseman",
+        "source_name": "James Wiseman",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4684208",
+        "name": "Brooks Barnhizer",
+        "source_name": "Brooks Barnhizer",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "2991350",
+        "name": "Alex Caruso",
+        "source_name": "Alex Caruso",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5105800",
+        "name": "Josh Dix",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4278073",
+        "name": "Shai Gilgeous-Alexander",
+        "source_name": "Shai Gilgeous-Alexander",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4222252",
+        "name": "Isaiah Hartenstein",
+        "source_name": "Isaiah Hartenstein",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5116468",
+        "name": "Andrew Holifield",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4433255",
+        "name": "Chet Holmgren",
+        "source_name": "Chet Holmgren",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5174983",
+        "name": "Aday Mara",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4683778",
+        "name": "Jared McCain",
+        "source_name": "Jared McCain",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4900671",
+        "name": "Ajay Mitchell",
+        "source_name": "Ajay Mitchell",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5106270",
+        "name": "Otega Oweh",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4897155",
+        "name": "Anthony Pritchard",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4277923",
+        "name": "Zhaire Smith",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "5061603",
+        "name": "Thomas Sorber",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "5241364",
+        "name": "Bennett Stirtz",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "5109790",
+        "name": "Christoph Tilly",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "5159925",
+        "name": "Nikola Topic",
+        "source_name": "Nikola Topić",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4683692",
+        "name": "Cason Wallace",
+        "source_name": "Cason Wallace",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4593803",
+        "name": "Jalen Williams",
+        "source_name": "Jalen Williams",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4432823",
+        "name": "Jaylin Williams",
+        "source_name": "Jaylin Williams",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "3133626",
+        "name": "Kenrich Williams",
+        "source_name": "Kenrich Williams",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4432573",
+        "name": "Paolo Banchero",
+        "source_name": "Paolo Banchero",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4066320",
+        "name": "Desmond Bane",
+        "source_name": "Desmond Bane",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4348700",
+        "name": "Goga Bitadze",
+        "source_name": "Goga Bitadze",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4712849",
+        "name": "Anthony Black",
+        "source_name": "Anthony Black",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4565201",
+        "name": "Malaki Branham",
+        "source_name": "Malaki Branham",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4278572",
+        "name": "Jamal Cain",
+        "source_name": "Jamal Cain",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "3133635",
+        "name": "Jevon Carter",
+        "source_name": "Jevon Carter",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4277847",
+        "name": "Wendell Carter Jr.",
+        "source_name": "Wendell Carter Jr.",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4397204",
+        "name": "Colin Castleton",
+        "source_name": "Colin Castleton",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4702382",
+        "name": "Tristan da Silva",
+        "source_name": "Tristan da Silva",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4576085",
+        "name": "JD Davison",
+        "source_name": "JD Davison",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4065654",
+        "name": "Jonathan Isaac",
+        "source_name": "Jonathan Isaac",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4278075",
+        "name": "Kevin Knox II",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4593034",
+        "name": "Alex Morales",
+        "source_name": "Alex Morales",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5107251",
+        "name": "Izaiyah Nelson",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "5214637",
+        "name": "Noah Penda",
+        "source_name": "Noah Penda",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5239561",
+        "name": "Jase Richardson",
+        "source_name": "Jase Richardson",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4432165",
+        "name": "Jalen Suggs",
+        "source_name": "Jalen Suggs",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "6478",
+        "name": "Nikola Vucevic",
+        "source_name": "Nikola Vučević",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4566434",
+        "name": "Franz Wagner",
+        "source_name": "Franz Wagner",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4870562",
+        "name": "Dominick Barlow",
+        "source_name": "Dominick Barlow",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5105637",
+        "name": "Adem Bona",
+        "source_name": "Adem Bona",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "3917376",
+        "name": "Jaylen Brown",
+        "source_name": "Jaylen Brown",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "2581018",
+        "name": "Kentavious Caldwell-Pope",
+        "source_name": "Kentavious Caldwell-Pope",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5124612",
+        "name": "VJ Edgecombe",
+        "source_name": "VJ Edgecombe",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4711297",
+        "name": "Justin Edwards",
+        "source_name": "Justin Edwards",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "3059318",
+        "name": "Joel Embiid",
+        "source_name": "Joel Embiid",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "3904625",
+        "name": "Tacko Fall",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4871141",
+        "name": "Ariel Hukporti",
+        "source_name": "Ariel Hukporti",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "1966",
+        "name": "LeBron James",
+        "source_name": "LeBron James",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4702159",
+        "name": "Dillon Jones",
+        "source_name": "Dillon Jones",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4433144",
+        "name": "Caleb Love",
+        "source_name": "Caleb Love",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4431678",
+        "name": "Tyrese Maxey",
+        "source_name": "Tyrese Maxey",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4702049",
+        "name": "Duke Miles",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4592444",
+        "name": "Jameer Nelson Jr.",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4873090",
+        "name": "Labaron Philon Jr.",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "5099752",
+        "name": "Rayan Rupert",
+        "source_name": "Rayan Rupert",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4351851",
+        "name": "Anfernee Simons",
+        "source_name": "Anfernee Simons",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4897471",
+        "name": "Saint Thomas",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "3912848",
+        "name": "Dean Wade",
+        "source_name": "Dean Wade",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4432446",
+        "name": "Jabari Walker",
+        "source_name": "Jabari Walker",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "3136193",
+        "name": "Devin Booker",
+        "source_name": "Devin Booker",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4280245",
+        "name": "Jamaree Bouyea",
+        "source_name": "Jamaree Bouyea",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4591259",
+        "name": "Koby Brea",
+        "source_name": "Koby Brea",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4066383",
+        "name": "Miles Bridges",
+        "source_name": "Miles Bridges",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "3155526",
+        "name": "Dillon Brooks",
+        "source_name": "Dillon Brooks",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4432646",
+        "name": "Kennedy Chandler",
+        "source_name": "Kennedy Chandler",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4888725",
+        "name": "Ryan Dunn",
+        "source_name": "Ryan Dunn",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5105977",
+        "name": "Rasheer Fleming",
+        "source_name": "Rasheer Fleming",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4278585",
+        "name": "Collin Gillespie",
+        "source_name": "Collin Gillespie",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4278402",
+        "name": "Jordan Goodwin",
+        "source_name": "Jordan Goodwin",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4437244",
+        "name": "Jalen Green",
+        "source_name": "Jalen Green",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4291678",
+        "name": "Haywood Highsmith",
+        "source_name": "Haywood Highsmith",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4702602",
+        "name": "CJ Huntley",
+        "source_name": "CJ Huntley",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4601023",
+        "name": "Oso Ighodaro",
+        "source_name": "Oso Ighodaro",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "3913174",
+        "name": "Luke Kennard",
+        "source_name": "Luke Kennard",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5203685",
+        "name": "Khaman Maluach",
+        "source_name": "Khaman Maluach",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5041953",
+        "name": "Koa Peat",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4066268",
+        "name": "Duop Reath",
+        "source_name": "Duop Reath",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4592714",
+        "name": "Pat Spencer",
+        "source_name": "Pat Spencer",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4909710",
+        "name": "Phillip Wheeler",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4701232",
+        "name": "Mark Williams",
+        "source_name": "Mark Williams",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4683021",
+        "name": "Deni Avdija",
+        "source_name": "Deni Avdija",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4431736",
+        "name": "Toumani Camara",
+        "source_name": "Toumani Camara",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4592435",
+        "name": "Branden Carlson",
+        "source_name": "Branden Carlson",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5081727",
+        "name": "Sidy Cissoko",
+        "source_name": "Sidy Cissoko",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5105565",
+        "name": "Donovan Clingan",
+        "source_name": "Donovan Clingan",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5217746",
+        "name": "Yang Hansen",
+        "source_name": "Yang Hansen",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4683678",
+        "name": "Scoot Henderson",
+        "source_name": "Scoot Henderson",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "3995",
+        "name": "Jrue Holiday",
+        "source_name": "Jrue Holiday",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4703889",
+        "name": "Jayson Kent",
+        "source_name": "Jayson Kent",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4578893",
+        "name": "Vit Krejci",
+        "source_name": "Vít Krejčí",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "6606",
+        "name": "Damian Lillard",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4684737",
+        "name": "Jaylen Martin",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4279888",
+        "name": "Ja Morant",
+        "source_name": "Ja Morant",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4066399",
+        "name": "Micah Potter",
+        "source_name": "Micah Potter",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4914336",
+        "name": "Shaedon Sharpe",
+        "source_name": "Shaedon Sharpe",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4610139",
+        "name": "Jeremy Sochan",
+        "source_name": "Jeremy Sochan",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4593043",
+        "name": "John Tonje",
+        "source_name": "John Tonje",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4066211",
+        "name": "Robert Williams III",
+        "source_name": "Robert Williams III",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4706557",
+        "name": "Chris Youngblood",
+        "source_name": "Chris Youngblood",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4431679",
+        "name": "Precious Achiuwa",
+        "source_name": "Precious Achiuwa",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5142620",
+        "name": "Darius Acuff Jr.",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4395650",
+        "name": "Leaky Black",
+        "source_name": "Leaky Black",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4433174",
+        "name": "Dylan Cardwell",
+        "source_name": "Dylan Cardwell",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4702384",
+        "name": "Nique Clifford",
+        "source_name": "Nique Clifford",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4397654",
+        "name": "Adam Flagler",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4065732",
+        "name": "De'Andre Hunter",
+        "source_name": "De'Andre Hunter",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4917149",
+        "name": "Alex Karaban",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "3064440",
+        "name": "Zach LaVine",
+        "source_name": "Zach LaVine",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5107897",
+        "name": "Jonathan Mogbo",
+        "source_name": "Jonathan Mogbo",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4066262",
+        "name": "Malik Monk",
+        "source_name": "Malik Monk",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4594327",
+        "name": "Keegan Murray",
+        "source_name": "Keegan Murray",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4592965",
+        "name": "Tristen Newton",
+        "source_name": "Tristen Newton",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "2583639",
+        "name": "Elfrid Payton",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4279318",
+        "name": "Daeqwon Plowden",
+        "source_name": "Daeqwon Plowden",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4898371",
+        "name": "Maxime Raynaud",
+        "source_name": "Maxime Raynaud",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "3155942",
+        "name": "Domantas Sabonis",
+        "source_name": "Domantas Sabonis",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5106058",
+        "name": "Emanuel Sharp",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "3907387",
+        "name": "Ben Simmons",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "6578",
+        "name": "Harrison Barnes",
+        "source_name": "Harrison Barnes",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5105337",
+        "name": "Maliq Brown",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "5061568",
+        "name": "Carter Bryant",
+        "source_name": "Carter Bryant",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4845367",
+        "name": "Stephon Castle",
+        "source_name": "Stephon Castle",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4592479",
+        "name": "Julian Champagnie",
+        "source_name": "Julian Champagnie",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4433176",
+        "name": "RJ Davis",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "3155937",
+        "name": "Jon Elmore",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4066259",
+        "name": "De'Aaron Fox",
+        "source_name": "De'Aaron Fox",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5107968",
+        "name": "Ja'Kobi Gillespie",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "5037871",
+        "name": "Dylan Harper",
+        "source_name": "Dylan Harper",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "6440",
+        "name": "Tobias Harris",
+        "source_name": "Tobias Harris",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4395723",
+        "name": "Keldon Johnson",
+        "source_name": "Keldon Johnson",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4713010",
+        "name": "David Jones Garcia",
+        "source_name": "David Jones Garcia",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "3064560",
+        "name": "Luke Kornet",
+        "source_name": "Luke Kornet",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "3134916",
+        "name": "Jordan McLaughlin",
+        "source_name": "Jordan McLaughlin",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4703421",
+        "name": "Taelon Peter",
+        "source_name": "Taelon Peter",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5101845",
+        "name": "Jayden Quaintance",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "5105809",
+        "name": "Tarris Reed Jr.",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4395630",
+        "name": "Devin Vassell",
+        "source_name": "Devin Vassell",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5104157",
+        "name": "Victor Wembanyama",
+        "source_name": "Victor Wembanyama",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4277880",
+        "name": "Malik Williams",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "2993874",
+        "name": "Kyle Anderson",
+        "source_name": "Kyle Anderson",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4433134",
+        "name": "Scottie Barnes",
+        "source_name": "Scottie Barnes",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4395625",
+        "name": "RJ Barrett",
+        "source_name": "RJ Barrett",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4431893",
+        "name": "Jamison Battle",
+        "source_name": "Jamison Battle",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4432586",
+        "name": "Nate Bittle",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4432737",
+        "name": "Jaden Bradley",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4433138",
+        "name": "Nimari Burnett",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "5149115",
+        "name": "Allen Graves",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4590360",
+        "name": "Chucky Hepburn",
+        "source_name": "Chucky Hepburn",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "unavailable"
+      },
+      {
+        "id": "4431684",
+        "name": "Trayce Jackson-Davis",
+        "source_name": "Trayce Jackson-Davis",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4395623",
+        "name": "Trey Jemison III",
+        "source_name": "Trey Jemison III",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4279143",
+        "name": "Tyreke Key",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "6450",
+        "name": "Kawhi Leonard",
+        "source_name": "Kawhi Leonard",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4702656",
+        "name": "Alijah Martin",
+        "source_name": "Alijah Martin",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5093267",
+        "name": "Collin Murray-Boyles",
+        "source_name": "Collin Murray-Boyles",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "3134908",
+        "name": "Jakob Poeltl",
+        "source_name": "Jakob Poeltl",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4395724",
+        "name": "Immanuel Quickley",
+        "source_name": "Immanuel Quickley",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4432241",
+        "name": "Jamal Shead",
+        "source_name": "Jamal Shead",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4397784",
+        "name": "Malachi Smith",
+        "source_name": "Malachi Smith",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4684272",
+        "name": "Ja'Kobe Walter",
+        "source_name": "Ja'Kobe Walter",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4684682",
+        "name": "Jonas Aidoo",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4433268",
+        "name": "Trey Alexander",
+        "source_name": "Trey Alexander",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4873138",
+        "name": "Ace Bailey",
+        "source_name": "Ace Bailey",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4277919",
+        "name": "Mo Bamba",
+        "source_name": "Mo Bamba",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4683933",
+        "name": "Tamar Bates",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4683766",
+        "name": "Isaiah Collier",
+        "source_name": "Isaiah Collier",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4684793",
+        "name": "Kyle Filipowski",
+        "source_name": "Kyle Filipowski",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4278395",
+        "name": "Taylor Funk",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4433627",
+        "name": "Keyonte George",
+        "source_name": "Keyonte George",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4432811",
+        "name": "Josh Green",
+        "source_name": "Josh Green",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4397077",
+        "name": "Jaxson Hayes",
+        "source_name": "Jaxson Hayes",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4396963",
+        "name": "Blake Hinson",
+        "source_name": "Blake Hinson",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4433618",
+        "name": "Harrison Ingram",
+        "source_name": "Harrison Ingram",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4277961",
+        "name": "Jaren Jackson Jr.",
+        "source_name": "Jaren Jackson Jr.",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4066336",
+        "name": "Lauri Markkanen",
+        "source_name": "Lauri Markkanen",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "3133602",
+        "name": "Svi Mykhailiuk",
+        "source_name": "Svi Mykhailiuk",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "3102530",
+        "name": "Jusuf Nurkic",
+        "source_name": "Jusuf Nurkić",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4065663",
+        "name": "Josh Okogie",
+        "source_name": "Josh Okogie",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5041955",
+        "name": "Darryn Peterson",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "5105839",
+        "name": "Brice Sensabaugh",
+        "source_name": "Brice Sensabaugh",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4278129",
+        "name": "Deandre Ayton",
+        "source_name": "Deandre Ayton",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4432187",
+        "name": "Reece Beekman",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4845374",
+        "name": "Bub Carrington",
+        "source_name": "Bub Carrington",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4432907",
+        "name": "Justin Champagnie",
+        "source_name": "Justin Champagnie",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5104155",
+        "name": "Bilal Coulibaly",
+        "source_name": "Bilal Coulibaly",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "6583",
+        "name": "Anthony Davis",
+        "source_name": "Anthony Davis",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5142718",
+        "name": "AJ Dybantsa",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "5174563",
+        "name": "Kyshawn George",
+        "source_name": "Kyshawn George",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "2581184",
+        "name": "Anthony Gill",
+        "source_name": "Anthony Gill",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5238230",
+        "name": "Tre Johnson",
+        "source_name": "Tre Johnson",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4432645",
+        "name": "Trevor Keels",
+        "source_name": "Trevor Keels",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "3936296",
+        "name": "Skal Labissiere",
+        "source_name": "Skal Labissiere",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4433622",
+        "name": "Chris Livingston",
+        "source_name": "Chris Livingston",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4432819",
+        "name": "Tre Mann",
+        "source_name": "Tre Mann",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "6609",
+        "name": "Khris Middleton",
+        "source_name": "Khris Middleton",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5105841",
+        "name": "Felix Okpara",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "5144126",
+        "name": "Will Riley",
+        "source_name": "Will Riley",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "5160992",
+        "name": "Alex Sarr",
+        "source_name": "Alex Sarr",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4704043",
+        "name": "Steve Settle III",
+        "source_name": null,
+        "status": "not_in_source",
+        "old_GP": null
+      },
+      {
+        "id": "4997537",
+        "name": "Tristan Vukcevic",
+        "source_name": "Tristan Vukcevic",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4606840",
+        "name": "Jamir Watkins",
+        "source_name": "Jamir Watkins",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      },
+      {
+        "id": "4277905",
+        "name": "Trae Young",
+        "source_name": "Trae Young",
+        "status": "matched",
+        "method": "unique_normalized_full_name",
+        "old_comparison": "same_GP_and_seven_totals"
+      }
+    ],
+    "old_disagreements": []
+  }
+}

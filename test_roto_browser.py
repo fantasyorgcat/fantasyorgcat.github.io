@@ -21,9 +21,16 @@ def run(origin,output):
             assert page.goto(origin+'/roto.html#players=1966,3195',wait_until='load').status==200
             assert page.locator('#base-count').inner_text()=='2 人'
             assert page.locator('#data-warning').is_visible()
-            assert page.locator('tr[data-metric="FG%"] td[data-team="base"]').get_attribute('data-value')==''
-            assert page.locator('tr[data-metric="FT%"] td[data-team="base"]').get_attribute('data-value')==''
-            assert page.locator('#radar [data-metric="FG%"],#radar [data-metric="FT%"],#radar polygon[fill-opacity]').count()==0
+            assert page.evaluate('ROTO_DATA.data_ready')
+            assert page.evaluate('ROTO_DATA.reference.size')==582
+            assert page.evaluate('ROTO_DATA.source')=='BoxScore Lab'
+            assert '二手' in page.locator('#data-warning').inner_text()
+            for metric in ['FG%','FT%']:
+                actual=float(page.locator('tr[data-metric="'+metric+'"] td[data-team="base"]').get_attribute('data-value'))
+                expected=page.evaluate('(metric)=>RotoCore.aggregate(["1966","3195"],ROTO_DATA,"perGame").cells[metric].value',metric)
+                assert abs(actual-expected)<1e-10
+            assert page.locator('#radar [data-series="base"] circle').count()==9
+            assert page.locator('#radar polygon[fill-opacity]').count()>=1
             baseline=page.evaluate('JSON.stringify(ROTO_DATA.benchmark)')
             original=page.locator('#base-list .roster-item').evaluate_all('(nodes)=>nodes.map(n=>n.dataset.playerId)')
             if width==390:
@@ -43,7 +50,7 @@ def run(origin,output):
             assert page.locator('#incoming-list .roster-item').count()==2
             assert page.locator('#base-list .roster-item').evaluate_all('(nodes)=>nodes.map(n=>n.dataset.playerId)')==original
             assert page.locator('#radar [data-series]').count()==3
-            assert page.locator('#radar [data-series="simulation"] circle').count()==7
+            assert page.locator('#radar [data-series="simulation"] circle').count()==9
             assert page.evaluate('JSON.stringify(ROTO_DATA.benchmark)')==baseline
             page.locator('#mode').select_option('totals')
             values=page.locator('tr[data-metric="PTS"] td').evaluate_all('(nodes)=>nodes.map(n=>n.dataset.value)')
@@ -73,12 +80,18 @@ def run(origin,output):
                 page.evaluate('scrollTo({top:document.querySelector(".differences-card").getBoundingClientRect().top+scrollY-10,behavior:"instant"})')
                 page.screenshot(path=str(output/'roto-real-table-390.png'))
                 page.evaluate('scrollTo({top:0,behavior:"instant"})');page.screenshot(path=str(output/'roto-real-top-390.png'))
+            # A declared conflict remains unknown even though the dataset is publishable.
+            page.goto(origin+'/roto.html#players=4432639',wait_until='load');page.reload(wait_until='load')
+            cell=page.locator('tr[data-metric="FG%"] td[data-team="base"]')
+            assert cell.get_attribute('data-value')=='' and '975／974' in cell.inner_text()
+            assert page.locator('#radar [data-series="base"] circle').count()==8
+            assert page.locator('#radar polygon[fill-opacity]').count()==0
             page.locator('#roster-name').fill('<img src=x onerror=alert(1)>');page.locator('#save-roster').click()
             assert page.locator('#saved-rosters img').count()==0
             assert page.locator('#saved-rosters option').count()==4
             assert not errors,errors;assert not failed,failed;assert not external,external;assert not console_errors,console_errors
-            results.append(dict(width=width,real_checked_in_data=True,denominators_missing_and_not_filled=True,
-                                release_data_complete=False,three_series_max=True,fixed_benchmark=True,multi_replace_base_unchanged=True,
+            results.append(dict(width=width,real_checked_in_data=True,real_weighted_denominators=True,declared_conflicts_preserved=True,
+                                release_data_complete=True,three_series_max=True,fixed_benchmark=True,multi_replace_base_unchanged=True,
                                 reset_restores_base=True,local_named_save_reload=True,unknown_player_coverage=True,
                                 no_page_overflow=True,js_errors=errors,failed_requests=failed,external_requests=external,csp_errors=console_errors))
             ctx.close()

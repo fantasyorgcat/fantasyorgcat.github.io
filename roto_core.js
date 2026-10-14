@@ -12,6 +12,7 @@
   }
   for(const prefix of ['FG','FT']){let known=0,made=0,attempts=0;for(const p of rows)if(p&&valid(p.gp)&&p.gp>0&&valid(p.shots[prefix+'M'])&&valid(p.shots[prefix+'A'])&&p.shots[prefix+'M']<=p.shots[prefix+'A']){known++;const scale=mode==='perGame'?p.gp:1;made+=p.shots[prefix+'M']/scale;attempts+=p.shots[prefix+'A']/scale;}
    cells[prefix+'%']={value:n&&known===n&&attempts>0?100*made/attempts:null,known,total:n,made,attempts,reason:!n?'尚未選球員':known<n?'缺命中／出手分母':!attempts?'此口徑無出手':null};
+   if(rows.some(p=>p&&Object.keys(p.uncertainties||{}).some(k=>k.startsWith(prefix))))cells[prefix+'%'].reason='來源差異：Jabari Smith Jr. FGA 975／974 未裁定';
   }
   const scores={};for(const key of metrics){const v=cells[key].value,b=data.benchmark[mode][key];
    const comparable=key.endsWith('%')?v:v===null?null:v/n;

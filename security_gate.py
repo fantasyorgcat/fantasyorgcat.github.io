@@ -11,6 +11,7 @@ import subprocess
 
 ROTO_FILES = ['roto.html','roto_data.js','roto_core.js','roto.js','roto.css','dashboard.css']
 ASSETS = ['jquery-3.7.1.min.js','datatables-2.3.7.min.js','datatables-2.3.7.min.css']
+ATTRIBUTION_URLS={'https://www.boxscorelab.com/downloads/2025-26-player-season-totals.csv','https://creativecommons.org/licenses/by/4.0/'}
 SECRET_PATTERNS = [r'gh[pousr]_[A-Za-z0-9]{30,}', r'github_pat_[A-Za-z0-9_]{40,}', r'AKIA[0-9A-Z]{16}', r'-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----']
 
 
@@ -28,7 +29,8 @@ class PublicHTML(HTMLParser):
         if tag=='link':self.external.append(attrs)
         for key,value in attrs.items():
             if key in ['src','href'] and value and (value.startswith(('http:','https:','//','javascript:')) or '..' in value):
-                self.errors.append('Unexpected external/unsafe resource URL')
+                if not (tag=='a' and key=='href' and value in ATTRIBUTION_URLS and attrs.get('rel')=='noopener' and attrs.get('target')=='_blank'):
+                    self.errors.append('Unexpected external/unsafe resource URL')
 
 
 def check(report, snapshot):
@@ -62,7 +64,7 @@ def check(report, snapshot):
     print('Public HTML/resource integrity, provenance, fixture exclusion, and bounded tracked-file secret scan passed')
 
 
-def check_roto(require_ready=True):
+def check_roto(require_ready=True,report=None):
     html=Path('roto.html').read_text(encoding='utf-8');parser=PublicHTML();parser.feed(html)
     csp="default-src 'none'; script-src 'self'; style-src 'self'; img-src data:; connect-src 'none'; base-uri 'none'; form-action 'none'"
     if parser.errors or parser.csp!=csp:raise ValueError('ROTO public content/CSP check failed')
@@ -78,34 +80,45 @@ def check_roto(require_ready=True):
     match=re.fullmatch(r'window\.ROTO_DATA = (.*);\s*',raw)
     if not match:raise ValueError('ROTO data format invalid')
     data=json.loads(match[1]);snapshot=json.loads(Path('data_snapshot.json').read_text())
-    if data.get('version')!=1 or data.get('generated_at')!=snapshot['generated_at'] or data.get('source')!='ESPN':raise ValueError('ROTO snapshot provenance mismatch')
+    if data.get('version')!=1 or data.get('generated_at')!=snapshot['generated_at'] or data.get('source') not in ['ESPN','BoxScore Lab']:raise ValueError('ROTO snapshot provenance mismatch')
     if data.get('fixture'):raise ValueError('ROTO test fixture cannot be published')
     if require_ready:
-        reference=data['reference'];expected=snapshot['period_populations']['LastSeason']
-        if not data.get('data_ready') or expected<=0 or reference['size']!=expected or reference['shooting_complete']!=expected:
-            raise ValueError('ROTO release blocked: full last-season reference and shooting denominators are incomplete')
-        from roto_data import benchmark
-        records=reference.get('records',[])
-        if len(records)!=expected or len({r['id'] for r in records})!=expected or benchmark(records)!=data['benchmark']:
-            raise ValueError('ROTO release blocked: fixed reference cannot be reproduced')
-        for p in data['players'].values():
-            if not p['gp'] or p['gp']<=0:continue
-            for prefix in ['FG','FT']:
-                made,attempts=p['shots'].get(prefix+'M'),p['shots'].get(prefix+'A')
-                if made is None or attempts is None or not all(isinstance(v,(int,float)) and not isinstance(v,bool) and v>=0 and float(v).is_integer() for v in [made,attempts]) or made>attempts:
-                    raise ValueError('ROTO release blocked: invalid/missing player shooting totals')
-        for mode in ['perGame','totals']:
-            for metric in ['PTS','REB','AST','3PM','STL','BLK','FG%','FT%','TO']:
-                b=data['benchmark'][mode][metric]
-                if b['mean'] is None or b['sd'] is None or b['sd']<=0:raise ValueError('ROTO release blocked: incomplete nine-category reference')
-    print('ROTO static assets/CSP/provenance passed'+('; complete nine-category release data passed' if require_ready else '; readiness deliberately not asserted'))
+        if data.get('source')=='BoxScore Lab':
+            from roto_boxscore import build_boxscore_data
+            from roto_data import read_report
+            expected_data=build_boxscore_data(read_report(report or 'index.html'),snapshot)
+            if data!=expected_data or not data.get('data_ready'):
+                raise ValueError('ROTO release blocked: source/mapping/uncertainty/reference provenance does not reproduce')
+            if data['source_info']['independent_checks']['official_full_table_verified']:
+                raise ValueError('Secondary source must not claim official full-table verification')
+            if 'BoxScore Lab' not in html or 'CC BY 4.0' not in html or 'Jabari' not in html:
+                raise ValueError('ROTO attribution or uncertainty disclosure missing')
+        else:
+            reference=data['reference'];expected=snapshot['period_populations']['LastSeason']
+            if not data.get('data_ready') or expected<=0 or reference['size']!=expected or reference['shooting_complete']!=expected:
+                raise ValueError('ROTO release blocked: full last-season reference and shooting denominators are incomplete')
+            from roto_data import benchmark
+            records=reference.get('records',[])
+            if len(records)!=expected or len({r['id'] for r in records})!=expected or benchmark(records)!=data['benchmark']:
+                raise ValueError('ROTO release blocked: fixed reference cannot be reproduced')
+            for p in data['players'].values():
+                if not p['gp'] or p['gp']<=0:continue
+                for prefix in ['FG','FT']:
+                    made,attempts=p['shots'].get(prefix+'M'),p['shots'].get(prefix+'A')
+                    if made is None or attempts is None or not all(isinstance(v,(int,float)) and not isinstance(v,bool) and v>=0 and float(v).is_integer() for v in [made,attempts]) or made>attempts:
+                        raise ValueError('ROTO release blocked: invalid/missing player shooting totals')
+            for mode in ['perGame','totals']:
+                for metric in ['PTS','REB','AST','3PM','STL','BLK','FG%','FT%','TO']:
+                    b=data['benchmark'][mode][metric]
+                    if b['mean'] is None or b['sd'] is None or b['sd']<=0:raise ValueError('ROTO release blocked: incomplete nine-category reference')
+    print('ROTO static assets/CSP/provenance passed'+('; applicable source coverage and declared unknowns passed' if require_ready and data.get('source')=='BoxScore Lab' else '; complete nine-category release data passed' if require_ready else '; readiness deliberately not asserted'))
 
 
 def main():
     p=argparse.ArgumentParser();p.add_argument('--generated',action='store_true');p.add_argument('--stage');a=p.parse_args()
     report=Path('fantasy_nba_report_v2.html' if a.generated else 'index.html');snapshot=Path('data_snapshot.json')
     check(report,snapshot)
-    check_roto()
+    check_roto(report=report)
     if a.stage:
         stage=Path(a.stage)
         if stage.exists():raise ValueError('Publish staging directory must start empty')

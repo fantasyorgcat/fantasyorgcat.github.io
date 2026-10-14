@@ -100,8 +100,11 @@ def read_report(path):
 
 
 if __name__=='__main__':
-    parser=argparse.ArgumentParser();parser.add_argument('--from-report',default='index.html');parser.add_argument('--output',default='roto_data.js');args=parser.parse_args()
-    data=build_data(read_report(args.from_report),json.loads(Path('data_snapshot.json').read_text()))
+    parser=argparse.ArgumentParser();parser.add_argument('--from-report',default='index.html');parser.add_argument('--output',default='roto_data.js');parser.add_argument('--legacy-espn',action='store_true');args=parser.parse_args()
+    if args.legacy_espn:data=build_data(read_report(args.from_report),json.loads(Path('data_snapshot.json').read_text()))
+    else:
+        from roto_boxscore import build_boxscore_data
+        data=build_boxscore_data(read_report(args.from_report),json.loads(Path('data_snapshot.json').read_text()))
     write_data(data,args.output)
     summary={k:data[k] for k in ['season','generated_at','data_ready']};summary['reference']={k:v for k,v in data['reference'].items() if k!='records'}
     print(json.dumps(summary,ensure_ascii=False))

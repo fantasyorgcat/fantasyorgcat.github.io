@@ -16,7 +16,7 @@
   state[target]=C.ids([...state[target],id]);if(target==='base')reset();render();message('已加入 '+info(id));
  }
  function rosterList(target){const host=$(target+'-list');host.replaceChildren();for(const id of state[target]){const row=element('div',undefined,'roster-item'),label=element('span',info(id)),p=data.players[id];row.dataset.playerId=id;
-  label.append(element('small',p&&p.gp?'上季 GP '+p.gp+' · 每場分鐘 '+(p.minutes===null?'—':p.minutes.toFixed(1)):'缺上季實績，統計為未知'));
+  label.append(element('small',p&&p.gp?'上季 GP '+p.gp+' · 每場分鐘 '+(p.minutes===null?'—':p.minutes.toFixed(1)):'此上季來源無資料／未匹配，統計為未知'));
   row.append(label,button('移除',()=>setRoster(target,state[target].filter(x=>x!==id)),'從'+(target==='incoming'?'模擬加入名單':names[target])+'移除 '+info(id)));host.append(row);
  }if(!state[target].length)host.append(element('small','尚未加入球員'));
  }
@@ -46,7 +46,7 @@
  }}
  function search(){const query=$('player-search').value.trim().toLocaleLowerCase(),target=$('add-target').value,selected=target==='incoming'?simulation():state[target],filtered=allPlayers.filter(p=>(p.name+' '+p.team).toLocaleLowerCase().includes(query));
   $('search-count').textContent=filtered.length+' 位符合 · 顯示 '+Math.min(limit,filtered.length)+' 位';const host=$('search-results');host.replaceChildren();for(const p of filtered.slice(0,limit)){const row=element('div',undefined,'search-result'),label=element('span',p.name+' · '+p.team),available=Object.values(p.shots).every(v=>v!==null);
-   label.append(element('small',p.gp?'上季 '+p.gp+' 場 · '+(available?'有投籃分母':'投籃分母缺失'):'無上季實績'));const b=button(selected.includes(p.id)?'已加入':'加入',()=>add(target,p.id),'加入 '+p.name+' 至 '+(target==='incoming'?'換人模擬':names[target]));b.disabled=selected.includes(p.id);row.append(label,b);host.append(row);
+   label.append(element('small',p.gp?'上季 '+p.gp+' 場 · '+(Object.keys(p.uncertainties||{}).length?'來源差異：FGA 未裁定':available?'有投籃分母':'投籃分母缺失'):'無上季實績'));const b=button(selected.includes(p.id)?'已加入':'加入',()=>add(target,p.id),'加入 '+p.name+' 至 '+(target==='incoming'?'換人模擬':names[target]));b.disabled=selected.includes(p.id);row.append(label,b);host.append(row);
   }$('more-results').hidden=limit>=filtered.length;
  }
  function render(){const teams={base:C.aggregate(state.base,data,mode),opponent:C.aggregate(state.opponent,data,mode),simulation:C.aggregate(simulation(),data,mode)};
@@ -67,10 +67,11 @@
  });
  $('load-roster').addEventListener('click',()=>{const entry=saved.find(r=>r.id===$('saved-rosters').value);if(!entry){message('先選擇已保存的陣容。');return;}setRoster($('load-target').value,entry.players);message('已載入「'+entry.name+'」；使用目前快照，未知球員不補零。');});
  $('delete-roster').addEventListener('click',()=>{const entry=saved.find(r=>r.id===$('saved-rosters').value);if(!entry)return;const next=saved.filter(r=>r.id!==entry.id);try{C.save(localStorage,next);saved=next;savedOptions();message('已刪除這份本地保存。');}catch(e){storageWarning(e);}});
- $('period-label').textContent=data.season+' 例行賽實績 · 不代表新季預測或實際聯盟排名';$('snapshot-label').textContent='實績快照 '+data.generated_at;
+ $('period-label').textContent=data.season+' 例行賽實績 · 不代表新季預測或實際聯盟排名';$('snapshot-label').textContent=data.source_info?'來源 build '+data.source_info.publisher_build:'實績快照 '+data.generated_at;
  $('basis-label').textContent='基準 '+data.reference.size+' 位有上季實績的參考球員；來源完整母體 '+data.reference.expected+' 位，已保存分母 '+data.reference.shooting_complete+' 位。基準版本：'+data.reference.id+'。';
- if(data.source_period&&data.source_period.source_period_start&&data.source_period.source_period_end)$('basis-label').textContent+=' 來源 '+data.source+'；統計視窗（UTC）：'+data.source_period.source_period_start+' 至 '+data.source_period.source_period_end+'。';
+ if(data.source_period&&data.source_period.source_period_start&&data.source_period.source_period_end)$('basis-label').textContent+=' 來源 '+data.source+'；統計視窗（'+(data.source_period.timezone||'UTC')+'）：'+data.source_period.source_period_start+' 至 '+data.source_period.source_period_end+'。';
  if(data.fixture){$('data-warning').hidden=false;$('data-warning').textContent='UI TEST ONLY · 合成資料驗證；不可發布或當作真實球員數據。';}
+ else if(data.source_info){$('data-warning').hidden=false;const s=data.mapping.summary;$('data-warning').textContent='BoxScore Lab／CC BY 4.0 · 2025–26二手例行賽實績，非官方全表驗證。名單 '+s.matched+'/'+s.catalog+' 唯一映射；其餘 '+s.not_in_source+' 位此來源無適用資料，保持未知。Jabari Smith Jr. FGA 存975／974來源差異，未裁定，選入時FG%未知。';}
  else if(!data.data_ready){$('data-warning').hidden=false;$('data-warning').textContent='資料尚未齊全：目前不能完成完整九項 ROTO 體質分析。FG／FT 缺命中／出手分母，雷達留白；此實績參考群也尚未涵蓋完整來源母體。七項計數仍可檢查，不能用它取代完整九項驗收。';}
  try{saved=C.load(localStorage);savedOptions();}catch(e){storageWarning(e);if(e.code==='ROTO_SAVE_FORMAT'){$('save-roster').disabled=true;$('delete-roster').disabled=true;}}
  try{const fragment=new URLSearchParams(location.hash.slice(1)).get('players');if(fragment)state.base=C.ids(fragment.split(',').filter(Boolean));}catch(e){message('帶入名單無法辨識：'+e.message);}

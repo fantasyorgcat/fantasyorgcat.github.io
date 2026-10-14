@@ -12,6 +12,7 @@ import base64
 from player_catalog import build_catalog, add_pr_ranks, metric_pr
 from fantasy_periods import build_platform_periods
 from roto_data import build_data, source_reference, write_data
+from roto_boxscore import build_boxscore_data
 
 IDENTITY_COLUMNS = ['PLAYER_ID','PLAYER_NAME','TEAM_ID','TEAM_ABBREVIATION']
 
@@ -669,7 +670,7 @@ def generate_html_report():
         f.write(html_template)
 
     Path("data_snapshot.json").write_text(json.dumps(provenance, ensure_ascii=False, indent=2), encoding="utf-8")
-    write_data(build_data(comparison_catalog,provenance,source_reference(stats_dict['LastSeason']),season=metadata['last_season']))
+    write_data(build_data(comparison_catalog,provenance,source_reference(stats_dict['LastSeason']),season=metadata['last_season']) if provenance.get('fixture') else build_boxscore_data(comparison_catalog,provenance))
     print(f"Report generated: {output_file}")
     if os.environ.get('OPEN_REPORT') == '1':
         webbrowser.open('file://' + os.path.realpath(output_file))

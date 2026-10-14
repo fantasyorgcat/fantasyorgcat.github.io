@@ -1,59 +1,57 @@
-# ROTO 本地實作與驗收｜2026-10-14
+# ROTO與固定表頭整包驗收｜2026-10-14
 
-**尚未完成完整九項真實資料驗收，沒有 push／merge／部署。** 使用者已批准固定表頭與 ROTO 一次完成後一起上線；此批准保留，不需再次核准，但目前資料缺口仍不符合發布條件。
+接續既有`fix/sticky-table-headers`，保留b4e072d固定表頭及既有ROTO UI。使用者已授權完整驗收後一次上線；此文件記錄部署前的可審查版本，正式部署證據另由run／線上讀回確認。沒有改其他投資專案、登入、費用、帳密或存取／分享設定。
 
-接續 `/workspace/fantasyorgcat.github.io` 的 `fix/sticky-table-headers`，保留 `b4e072d4c5d493fb929063d2e2ccf8969e65cd19` 的網頁下捲固定表頭。remote 為 `fantasyorgcat/fantasyorgcat.github.io`，本輪開始 main 為 `dbe5622`、工作樹乾淨，未開新專案或修改其他投資專案；未新增登入、費用、來源帳密或存取權限。
+## 真實來源與精確覆蓋
 
-## 已實作與本機驗證
+來源是合法交付的 **BoxScore Lab 2025–26例行賽二手整理**，CC BY4.0；不是官方全表逐列驗證。頁面／repo source manifest保留署名、授權、來源URL、build字串與修改說明。
 
-- `roto.html` 是同站獨立頁，首頁有入口；既有比較勾選的 ESPN ID 可透過 `roto.html#players=…` 在新分頁帶入。沒有複製整張 26 MB 首頁資料，ROTO 使用獨立本地 `roto_data.js`。
-- 原陣容、手動對手及多人換人模擬；最多三組 SVG 雷達疊圖及九項數據／模擬差異。搜尋／加入／移除／去重，原名單不被模擬改寫，重設模擬可還原；手機名單編輯預設收合，保留莫蘭迪米、灰藍、柔橘與灰粉。
-- 只使用 **2025–26 例行賽上季實績**，來源快照 **2026-10-10 17:34 UTC**；不是新季預測、可先發產量、增員資格或私人聯盟已計入成績。顯示 GP、平均分鐘、各類覆蓋與缺值原因。
-- 此裝置的多份命名陣容，保存原隊／對手／模擬後名單，載入至原隊或對手，更新同名與刪除。使用新 key `fantasyorgcat:roto:rosters:v1`，只保存 ID／名稱／時間，統計用當前快照；不碰舊比較／陣容 key。儲存停用時維持頁面操作，格式損壞時禁止覆寫原內容。
+CSV實際95,924 bytes、582列、32欄；SHA256：`629839481dcb087aac9aa27f97fc1ef355cd93bc11e561b598ad680c38e446ee`。Library附件下載輔助程式未成功，但同一已授權檔案的native內容可讀；只去除讀取器產生的index欄，得到的UTF8/LF原始bytes與指定大小／SHA完全一致，再套用Library來源metadata。沒有重試任何被拒體育URL，也沒有以近似轉換替代hash驗證。
 
-## 聚合與固定尺度
+全582列同季、GP>0且≤82，必要總量為非負整數、made≤attempt、`PTS=2FGM+3PM+FTM`全通過；完整姓名與保守正規化姓名各582唯一。GP、七項、四個投籃量及平均分鐘均整套採同一CSV；不拼接舊七項與新分母、不使用rounded百分比重建出手。
 
-`roto_core.js` 是瀏覽器／Node 共用純函數，不依賴付費圖表或第三方 CDN：
-
-- **上季實績總量**：七項 counting 相加真實來源總量；FG／FT 為 `Σmade / Σattempt ×100`。相同季別但不同個人 GP 的歷史曝光差異在介面明確說明。
-- **每人1場合計**：逐員 `total / 個人GP` 再相加；投籃亦將每人 made／attempt 除以 GP，按相同口徑相加後求比率。這是等量出賽的歷史實績聚合，不是預測，不平均球員百分比。
-- 任一選入球員缺該類數據，整隊該類為未知，另列 `known / roster size` 覆蓋；零出手時百分比未知。未知項不畫點／完整填色，不當0；計數欄真實0保留0。
-- 雷達為 `50 + 15 × z`、截於0–100。計數類先取每名成員平均貢獻，相對固定上季參考球員的均值／標準差；百分比參考亦同口徑按出手加權。**TO 反向**。名單人數不同另明示，真實合計與差值留在表格。這不是百分位或真實 ROTO 聯盟積分。
-- 參考 records、有效樣本數、均值／標準差及內容 hash 保存在資料檔；更換原隊／對手／模擬不改尺。發布 gate 可從已保存 reference records 重算基準並比對，拒絕無法重現的尺度。
-
-## 資料管線與不可發布的缺口
-
-`utils.py` 已新增 FGM/FGA/FTM/FTA 的 bulk 原始欄位讀取、非負整數與 made≤attempt 驗證；missing保留None。近期逐場總量亦保存四欄，零出手／缺分母不填0%。`player_catalog.py` 保存每期間 shooting，`generate_report.py` 同次輸出 `roto_data.js` 並用完整上季來源母體建固定參考；每日 workflow 一併測試、驗證及提交該檔。**以上契約透過單元／隔離生成驗證，這輪沒有拿到真的投籃分母。**
-
-現有真實首頁為610人目錄，其中479人有上季實績；來源完整母體578人。沒有完整578人的原始數據或任何已持久化投籃分母。因此目前 ROTO reference 為479／578，shooting complete **0／578**，`data_ready=false`，FG／FT全為未知。沒有從百分比、GP或點數方程反推分母，也沒有改拿更舊賽季或假資料。
-
-[來源存取紀錄](docs/roto/source-access.json)：
-
-| 來源／目標 | 結果與處理 |
+| 覆蓋項目 | 精確數量／規則 |
 | --- | --- |
-| ESPN `site.web.api.espn.com/.../statistics/byathlete?season=2026&seasontype=2&limit=1000` | 前輪已發生代理 CONNECT 403，這輪未重試／換路徑。 |
-| NBA 官方 `stats.nba.com/stats/leaguedashplayerstats`，Season2025–26、Regular Season、Totals | 普通公開GET遭環境代理 CONNECT 403；未換 headers、代理或端點繞過。 |
-| Basketball Reference `NBA_2026_totals.html` | web.open回403，停止。 |
-| CBS `.../stats/player/all/nba/regular/2025/...` | 普通公開GET遭環境代理 CONNECT403，停止。 |
+| 現有首頁候選 | 610 ESPN ID，不是上季benchmark分母 |
+| 唯一映射 | 481；保守完整姓名480，加Bobby Portis的明確suffix alias1 |
+| 可與舊上季GP／七項比對 | 479，全項一致，0個差異 |
+| 舊catalog缺實績、新來源有資料 | Noa Essengue／Chucky Hepburn2位，使用同份來源完整實績 |
+| 來源無適用資料／未匹配 | 129，保留unknown；不稱全部是新秀或確定0場 |
+| 姓名歧義 | 0；如果出現將保留unknown、另報數，不猜配 |
+| 來源僅用於benchmark、未映射至當前名單 | 101，仍為同季參考群的一部分 |
+| 固定benchmark母體 | 本來源582位；不強湊舊ESPN578，也不要求610候選都具上季資料 |
+| 宣告衝突 | Jabari Smith Jr.1位FGA：BoxScore Lab975／父端RealGM核對974，未裁定，FGA與其FG%unknown；其他同來源欄位保留 |
+| 完整原始投籃量／宣告未知 | 581人完整、1筆FGA未知；19人真實FTA=0，比率未知，不當0% |
 
-NBA公開stats頁亦無法透過web工具讀取，Fox公開頁回406，沒有對其改header繞過。repo現有各branch／歷史只找到snapshot／平台週表／測試JSON，沒有可用的2025–26 made/attempt raw資料。**未驗證到可用替代來源**；下一個可接受路徑是合法取得既有ESPN bulk或官方完整季末匯出，保留來源／季別／GP與ID對照，再重建完整reference。不能把上述候選來源說成已可用。
+Bobby alias僅在GP及七項整數總量完全一致時採用，從不廣泛刪除Jr/III或模糊猜配。資料沒有NBA PLAYER_ID；搜尋／保存仍使用原ESPN ID。benchmark使用穩定的發布者姓名ID，並非冒稱官方ID。來源last team只是標示；Harden70場已含44LAC+26CLE，Kuminga36場已含20GSW+16ATL，不再疊加stint。
 
-[實際發布 gate](docs/roto/release-gate.json) 的錯誤為：`ROTO release blocked: full last-season reference and shooting denominators are incomplete`。靜態資產／CSP／provenance檢查通過，但完整資料gate失敗；這是程式發布條件失敗，尚未觸發任何遠端發布動作。不得略過這個gate或將 `data_ready` 手動改true。
+父端六人RealGM計數抽查與轉隊合計證據保留在manifest，清楚標示外部研究與非官方全表驗證。原始CSV中的Jabari975未改；只在計算衍生檔中將FGA標null及保留兩個來源值／原因。
 
-`security_gate.py --stage` 已準備在原有發布 allowlist 追加 ROTO六個自有檔案；現有Pages與daily部署工作仍使用原權限、環境及存取設定。CLI現有GH_TOKEN失效，GitHub連接器的唯讀get_repo已成功、回報既有push權限；沒有新增帳密或權限，也尚未嘗試寫入。
+## 計算與保存保持原設計
 
-## 測試與真實畫面
+- 上季總量加總真實計數，FG／FT為Σmade/Σattempt。
+- 每人1場合計先各自除GP，再合計計數／made／attempt；不平均球員百分比，沒有混合不同單位。
+- 輸入缺值或零出手保持unknown；原陣容、對手及多人模擬最多三組，原名單不被模擬改寫，可重設。
+- 計數圖值取每員平均貢獻，相對固定參考均值／population SD取50+15z；TO反向、0–100截斷。FG／FT的均值及SD按同口徑出手加權。不是百分位、新季預測或真實聯盟積分。
+- reference完整records、內容hash、各軸有效樣本可重現；選名單不改尺，Jabari不確定FG項排除於該軸基準。
+- 命名保存用新本地key，沒有登入／私人聯盟；格式損壞不覆寫、停用時仍可編輯，舊儲存不碰。
 
-- Python：`test_sources test_defense test_schedule test_player_catalog test_roto_data` **54項通過**。包括bulk made/attempt保存、zero／missing、季別、完整參考群、整數／made≤attempt、可重現基準及gate不能只信ready flag。gate的「完整資料通過」案例只存在隔離的單元測試目錄，不是真實數據驗收。
-- `node test_roto_core.cjs`：加權FG／FT、兩種GP口徑、TO反向、缺值／覆蓋、重複球員、原名單不變、替換／復原、固定基準及保存讀回通過；`node test_team_tools.cjs`／JS syntax亦通過。
-- [ROTO browser結果](docs/roto/browser-results.json)：1500×1000與390×844、最多三組疊圖、多人換人不改原隊、重設、保存／重新載入、多份命名、unknown球員、手機收合、無頁面橫向溢出、儲存停用／損壞、XSS文字、首頁勾選開新分頁均通過；JS／failed requests／external requests／CSP errors均空。這裡使用的是目前不完整但真實的checked-in資料，不是完整九項驗收。
-- 完整九軸與83.3333%加權FG另由明確 `UI TEST ONLY` 的 route隔離合成資料驗證，不修改 `roto_data.js`，沒有列作真實分母。
-- [原頁儀表板](docs/roto/dashboard-regression.json)、[球隊排序](docs/roto/team-regression.json)、[原網頁下捲表頭／手機觸控](docs/roto/sticky-regression.json) 通過；保留 `b4e072d` 修正。
-- [隔離賽程生成與回歸](docs/roto/schedule-synthetic-regression.json) 通過：1／7／14／31日、跨年、25個NBA週／23個Yahoo週／24個ESPN週與長週／平台往返、比較同步與計時重算。合成預覽維持UI TEST ONLY，未替換正式頁。
-- `git diff --check` 通過；[data-status](docs/roto/data-status.json) 記錄原snapshot前後完全一致，首頁playerCatalog／統計未改，只同步新增入口與腳本／CSS。
+## 管線與發布gate
 
-畫面：[桌機真實資料](docs/roto/roto-real-1500.png)、[手機圖表](docs/roto/roto-real-390.png)、[手機九項數值](docs/roto/roto-real-table-390.png)、[手機資料缺口標示](docs/roto/roto-real-top-390.png)。未驗證Safari／iOS真機。
+`roto_boxscore.py`只讀已核archive，不自行網搜或重試拒絕URL。首頁generator在真正報告時使用該來源；隔離fixture明確UI TEST ONLY。每日工作仍用原權限，只新增相同資料契約／數學測試與ROTO輸出提交。換季需要新、合法且核過的資料，不能把2025–26改名成下一季。
 
-## 待完成的正式驗收
+gate重新從已核CSV、manifest與待發布首頁catalog完整重建ROTO資料，逐字／數值比對來源、映射、未知、benchmark與provenance。已宣告的129不適用與1衝突不是偽造零值，也不會造成永久阻擋；未宣告篡改會失敗。CSP只允許原本地程式／樣式資產，以及兩個明確署名／授權的外部anchor。Pages staging仍是allowlist，不含原始CSV／測試或QA檔案；原網站存取／分享設定不變。
 
-取得可核對的2025–26完整made/attempt來源、檢查球員ID及GP／計數總量的一致性、重建578人完整reference，並通過9項真實資料／發布gate後，才能一次push／合併原分支及Pages部署。之後仍須監看部署到terminal、讀回正式首頁與`/roto.html`核對commit／快照及功能。**現在沒有部署run／正式新頁版本證據，沒有把表頭先單獨上線。**
+## 驗證
+
+60項Python source／defense／schedule／catalog／ROTO契約／BoxScore測試通過；Node加權FG／FT、GP口徑、TO、缺值、去重、替換／復原、保存讀回、固定基準及原隊排序通過。JS／Python syntax與diff check通過。
+
+真實桌機1500×1000／手機390×844ROTO測試已通過：完整分母加權、最多三組、多人替換／復原、原隊不變、命名保存／讀回、未知球員、Jabari衝突、source署名、手機無頁面溢出、CSP無錯誤及首頁勾選新頁帶入。[結果](docs/roto/boxscore-browser-results.json)。合成完整九軸公式只做route隔離，不替代真實CSV。
+
+原網頁下捲表頭／手機觸控、表頭欄位同步／排序、導航高度、動態長週及比較、原儀表板／球隊排序已通過。[表頭](docs/roto/boxscore-sticky-results.json)、[球隊](docs/roto/boxscore-team-results.json)、[儀表板](docs/roto/boxscore-dashboard-results.json)。[整季真實頁](docs/roto/boxscore-season-results.json)已逐一驗證NBA25／Yahoo23／ESPN24期間的日期、對手、排序和統計保持原值；[隔離賽程回歸](docs/roto/boxscore-schedule-results.json)桌機及手機已驗證跨年、長週、三平台來回、custom 1／7／14／31日、tipoff／foreground重算、無效區間，以及舊DataTable事件／jQuery資料釋放。各瀏覽器結果均無JS錯誤或失敗請求。
+
+目前真實畫面：[桌機](docs/roto/boxscore-real-1500.png)、[手機圖](docs/roto/boxscore-real-390.png)、[手機九項表](docs/roto/boxscore-real-table-390.png)、[來源與限制](docs/roto/boxscore-real-top-390.png)。未驗iOS/Safari真機。
+
+## 保留的來源限制
+
+[先前來源錯誤](docs/roto/source-access.json)與[當時阻擋版本](docs/roto/blocked-qa-2026-10-14.md)保留作歷史證據。NBA／CBS／ESPN是本環境CONNECT代理403；BRef工具報403但無原始header以歸因origin。沒有再請求這些來源。新來源合法artifact不等於解除那些URL限制；不宣稱NBA官方全表核對。正式頁應顯示BoxScore Lab二手來源、Jabari未知及GP／分鐘／覆蓋限制，不能包裝成預測或真正ROTO積分。
