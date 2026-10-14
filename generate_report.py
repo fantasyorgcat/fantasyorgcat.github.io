@@ -646,7 +646,7 @@ def generate_html_report():
     </head>
     <body>
         <div class="container">
-            <header class="appbar"><div class="brand"><span class="brand-mark">FC</span><div>FANTASYORGCAT<small>NBA · WEEKLY PLANNER</small><a href="roto.html" class="roto-link">ROTO 配隊 ↗</a></div></div><div class="app-status">ESPN + PBP Stats<br>更新 {escape(generated_at)}</div></header>
+            <header class="appbar"><div class="brand"><span class="brand-mark">FC</span><div>FANTASYORGCAT<small>NBA · WEEKLY PLANNER</small><a href="roto.html" class="roto-link">九項配隊分析 ↗</a></div></div><div class="app-status">ESPN + PBP Stats<br>更新 {escape(generated_at)}</div></header>
             <section class="hero"><div><div class="eyebrow">WEEKLY COMPARISON</div><h1>把下一場，排進你的陣容。</h1><p>四週賽程、球員表現與對手防守，一起看清楚。</p></div><div class="hero-meta"><strong>{escape(metadata['season'])} NBA</strong>{escape(str(w1_start))} — {escape(str(final_end))}</div></section>
             <div class="metric-grid">
                 <div class="metric-card"><span>現役球員</span><strong>{roster_count}</strong><small>人</small></div>
