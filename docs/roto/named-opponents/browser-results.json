@@ -1,0 +1,87 @@
+[
+  {
+    "width": 1500,
+    "real_checked_in_data": true,
+    "real_weighted_denominators": true,
+    "declared_conflicts_preserved": true,
+    "release_data_complete": true,
+    "default_three_series": true,
+    "readable_sans_serif_text": true,
+    "full_stat_table_in_place_toggle": true,
+    "checkbox_keyboard_focus_preserved": true,
+    "picker_page_scroll_header": true,
+    "picker_horizontal_selection_sticky": true,
+    "search_resets_paging": true,
+    "unknown_member_known_subtotal": true,
+    "season_switch_preserves_roster": true,
+    "nearby_total_mode_switch": true,
+    "named_multiple_opponents": true,
+    "old_save_import_as_new_opponent": true,
+    "opponent_auto_save_reload": true,
+    "selectable_overlays": true,
+    "fixed_benchmark": true,
+    "multi_replace_base_unchanged": true,
+    "reset_restores_base": true,
+    "local_named_save_reload": true,
+    "unknown_player_coverage": true,
+    "no_page_overflow": true,
+    "js_errors": [],
+    "failed_requests": [],
+    "external_requests": [],
+    "csp_errors": []
+  },
+  {
+    "width": 390,
+    "real_checked_in_data": true,
+    "real_weighted_denominators": true,
+    "declared_conflicts_preserved": true,
+    "release_data_complete": true,
+    "default_three_series": true,
+    "readable_sans_serif_text": true,
+    "full_stat_table_in_place_toggle": true,
+    "checkbox_keyboard_focus_preserved": true,
+    "picker_page_scroll_header": true,
+    "picker_horizontal_selection_sticky": true,
+    "search_resets_paging": true,
+    "unknown_member_known_subtotal": true,
+    "season_switch_preserves_roster": true,
+    "nearby_total_mode_switch": true,
+    "named_multiple_opponents": true,
+    "old_save_import_as_new_opponent": true,
+    "opponent_auto_save_reload": true,
+    "selectable_overlays": true,
+    "fixed_benchmark": true,
+    "multi_replace_base_unchanged": true,
+    "reset_restores_base": true,
+    "local_named_save_reload": true,
+    "unknown_player_coverage": true,
+    "no_page_overflow": true,
+    "js_errors": [],
+    "failed_requests": [],
+    "external_requests": [],
+    "csp_errors": []
+  },
+  {
+    "corrupt_opponents_preserved": true,
+    "delete_all_restore_and_readd": true,
+    "quota_preserves_prior_storage": true
+  },
+  {
+    "homepage_checkbox_entry": true,
+    "same_origin_new_page": true,
+    "canonical_ids": [
+      "1966",
+      "3195"
+    ]
+  },
+  {
+    "synthetic_current_season_auto_default": true,
+    "production_data_unchanged": true
+  },
+  {
+    "synthetic_math_only": true,
+    "production_data_unchanged": true,
+    "weighted_FG_pct": 83.33333333333333,
+    "nine_axis_rendering": true
+  }
+]

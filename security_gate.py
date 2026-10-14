@@ -68,9 +68,13 @@ def check_roto(require_ready=True,report=None):
     html=Path('roto.html').read_text(encoding='utf-8');parser=PublicHTML();parser.feed(html)
     csp="default-src 'none'; script-src 'self'; style-src 'self'; img-src data:; connect-src 'none'; base-uri 'none'; form-action 'none'"
     if parser.errors or parser.csp!=csp:raise ValueError('ROTO public content/CSP check failed')
-    expected=set(ROTO_FILES)-{'roto.html'}
+    expected=(set(ROTO_FILES)-{'roto.html'})|{'assets/'+name for name in ASSETS}
     actual={a.get('src',a.get('href')) for a in parser.external}
-    if actual!=expected or parser.scripts!=3:raise ValueError('ROTO asset allowlist mismatch')
+    if actual!=expected or parser.scripts!=5:raise ValueError('ROTO asset allowlist mismatch')
+    for asset in ASSETS:
+        expected_integrity='sha384-'+base64.b64encode(hashlib.sha384(Path('assets',asset).read_bytes()).digest()).decode()
+        attrs=next(a for a in parser.external if a.get('src',a.get('href'))=='assets/'+asset)
+        if attrs.get('integrity')!=expected_integrity:raise ValueError('ROTO pinned asset integrity mismatch')
     for name in ROTO_FILES:
         if not Path(name).is_file():raise ValueError('Missing ROTO public file: '+name)
         content=Path(name).read_text(encoding='utf-8')
@@ -84,10 +88,12 @@ def check_roto(require_ready=True,report=None):
     if data.get('fixture'):raise ValueError('ROTO test fixture cannot be published')
     if require_ready:
         if data.get('source')=='BoxScore Lab':
-            from roto_boxscore import build_boxscore_data
+            from roto_package import build_package
             from roto_data import read_report
-            expected_data=build_boxscore_data(read_report(report or 'index.html'),snapshot)
-            if data!=expected_data or not data.get('data_ready'):
+            expected_data=build_package(read_report(report or 'index.html'),snapshot)
+            active=data.get('extra_periods',{}).get(data.get('default_period'),data)
+            applicable=active.get('data_ready') or active.get('stats_available') and active['reference']['size']==active['reference']['expected']>0
+            if data!=expected_data or not applicable:
                 raise ValueError('ROTO release blocked: source/mapping/uncertainty/reference provenance does not reproduce')
             if data['source_info']['independent_checks']['official_full_table_verified']:
                 raise ValueError('Secondary source must not claim official full-table verification')

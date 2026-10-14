@@ -55,6 +55,7 @@ class RotoData(unittest.TestCase):
             target=Path(tmp)
             for name in ROTO_FILES:
                 if name!='roto_data.js':shutil.copyfile(root/name,target/name)
+            shutil.copytree(root/'assets',target/'assets')
             (target/'data_snapshot.json').write_text(json.dumps(self.snapshot()))
             write_data(data,target/'roto_data.js')
             try:
