@@ -2,7 +2,7 @@
 import copy
 import hashlib
 import json
-from roto_data import COUNTING, SHOTS, benchmark, numeric, records_from_catalog
+from roto_data import COUNTING, SHOTS, RADAR_SCALE, benchmark, numeric, records_from_catalog
 from roto_boxscore import build_boxscore_data, load_source
 
 
@@ -38,7 +38,7 @@ def live_period(catalog,snapshot,period,season):
         stats_available=any(p['gp'] and p['gp']>0 for p in players.values()),data_ready=complete and shooting_complete==expected,
         reference=dict(size=len(reference),expected=expected,shooting_complete=shooting_complete,
             id='season-v1:'+season+':'+hashlib.sha256(json.dumps(reference,sort_keys=True).encode()).hexdigest()[:12],records=reference,
-            scale='50 + 15 × z; clipped 0–100; counting uses roster average per member; TO reversed'),
+            scale=RADAR_SCALE),
         benchmark=scales,players=players)
 
 

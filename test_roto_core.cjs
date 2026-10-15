@@ -10,7 +10,14 @@ assert.equal(C.aggregate(['3'],data,'totals').cells['FG%'].value,null);assert.eq
 const missing={...data,players:{...data.players,'4':{...p('4',5,1,2),shots:{FGM:null,FGA:2,FTM:null,FTA:null}}}};
 a=C.aggregate(['1','4','999'],missing,'totals');assert.equal(a.cells.PTS.value,null);assert.equal(a.cells.PTS.known,2);assert.equal(a.cells.PTS.subtotal,150);assert.equal(a.cells['FG%'].value,null);assert.equal(a.cells['FG%'].known,1);assert.equal(a.scores['FG%'],null);
 assert.equal(C.aggregate([],data,'totals').cells.TO.value,null);
-const low=C.aggregate(['1'],data,'perGame'),high=C.aggregate(['2'],data,'perGame');assert.ok(low.scores.TO>high.scores.TO);assert.equal(low.scores.TO,65);assert.equal(high.scores.TO,35);
+const low=C.aggregate(['1'],data,'perGame'),high=C.aggregate(['2'],data,'perGame');assert.ok(low.scores.TO>high.scores.TO);assert.ok(Math.abs(low.scores.TO-200/3)<1e-12);assert.equal(high.scores.TO,40);
+assert.equal(C.aggregate(['3'],data,'perGame').scores.TO,100);
+assert.equal(C.aggregate(['1','2'],data,'perGame').scores.TO,50);
+const toScores=[0,1,2,3,10,1000].map(to=>C.aggregate(['1'],{...data,players:{'1':p('1',10,1,2,0,0,to)}},'perGame').scores.TO);
+assert.equal(toScores[0],100);assert.ok(toScores.every((v,i)=>Number.isFinite(v)&&v>0&&v<=100&&(!i||v<toScores[i-1])));
+const partialZero=C.knownView(C.aggregate(['3','999'],data,'perGame'),data,'perGame');assert.equal(partialZero.scores.TO,100);assert.equal(partialZero.cells.TO.partial,true);
+assert.equal(C.aggregate(['999'],data,'perGame').scores.TO,null);
+assert.equal(C.aggregate(['1'],{...data,benchmark:{...data.benchmark,perGame:{...data.benchmark.perGame,TO:{mean:0,sd:0}}}},'perGame').scores.TO,null);
 const frozen=JSON.stringify(data.benchmark);C.aggregate(['1','2','3'],data,'totals');assert.equal(JSON.stringify(data.benchmark),frozen);
 const base=['1','2'];assert.deepEqual(C.simulate(base,['1'],['3','3']),['2','3']);assert.deepEqual(base,['1','2']);assert.deepEqual(C.simulate(base,[],[]),base);assert.deepEqual(C.simulate(base,['1','2'],['1','2']),base);assert.deepEqual(C.simulate(base,[],['2']),base);
 assert.throws(()=>C.ids(['__proto__']));

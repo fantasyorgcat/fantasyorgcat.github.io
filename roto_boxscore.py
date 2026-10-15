@@ -7,7 +7,7 @@ import math
 from pathlib import Path
 import re
 import unicodedata
-from roto_data import COUNTING, SHOTS, benchmark, read_report, write_data
+from roto_data import COUNTING, SHOTS, RADAR_SCALE, benchmark, read_report, write_data
 
 ROOT=Path(__file__).resolve().parent
 CSV_PATH=ROOT/'data/roto/2025-26-player-season-totals.csv'
@@ -107,7 +107,7 @@ def build_boxscore_data(catalog,snapshot,source=None,manifest=None,allow_histori
         data_ready=summary['matched']>0,
         reference=dict(size=len(reference),expected=len(reference),shooting_complete=sum(all(r['shots'][k] is not None for k in SHOTS) for r in reference),
                        declared_conflicts=manifest['uncertainties'],id='boxscore-lab-v1:'+manifest['season']+':'+ref_hash,records=reference,
-                       scale='50 + 15 × z; clipped 0–100; counting uses roster average per member; TO reversed'),
+                       scale=RADAR_SCALE),
         benchmark=benchmark(reference),players=players,mapping=dict(summary=summary,records=mapping,old_disagreements=disagreements))
 
 
