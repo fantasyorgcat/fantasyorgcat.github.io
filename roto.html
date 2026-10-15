@@ -8,10 +8,10 @@
 <link rel="stylesheet" type="text/css" href="assets/datatables-2.3.7.min.css" integrity="sha384-iRTWPXZquQySBE9K96fgJXUIrnm8TpdtPAbiCNR+qjpP24qFZw9PHFA91JtWy7Ul">
 <script type="text/javascript" charset="utf8" src="assets/jquery-3.7.1.min.js" integrity="sha384-1H217gwSVyLSIfaLxHbE7dRb3v4mYCKbpQvzx0cegeju1MVsGrX5xXxAvs/HgeFs" defer></script>
 <script type="text/javascript" charset="utf8" src="assets/datatables-2.3.7.min.js" integrity="sha384-Lo2E+ASlyar6zUXt6sPEy5uaDGtDGHXo300rohaW4/AV26JdoLBT9zhcOhV8BtL8" defer></script>
-<script src="roto_data.js" defer></script><script src="roto_core.js" defer></script><script src="roto.js" defer></script>
+<script src="site_ui.js" defer></script><script src="roto_data.js" defer></script><script src="roto_core.js" defer></script><script src="roto.js" defer></script>
 </head>
 <body class="roto-page"><a class="skip-link" href="#player-picker">跳到球員選取</a><main id="main-content" class="container">
-<header class="appbar"><a class="brand home-link" href="index.html"><span class="brand-mark">FC</span><span>FANTASYORGCAT<small>NINE-CATEGORY · ROSTER LAB</small></span></a><nav class="site-nav" aria-label="網站導覽"><a href="index.html">球員與賽程</a><a href="roto.html" aria-current="page">九項配隊</a></nav></header>
+<header class="appbar"><a class="brand home-link" href="index.html"><span class="brand-mark">FC</span><span>FANTASYORGCAT<small>NINE-CATEGORY · ROSTER LAB</small></span></a><div class="site-preferences" data-site-preferences></div><nav class="site-nav" aria-label="網站導覽"><a href="index.html">球員與賽程</a><a href="roto.html" aria-current="page">九項配隊</a></nav></header>
 <section class="hero"><div><div class="eyebrow">ROSTER LAB</div><h1>九項配隊分析</h1><p id="period-label">所選季別例行賽實績 · 比較陣容體質與換人產效</p></div><div class="hero-meta"><strong>H2H · ROTO</strong><span id="snapshot-label"></span></div></section>
 <nav class="section-nav" aria-label="配隊工作區">
 <button type="button" data-jump="player-picker">選球員 <span id="nav-pick-count">0</span></button><button type="button" data-jump="roster-editors">陣容管理</button><button type="button" data-jump="comparison-overview">看比較</button><button type="button" data-jump="saved-panel">儲存庫</button>

@@ -81,12 +81,12 @@ class Schedule(unittest.TestCase):
         payload=schedule_event_payload(frame,{})
         self.assertEqual(len(payload),1);self.assertEqual(payload[0]['date_et'],'2026-12-31')
         self.assertEqual(payload[0]['season_type'],2)
-        self.assertIn('美東 12/31 21:30',payload[0]['home_html']);self.assertIn('台北 01/01 10:30',payload[0]['home_html'])
+        self.assertIn("datetime='2027-01-01T02:30:00Z'",payload[0]['home_html']);self.assertIn('01/01 10:30',payload[0]['home_html'])
 
     def test_dst_changes_clock_without_changing_eastern_date(self):
         for stamp,et in [('2026-10-31T23:30:00Z','10/31 19:30'),('2026-11-02T00:30:00Z','11/01 19:30')]:
             utils.get_season_schedule.cache_clear();frame=self.normalized(self.event('dst',stamp))
-            self.assertIn('美東 '+et,scheduled_matchup(frame.iloc[0],{}))
+            self.assertIn("datetime='"+stamp+"'",scheduled_matchup(frame.iloc[0],{}))
 
     def test_undated_and_time_tbd_do_not_invent_tipoff(self):
         event=self.event('tbd',None)
@@ -97,7 +97,7 @@ class Schedule(unittest.TestCase):
         utils.get_season_schedule.cache_clear()
         event=self.event('tbd-clock','2026-10-21T00:00Z');event['competitions'][0]['timeValid']=False
         row=self.normalized(event).iloc[0];self.assertIsNone(row.TIPOFF_UTC)
-        self.assertIn('開賽時間待定',scheduled_matchup(row,{}))
+        self.assertIn('時間待定',scheduled_matchup(row,{}))
 
     def test_postponed_cancelled_final_states_and_scheduled_count(self):
         for name,state,completed,expected,count in [('STATUS_POSTPONED','pre',False,'postponed',0),('STATUS_CANCELED','pre',False,'cancelled',0),('STATUS_FINAL','post',True,'final',1)]:

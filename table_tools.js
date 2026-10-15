@@ -93,7 +93,7 @@
   const explanation=node('p');explanation.dataset.rankDescription='';rankDetails.append(explanation,node('p','使用未四捨五入的 PR 加總；TO 越少 PR 越高，缺值不當成 0。這不是聯盟 ROTO 積分。'));
   const display=node('details',null,'table-options');display.appendChild(node('summary','顯示設定'));
   const controls=node('div',null,'display-controls');
-  for(const [key,title,min,max] of [['font','數據字級',13,18],['padding','列間距',4,14],['dayWidth','賽程欄寬',64,120]]){
+  for(const [key,title,min,max] of [['font','數據字級',13,18],['padding','列間距',4,14],['dayWidth','球員表賽程欄寬',64,120]]){
    const label=node('label'),input=node('input');input.type='range';input.min=min;input.max=max;input.step=1;input.dataset.displaySetting=key;input.setAttribute('aria-label',title);
    input.addEventListener('input',()=>{prefs[key]=Number(input.value);savePreferences();});label.append(node('span',title),input,node('output'));controls.appendChild(label);
   }
@@ -124,11 +124,16 @@
   }finally{sized.delete(container);}
  }
  function sizeTeams(){
-  document.querySelectorAll('.team-section table').forEach(table=>{
-   const headers=Array.from(table.tHead?.rows[0]?.cells||[]);if(!headers.length)return;
-   table.style.setProperty('width',(128+(headers.length-2)*prefs.dayWidth)+'px','important');table.style.tableLayout='fixed';
-   headers.forEach((h,i)=>{const width=i<2?64:prefs.dayWidth;h.style.width=width+'px';if(i>=2)shortDate(h);});
-   table.querySelectorAll('colgroup col').forEach((c,i)=>{c.style.width=(i<2?64:prefs.dayWidth)+'px';});
+  document.querySelectorAll('.team-section').forEach(section=>{
+   const table=section.querySelector('table');if(!table)return;
+   table.style.width='100%';table.style.tableLayout='auto';
+   const headers=Array.from(table.tHead?.rows[0]?.cells||[]);
+   table.style.minWidth=(128+Math.max(0,headers.length-2)*100)+'px';
+   headers.forEach((h,i)=>{h.style.width=i<2?'64px':'';if(i>=2)shortDate(h);});
+   table.querySelectorAll('colgroup col').forEach((col,i)=>{col.style.width=i<2?'64px':'';col.style.minWidth='';});
+   const rows=Array.from(table.tBodies[0]?.rows||[]).slice(0,6);
+   const scroll=section.querySelector('.schedule-scroll'),gutter=Math.max(0,scroll.offsetHeight-scroll.clientHeight-2);
+   scroll.style.height=(table.tHead.getBoundingClientRect().height+rows.reduce((sum,row)=>sum+row.getBoundingClientRect().height,0)+2+gutter)+'px';
   });
  }
  function enhance(suffix){

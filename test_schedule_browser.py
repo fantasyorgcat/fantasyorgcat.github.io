@@ -17,7 +17,7 @@ ROOT=Path(__file__).resolve().parent
 
 def build_fixture(target):
     target=Path(target);target.mkdir(parents=True,exist_ok=True)
-    for name in ['dashboard.css','player_tools.js','schedule_tools.js','team_tools.js','table_tools.js']:shutil.copyfile(ROOT/name,target/name)
+    for name in ['dashboard.css','player_tools.js','schedule_tools.js','team_tools.js','table_tools.js','site_ui.js']:shutil.copyfile(ROOT/name,target/name)
     shutil.copytree(ROOT/'assets',target/'assets',dirs_exist_ok=True)
     records=[]
     # 25 calendar weeks, four-day opening shortcut, cross-year and DST events.
@@ -52,11 +52,13 @@ def run(url,output):
         browser=p.chromium.launch(executable_path=os.environ.get('CHROMIUM_PATH','/usr/bin/chromium'),headless=True)
         for width in [1500,390]:
             context=browser.new_context(viewport={'width':width,'height':1000 if width==1500 else 844})
+            context.add_init_script("localStorage.setItem('fantasyorgcat:site-preferences:v1',JSON.stringify({language:'zh-Hant',timezone:'America/New_York'}))")
             page=context.new_page();errors=[];failed=[]
             page.clock.install(time='2026-10-25T12:00:00Z')
             page.on('pageerror',lambda e:errors.append(str(e)));page.on('requestfailed',lambda r:failed.append(r.url))
             assert page.goto(url,wait_until='load').status==200
             page.wait_for_function('Object.keys(tables).length===5')
+            page.locator('[data-platform="NBA"]').click()
             assert page.locator('[data-platform]').count()==3
             assert page.locator('[data-platform="NBA"]').get_attribute('aria-pressed')=='true'
             assert page.locator('[data-platform="ESPN"]').is_enabled()
@@ -80,9 +82,9 @@ def run(url,output):
             assert page.locator('#comparison-body .comparison-matchup').count()==14
             headers=page.evaluate("tables.WCustom.columns('[data-schedule-day]').indexes().toArray().map(i=>tables.WCustom.column(i).header().textContent)")
             assert headers==page.locator('#comparison-head th').all_text_contents()[2:16]
-            assert '美東 10/20 21:00' in page.locator('#comparison-body').inner_text()
-            assert '台北 10/21 09:00' in page.locator('#comparison-body').inner_text()
-            assert '延賽' in page.locator('#comparison-body').inner_text()
+            assert '10/20 21:00' in page.locator('#comparison-body').inner_text()
+            assert page.locator('#comparison-body time[datetime="2026-10-21T01:00:00Z"]').count()>0
+            assert page.locator('#comparison-body time[title="延賽"]').count()>0
             # Scheduled open + two B2B + final; postponed/cancelled do not inflate total.
             assert page.locator('#comparison-body tr td').nth(1).inner_text()=='4'
             page.locator('#schedule-metrics summary').click()
@@ -95,7 +97,7 @@ def run(url,output):
             page.clock.fast_forward(60000)
             values=page.locator('#schedule-insights tr[data-team="LAL"] td').all_text_contents()
             assert values==['LAL','4','1','0','1','3'],values
-            assert '2026-10-27 01:00 UTC' in page.locator('#schedule-period-context').inner_text()
+            assert '2026-10-26 21:00 美東' in page.locator('#schedule-period-context').inner_text()
             # Background tabs can throttle timers. Returning to visible refreshes
             # the cutoff immediately, even before the next interval.
             page.clock.set_system_time('2026-10-28T01:00:30Z')
@@ -104,7 +106,7 @@ def run(url,output):
             page.evaluate("Object.defineProperty(document,'visibilityState',{configurable:true,value:'visible'});document.dispatchEvent(new Event('visibilitychange'))")
             values=page.locator('#schedule-insights tr[data-team="LAL"] td').all_text_contents()
             assert values==['LAL','4','0','0','0','4'],values
-            assert '2026-10-28 01:00 UTC' in page.locator('#schedule-period-context').inner_text()
+            assert '2026-10-27 21:00 美東' in page.locator('#schedule-period-context').inner_text()
             page.clock.set_system_time('2026-10-25T12:00:00Z')
             assert 'tbd' not in page.locator('#schedule-pending').inner_text() # IDs are retained in data, not noisy product labels.
             assert '日期待定' in page.locator('#schedule-pending').inner_text()
@@ -112,7 +114,7 @@ def run(url,output):
             page.evaluate("tables.WCustom.order([tables.WCustom.column('.rank-ls-tot').index(),'asc']).draw()")
             page.locator('#teamTableWCustom .team-row[data-team="LAL"]').click()
             apply('2026-12-28','2027-01-03')
-            assert '台北 01/01 10:30' in page.locator('#comparison-body').inner_text()
+            assert '12/31 21:30' in page.locator('#comparison-body').inner_text()
             assert page.evaluate("viewState.WCustom.mode==='tot'&&viewState.WCustom.period==='ls'&&teamSelection.WCustom==='LAL'")
             assert page.evaluate("tables.WCustom.column(tables.WCustom.order()[0][0]).header().classList.contains('rank-ls-tot')")
             assert original==page.evaluate("JSON.stringify(playerCatalog['1'].periods)")

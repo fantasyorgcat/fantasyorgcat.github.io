@@ -39,7 +39,7 @@ def run(url):
    page.evaluate("tables[activeWeek].order([tables[activeWeek].column('.rank-ls-avg').index(),'asc']).draw()")
    values=page.evaluate("Array.from(tables[activeWeek].column('.rank-ls-avg',{order:'applied'}).nodes()).map(n=>Number(n.dataset.order))");assert values==sorted(values)
    page.locator('#comparison-head button[data-sort="Rank"]').click()
-   values=page.locator('#comparison-body tr td').evaluate_all('(nodes)=>nodes.filter(n=>n.cellIndex===20).map(n=>Number(n.dataset.value)).filter(n=>n>0)');assert values==sorted(values)
+   values=page.locator('#comparison-body tr td').evaluate_all('(nodes)=>nodes.filter(n=>n.dataset.metric==="Rank").map(n=>Number(n.dataset.value)).filter(n=>n>0)');assert values==sorted(values)
    weeks=page.evaluate('seasonWeeks');assert len(weeks)==25
    tested_platforms={}
    for key,count in [('NBA',25),('YAHOO',23),('ESPN',24)]:
@@ -51,11 +51,11 @@ def run(url):
    page.locator('#season-week').select_option('0');exact()
    assert page.evaluate('seasonWeeks[0].start') if 'start' in weeks[0] else weeks[0]['number']==1
    page.locator('#comparison-mode').select_option('tot');page.locator('#comparison-head button[data-sort="PTS"]').click()
-   vals=page.locator('#comparison-body tr td').evaluate_all('(nodes)=>nodes.filter(n=>n.cellIndex===11).map(n=>Number(n.dataset.value))');assert vals==sorted(vals,reverse=True)
-   page.locator('#comparison-period').select_option('l7');assert page.locator('#comparison-body tr td').evaluate_all('(nodes)=>nodes.filter(n=>[11,19,20].includes(n.cellIndex)).every(n=>n.textContent==="—")')
+   vals=page.locator('#comparison-body tr td').evaluate_all('(nodes)=>nodes.filter(n=>n.dataset.metric==="PTS").map(n=>Number(n.dataset.value))');assert vals==sorted(vals,reverse=True)
+   page.locator('#comparison-period').select_option('l7');assert page.locator('#comparison-body tr td').evaluate_all('(nodes)=>nodes.filter(n=>["PTS","TO","Rank"].includes(n.dataset.metric)).every(n=>n.textContent==="—")')
    page.locator('#comparison-period').select_option('ls');page.locator('#comparison-mode').select_option('avg')
    page.locator('#comparison-head button[data-sort="TO"]').click()
-   to=page.locator('#comparison-body tr td').evaluate_all('(nodes)=>nodes.filter(n=>n.cellIndex===19).map(n=>Number(n.dataset.value))');assert to==sorted(to)
+   to=page.locator('#comparison-body tr td').evaluate_all('(nodes)=>nodes.filter(n=>n.dataset.metric==="TO").map(n=>Number(n.dataset.value))');assert to==sorted(to)
    page.evaluate("tables[activeWeek].order([tables[activeWeek].column('.stat-ls.stat-avg').index()+9,'asc']).draw()")
    to=page.evaluate("Array.from(tables[activeWeek].column(tables[activeWeek].column('.stat-ls.stat-avg').index()+9,{order:'applied'}).nodes()).map(n=>Number(n.dataset.order))");assert to==sorted(to)
    assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+1')
@@ -63,12 +63,12 @@ def run(url):
    page.locator('.comparison-scroll').evaluate('(e)=>e.scrollLeft=0');page.evaluate('window.scrollTo(0,document.querySelector("#comparison-panel").offsetTop-document.querySelector(".workspace-bar").offsetHeight-16)');page.screenshot(path='../comparison-schedule-'+str(width)+'.png',full_page=False)
    original=page.evaluate('(id)=>({name:playerCatalog[id].name,team:playerCatalog[id].team})',pair[0]);page.evaluate('(id)=>{playerCatalog[id].name="<img src=x onerror=alert(1)>";playerCatalog[id].team="UNKNOWN";}',pair[0])
    page.locator('#comparison-mode').select_option('tot');assert page.locator('#comparison-body img').count()==0
-   missing=page.locator('#comparison-body tr[data-player-id="'+pair[0]+'"]');assert missing.locator('td').nth(1).inner_text()=='—';assert missing.locator('td.comparison-matchup').count()==7
+   missing=page.locator('#comparison-body tr[data-player-id="'+pair[0]+'"]');assert missing.locator('td').nth(1).inner_text()=='—';assert missing.locator('td.comparison-matchup').count()==page.evaluate("tables[activeWeek].columns('[data-schedule-day]').count()")
    page.evaluate('([id,v])=>Object.assign(playerCatalog[id],v)',[pair[0],original]);page.locator('#comparison-mode').select_option('avg');exact()
    page.locator('#comparison-body button').first.click();assert page.locator('#comparison-body tr').count()==1
    page.locator('#clear-comparison').click();assert not page.locator('#comparison-panel').is_visible()
-   assert page.evaluate('storageCalls')==['getItem'];assert page.evaluate('savedRoster()')=='existing-user-data'
-   page.reload(wait_until='load');page.wait_for_function('Object.keys(tables).length===5');assert not page.locator('#comparison-panel').is_visible();assert page.evaluate('storageCalls')==['getItem']
+   assert page.evaluate('storageCalls')==['getItem','getItem'];assert page.evaluate('savedRoster()')=='existing-user-data'
+   page.reload(wait_until='load');page.wait_for_function('Object.keys(tables).length===5');assert not page.locator('#comparison-panel').is_visible();assert page.evaluate('storageCalls')==['getItem','getItem']
    assert not errors,errors;assert not failed,failed;assert not external,external
    results.append(dict(width=width,season_weeks=len(weeks),tested_platforms=tested_platforms,cross_team_ids=pair,exact_schedule_all_weeks=True,display_preferences_blocked_read=True,existing_storage_preserved=True,zero_games_and_missing=True,rank_global_and_week_invariant=True,rank_numeric_sort=True,rank_missing_is_unranked=True,js_errors=errors,failed_requests=failed,external_requests=external));ctx.close()
   browser.close()
