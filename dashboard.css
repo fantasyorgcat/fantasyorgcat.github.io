@@ -98,3 +98,59 @@ body.dashboard-page .player-section .dt-scroll-body>table>tbody>tr>td:first-chil
 body.dashboard-page .player-section .dt-scroll-body>table>tbody>tr:nth-child(even)>td:first-child{background:var(--panel)}
 body.dashboard-page .stat-pr,body.dashboard-page .comparison-scroll small{white-space:nowrap}
 @media(max-width:360px){body.dashboard-page .app-status{max-width:none;flex-basis:100%;text-align:left}}
+
+/* Stable data-first workspace. Schedule defaults to 84px (120px × 70%). */
+body.dashboard-page{--table-font:14px;--table-padding:6px;--schedule-width:84px}
+body.dashboard-page :is(.player-section table,.team-section table){font-size:var(--table-font);font-variant-numeric:tabular-nums}
+body.dashboard-page .player-section .dt-scroll :is(th,td){overflow-wrap:normal;white-space:nowrap;padding:var(--table-padding) 8px;box-sizing:border-box}
+body.dashboard-page .player-section .dt-scroll th{font-size:13px;padding:10px 20px 10px 8px}
+body.dashboard-page .player-section .dt-scroll :is(th,td):first-child{white-space:normal;overflow-wrap:anywhere;min-width:0;max-width:none}
+body.dashboard-page .player-section .dt-scroll tbody td:not(:first-child){text-align:right}
+body.dashboard-page .player-section .dt-scroll tbody td:has(.matchup){text-align:left;white-space:normal}
+body.dashboard-page .player-section .dt-scroll td.stat-pr{white-space:nowrap}
+body.dashboard-page .stat-pr,body.dashboard-page .rank-sum{font-size:max(13px,calc(var(--table-font) - 1px));line-height:1.4;font-weight:400;color:var(--muted)}
+body.dashboard-page .rank-sum{display:block;white-space:nowrap}
+body.dashboard-page .rank-value{font-weight:700}
+body.dashboard-page .pick-controls{margin-top:4px}
+body.dashboard-page .pick-controls label{padding:2px 5px;min-height:36px;font-size:13px}
+body.dashboard-page .matchup{width:100%;min-width:0;max-width:none;font-size:13px;padding:4px!important;white-space:normal;overflow-wrap:anywhere}
+body.dashboard-page .matchup small{font-size:12px;line-height:1.35}
+body.dashboard-page .game-time{max-width:none;font-size:12px;line-height:1.4;white-space:normal;overflow-wrap:anywhere}
+body.dashboard-page .team-section .schedule-scroll{width:max-content;max-width:100%}
+body.dashboard-page .team-section :is(th,td){padding:var(--table-padding) 6px;min-width:0!important;white-space:normal}
+body.dashboard-page .team-section th{font-size:12px;white-space:nowrap}
+body.dashboard-page .table-toolbar{display:flex;flex-wrap:wrap;gap:8px 20px;align-items:flex-start;padding:0 0 12px;border-bottom:1px solid var(--line);font-size:14px}
+body.dashboard-page .table-options{min-width:0;max-width:100%;flex:0 1 auto}
+body.dashboard-page .table-options[open]{flex-basis:100%;order:3;padding:12px;background:var(--paper);border:1px solid var(--line);border-radius:10px}
+body.dashboard-page .table-options summary{padding:8px 0;min-height:40px;cursor:pointer;font-weight:650}
+body.dashboard-page .table-options p{font-size:13px;line-height:1.6;margin:8px 0 0}
+body.dashboard-page .table-options button{margin:6px 8px 0 0}
+body.dashboard-page .rank-choices{display:flex;flex-wrap:wrap;gap:4px 10px;margin:8px 0;border:0;padding:0}
+body.dashboard-page .rank-choices legend{font-size:13px;margin-bottom:4px;color:var(--muted)}
+body.dashboard-page :is(.rank-choices label,.schedule-toggle){display:flex;gap:8px;align-items:center;min-height:44px;cursor:pointer}
+body.dashboard-page .rank-choices label{border:1px solid var(--line);border-radius:8px;padding:6px 10px}
+body.dashboard-page .rank-choices label:has(:checked){background:var(--accent-soft);border-color:var(--accent)}
+body.dashboard-page :is(.rank-choices,.schedule-toggle) input{width:20px;height:20px;margin:0;accent-color:var(--accent);flex-shrink:0}
+body.dashboard-page .display-controls{display:flex;flex-wrap:wrap;gap:12px 24px}
+body.dashboard-page .display-controls label{display:grid;grid-template-columns:1fr auto;gap:6px;max-width:100%;width:240px}
+body.dashboard-page .display-controls input{grid-column:1;min-width:0;width:100%;accent-color:var(--accent);min-height:32px}
+body.dashboard-page .display-controls output{grid-column:2;grid-row:2;align-self:center;font-variant-numeric:tabular-nums}
+body.dashboard-page .table-x-scroll{overflow-x:auto;overflow-y:hidden;height:20px;max-width:100%;scrollbar-color:var(--accent) var(--panel)}
+body.dashboard-page .table-x-scroll>div{height:1px}
+body.dashboard-page .table-scroll-hint{display:flex;gap:8px;flex-wrap:wrap;align-items:center;font-size:13px;color:var(--muted);padding:4px 0}
+body.dashboard-page .table-scroll-hint button{font-size:13px;min-height:36px;padding:4px 8px}
+@media(max-width:600px){body.dashboard-page .table-toolbar{gap:4px 16px}body.dashboard-page .display-controls label{width:100%}body.dashboard-page .table-options[open]{padding:10px}body.dashboard-page .table-scroll-hint span{flex-basis:100%}}
+/* Finished fixed desktop grid; narrow screens scroll the same grid. */
+body.dashboard-page .container{max-width:1280px}
+body.dashboard-page .player-section .dt-scroll th:not(:first-child){text-align:right}
+body.dashboard-page .player-section .dt-scroll .pick-controls{display:inline-flex;vertical-align:middle;margin:2px 0 0 8px}
+body.dashboard-page .team-section{width:fit-content;max-width:100%}
+@media(max-width:600px){
+ body.dashboard-page .player-hint,body.dashboard-page .stat-divider{display:none}
+ body.dashboard-page .player-section .dt-layout-row:not(.dt-layout-table){display:flex!important;align-items:center;gap:8px;margin:8px 0}
+ body.dashboard-page .player-section .dt-layout-row:not(.dt-layout-table) .dt-layout-cell{padding:0;flex:0 1 auto}
+ body.dashboard-page .player-section .dt-length{white-space:nowrap}
+ body.dashboard-page .player-section .dt-search{display:flex;align-items:center;gap:6px}
+ body.dashboard-page .player-section .dt-search input{width:140px;margin:0}
+ body.dashboard-page .table-scroll-hint{gap:4px}
+}

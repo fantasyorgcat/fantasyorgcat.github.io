@@ -34,7 +34,7 @@ def run(url):
     if teamrow.count():teamrow.first.click();exact();assert page.locator('#comparison-body tr').count()==2
     page.locator('#show-all-players').click();exact()
    def ranks():
-    return page.evaluate("""()=>{const out={};for(const node of tables[activeWeek].rows({search:'none'}).nodes().toArray()){const id=node.querySelector('[data-player-id]').dataset.playerId,cell=node.querySelector('.rank-ls-avg');out[id]=cell.textContent;if(playerCatalog[id].periods.ls.avg.Rank.value!==null&&Number(cell.textContent)!==playerCatalog[id].periods.ls.avg.Rank.value)throw Error('Global/catalog Rank mismatch');}return out;}""")
+    return page.evaluate("""()=>{const out={};for(const node of tables[activeWeek].rows({search:'none'}).nodes().toArray()){const id=node.querySelector('[data-player-id]').dataset.playerId,cell=node.querySelector('.rank-ls-avg');out[id]=cell.dataset.rankValue===undefined?cell.textContent:(cell.dataset.rankValue||'—');if(playerCatalog[id].periods.ls.avg.Rank.value!==null&&Number(cell.dataset.rankValue??cell.textContent)!==playerCatalog[id].periods.ls.avg.Rank.value)throw Error('Global/catalog Rank mismatch');}return out;}""")
    before=ranks();assert min(int(v) for v in before.values() if v!='—')==1
    page.evaluate("tables[activeWeek].order([tables[activeWeek].column('.rank-ls-avg').index(),'asc']).draw()")
    values=page.evaluate("Array.from(tables[activeWeek].column('.rank-ls-avg',{order:'applied'}).nodes()).map(n=>Number(n.dataset.order))");assert values==sorted(values)
@@ -67,10 +67,10 @@ def run(url):
    page.evaluate('([id,v])=>Object.assign(playerCatalog[id],v)',[pair[0],original]);page.locator('#comparison-mode').select_option('avg');exact()
    page.locator('#comparison-body button').first.click();assert page.locator('#comparison-body tr').count()==1
    page.locator('#clear-comparison').click();assert not page.locator('#comparison-panel').is_visible()
-   assert page.evaluate('storageCalls')==[];assert page.evaluate('savedRoster()')=='existing-user-data'
-   page.reload(wait_until='load');page.wait_for_function('Object.keys(tables).length===5');assert not page.locator('#comparison-panel').is_visible();assert page.evaluate('storageCalls')==[]
+   assert page.evaluate('storageCalls')==['getItem'];assert page.evaluate('savedRoster()')=='existing-user-data'
+   page.reload(wait_until='load');page.wait_for_function('Object.keys(tables).length===5');assert not page.locator('#comparison-panel').is_visible();assert page.evaluate('storageCalls')==['getItem']
    assert not errors,errors;assert not failed,failed;assert not external,external
-   results.append(dict(width=width,season_weeks=len(weeks),tested_platforms=tested_platforms,cross_team_ids=pair,exact_schedule_all_weeks=True,storage_calls=[],existing_storage_preserved=True,zero_games_and_missing=True,rank_global_and_week_invariant=True,rank_numeric_sort=True,rank_missing_is_unranked=True,js_errors=errors,failed_requests=failed,external_requests=external));ctx.close()
+   results.append(dict(width=width,season_weeks=len(weeks),tested_platforms=tested_platforms,cross_team_ids=pair,exact_schedule_all_weeks=True,display_preferences_blocked_read=True,existing_storage_preserved=True,zero_games_and_missing=True,rank_global_and_week_invariant=True,rank_numeric_sort=True,rank_missing_is_unranked=True,js_errors=errors,failed_requests=failed,external_requests=external));ctx.close()
   browser.close()
  result=dict(url=url,results=results);Path('../comparison-schedule-browser-result.json').write_text(json.dumps(result,indent=2),encoding='utf-8');print(json.dumps(result))
 if __name__=='__main__':run(sys.argv[1])

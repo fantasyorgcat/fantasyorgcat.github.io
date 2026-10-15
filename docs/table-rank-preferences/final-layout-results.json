@@ -1,0 +1,90 @@
+[
+  {
+    "width": 1327,
+    "fixedWidths": [
+      160,
+      64,
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      98
+    ],
+    "aligned": true,
+    "fits": true,
+    "allStatsVisible": true,
+    "js_errors": []
+  },
+  {
+    "width": 1500,
+    "fixedWidths": [
+      160,
+      64,
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      98
+    ],
+    "aligned": true,
+    "fits": true,
+    "allStatsVisible": true,
+    "js_errors": []
+  },
+  {
+    "width": 390,
+    "fixedWidths": [
+      160,
+      64,
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      98
+    ],
+    "aligned": true,
+    "fits": true,
+    "allStatsVisible": false,
+    "js_errors": []
+  },
+  {
+    "width": 320,
+    "fixedWidths": [
+      160,
+      64,
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      88,
+      98
+    ],
+    "aligned": true,
+    "fits": true,
+    "allStatsVisible": false,
+    "js_errors": []
+  }
+]

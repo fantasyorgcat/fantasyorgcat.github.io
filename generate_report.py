@@ -267,7 +267,7 @@ def generate_html_report():
 
         player_html = f"""
         <div class="player-section"><div class="player-heading"><h3>球員名單</h3><span id="selection{table_id_suffix}">全體球員</span></div>
-            <p class="player-hint">可直接勾選或取消「比較」，再從上方「比較人數」查看；左右滑動可看完整數據。</p>
+            <p class="player-hint">預設數據優先；可開啟逐日賽程。勾選「比較」後從上方查看，也可自訂排名項目。</p>
             <div class="controls">
                 <button class="btn-stat active" data-period="Season" onclick="switchStats('Season', '{table_id_suffix}')">本季</button>
                 <button class="btn-stat" data-period="L7" onclick="switchStats('L7', '{table_id_suffix}')">近7天</button>
@@ -490,6 +490,7 @@ def generate_html_report():
     team_js=Path('team_tools.js').read_text(encoding='utf-8')
     tools_js=Path('player_tools.js').read_text(encoding='utf-8')
     schedule_js=Path('schedule_tools.js').read_text(encoding='utf-8')
+    table_js=Path('table_tools.js').read_text(encoding='utf-8')
     events_json=json.dumps(events_payload,ensure_ascii=False,allow_nan=False).replace('<','\\u003c')
     periods_json=json.dumps(quick_periods,ensure_ascii=False).replace('<','\\u003c')
 
@@ -649,6 +650,7 @@ def generate_html_report():
             {team_js}
             {tools_js}
             {schedule_js}
+            {table_js}
         </script>
     </head>
     <body class="dashboard-page">
