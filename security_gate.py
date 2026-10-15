@@ -9,7 +9,7 @@ import re
 import shutil
 import subprocess
 
-ROTO_FILES = ['roto.html','roto_data.js','roto_core.js','roto.js','roto.css','dashboard.css']
+ROTO_FILES = ['roto.html','roto_data.js','roto_core.js','roto.js','roto.css','dashboard.css','site_ui.js']
 ASSETS = ['jquery-3.7.1.min.js','datatables-2.3.7.min.js','datatables-2.3.7.min.css']
 ATTRIBUTION_URLS={'https://www.boxscorelab.com/downloads/2025-26-player-season-totals.csv','https://creativecommons.org/licenses/by/4.0/'}
 SECRET_PATTERNS = [r'gh[pousr]_[A-Za-z0-9]{30,}', r'github_pat_[A-Za-z0-9_]{40,}', r'AKIA[0-9A-Z]{16}', r'-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----']
@@ -70,7 +70,7 @@ def check_roto(require_ready=True,report=None):
     if parser.errors or parser.csp!=csp:raise ValueError('ROTO public content/CSP check failed')
     expected=(set(ROTO_FILES)-{'roto.html'})|{'assets/'+name for name in ASSETS}
     actual={a.get('src',a.get('href')) for a in parser.external}
-    if actual!=expected or parser.scripts!=5:raise ValueError('ROTO asset allowlist mismatch')
+    if actual!=expected or parser.scripts!=6:raise ValueError('ROTO asset allowlist mismatch')
     for asset in ASSETS:
         expected_integrity='sha384-'+base64.b64encode(hashlib.sha384(Path('assets',asset).read_bytes()).digest()).decode()
         attrs=next(a for a in parser.external if a.get('src',a.get('href'))=='assets/'+asset)

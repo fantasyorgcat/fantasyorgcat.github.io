@@ -1,0 +1,34 @@
+{
+  "results": [
+    {
+      "width": 1440,
+      "default_yahoo": true,
+      "default_taipei": true,
+      "six_complete_rows": true,
+      "full_width_schedule": true,
+      "compact_cards": true,
+      "localized_dates_and_times": true,
+      "language_roundtrip": true,
+      "roto_and_dynamic_ui": true,
+      "roster_and_stats_preserved": true,
+      "js_errors": [],
+      "external_requests": []
+    },
+    {
+      "width": 390,
+      "default_yahoo": true,
+      "default_taipei": true,
+      "six_complete_rows": true,
+      "full_width_schedule": true,
+      "compact_cards": true,
+      "localized_dates_and_times": true,
+      "language_roundtrip": true,
+      "roto_and_dynamic_ui": true,
+      "roster_and_stats_preserved": true,
+      "js_errors": [],
+      "external_requests": []
+    }
+  ],
+  "yahoo_current_date_verified": true,
+  "storage_failure_verified": true
+}

@@ -1,0 +1,194 @@
+{
+  "fixture": true,
+  "url": "http://127.0.0.1:39593/fantasy_nba_report_v2.html",
+  "results": [
+    {
+      "width": 1500,
+      "nba_weeks": 25,
+      "yahoo_weeks": 23,
+      "espn_weeks": 24,
+      "yahoo_short_opening_and_double_weeks": true,
+      "long_week_event_regressions": [
+        {
+          "yahoo_week": 7,
+          "nba_weeks": [
+            7,
+            8
+          ],
+          "event_dates": [
+            "2026-12-02",
+            "2026-12-09"
+          ],
+          "merged_games": 2,
+          "nba_games": [
+            1,
+            1
+          ],
+          "comparison_verified": true,
+          "roundtrips_verified": true
+        },
+        {
+          "yahoo_week": 17,
+          "nba_weeks": [
+            18,
+            19
+          ],
+          "event_dates": [
+            "2027-02-18",
+            "2027-02-25"
+          ],
+          "merged_games": 2,
+          "nba_games": [
+            1,
+            1
+          ],
+          "comparison_verified": true,
+          "roundtrips_verified": true
+        }
+      ],
+      "espn_all_periods_verified": true,
+      "retired_table_jquery_data_released": true,
+      "three_platform_roundtrips": [
+        {
+          "nba_week": 7,
+          "espn_week": 7,
+          "yahoo_week": 7,
+          "espn_games": 1,
+          "verified": true
+        },
+        {
+          "nba_week": 8,
+          "espn_week": 8,
+          "yahoo_week": 7,
+          "espn_games": 1,
+          "verified": true
+        },
+        {
+          "nba_week": 18,
+          "espn_week": 18,
+          "yahoo_week": 17,
+          "espn_games": 2,
+          "verified": true
+        },
+        {
+          "nba_week": 19,
+          "espn_week": 18,
+          "yahoo_week": 17,
+          "espn_games": 2,
+          "verified": true
+        }
+      ],
+      "date_anchored_platform_switch": true,
+      "filters_search_mode_order_preserved": true,
+      "custom_days": [
+        1,
+        7,
+        14,
+        31
+      ],
+      "cross_year": true,
+      "invalid_range_rejected": true,
+      "remaining_b2b_light_verified": true,
+      "tipoff_timer_refresh": true,
+      "foreground_refresh": true,
+      "empty_season_selection_preserves_applied_period": true,
+      "statistics_unchanged": true,
+      "js_errors": [],
+      "failed_requests": []
+    },
+    {
+      "width": 390,
+      "nba_weeks": 25,
+      "yahoo_weeks": 23,
+      "espn_weeks": 24,
+      "yahoo_short_opening_and_double_weeks": true,
+      "long_week_event_regressions": [
+        {
+          "yahoo_week": 7,
+          "nba_weeks": [
+            7,
+            8
+          ],
+          "event_dates": [
+            "2026-12-02",
+            "2026-12-09"
+          ],
+          "merged_games": 2,
+          "nba_games": [
+            1,
+            1
+          ],
+          "comparison_verified": true,
+          "roundtrips_verified": true
+        },
+        {
+          "yahoo_week": 17,
+          "nba_weeks": [
+            18,
+            19
+          ],
+          "event_dates": [
+            "2027-02-18",
+            "2027-02-25"
+          ],
+          "merged_games": 2,
+          "nba_games": [
+            1,
+            1
+          ],
+          "comparison_verified": true,
+          "roundtrips_verified": true
+        }
+      ],
+      "espn_all_periods_verified": true,
+      "retired_table_jquery_data_released": true,
+      "three_platform_roundtrips": [
+        {
+          "nba_week": 7,
+          "espn_week": 7,
+          "yahoo_week": 7,
+          "espn_games": 1,
+          "verified": true
+        },
+        {
+          "nba_week": 8,
+          "espn_week": 8,
+          "yahoo_week": 7,
+          "espn_games": 1,
+          "verified": true
+        },
+        {
+          "nba_week": 18,
+          "espn_week": 18,
+          "yahoo_week": 17,
+          "espn_games": 2,
+          "verified": true
+        },
+        {
+          "nba_week": 19,
+          "espn_week": 18,
+          "yahoo_week": 17,
+          "espn_games": 2,
+          "verified": true
+        }
+      ],
+      "date_anchored_platform_switch": true,
+      "filters_search_mode_order_preserved": true,
+      "custom_days": [
+        1,
+        7,
+        14,
+        31
+      ],
+      "cross_year": true,
+      "invalid_range_rejected": true,
+      "remaining_b2b_light_verified": true,
+      "tipoff_timer_refresh": true,
+      "foreground_refresh": true,
+      "empty_season_selection_preserves_applied_period": true,
+      "statistics_unchanged": true,
+      "js_errors": [],
+      "failed_requests": []
+    }
+  ]
+}

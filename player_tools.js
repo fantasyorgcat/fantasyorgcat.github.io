@@ -26,7 +26,7 @@
    for(const metric of metrics){const td=row.insertCell(),v=value(p,metric);td.dataset.metric=metric;td.dataset.value=v===null?'':String(v);td.textContent=v===null?'—':['GP','Rank'].includes(metric)||(mode==='tot'&&['PTS','REB','AST','3PM','STL','BLK','TO'].includes(metric))?String(v):v.toFixed(1)+(metric.endsWith('%')?'%':'');if(metric!=='GP'&&v!==null){const pr=p.periods[period][mode][metric].pr;if(pr!==null){const small=document.createElement('small');small.textContent='PR '+Math.round(pr);td.appendChild(small);}}if(metric==='Rank'&&window.playerRank){const rank=window.playerRank(p,period,mode);if(rank.sum!==null){const small=document.createElement('small');small.textContent='Σ PR '+rank.sum.toFixed(1);td.appendChild(small);}}}body.appendChild(row);
   }
   const names={season:'本季 '+playerToolsMeta.season,l7:'近7天',l14:'近14天',ls:'上季 '+playerToolsMeta.lastSeason};
-  const label=activeWeek==='WCustom'?byId('custom-period-heading').textContent:document.querySelector('.tablinks.active').textContent;
+  const label=window.activeScheduleLabel|| (activeWeek==='WCustom'?byId('custom-period-heading').textContent:document.querySelector('.tablinks.active').textContent);
   byId('comparison-meta').textContent=label+' · '+names[period]+' · '+mode.toUpperCase()+(window.playerRankLabel?' · 排名 '+window.playerRankLabel():'');
  }
  $(document).ready(function(){
@@ -36,6 +36,6 @@
   byId('jump-players').addEventListener('click',()=>{const section=document.querySelector('#Week'+activeWeek.replace('W','')+' .player-section');if(section){section.scrollIntoView({block:'start'});const heading=section.querySelector('h3');heading.setAttribute('tabindex','-1');heading.focus({preventScroll:true});}});
   byId('comparison-period').value=period;byId('comparison-period').addEventListener('change',e=>{period=e.target.value;render();});byId('comparison-mode').addEventListener('change',e=>{mode=e.target.value;render();});byId('clear-comparison').addEventListener('click',()=>{compared.clear();render();});
   document.addEventListener('change',e=>{const input=e.target;if(!input.matches('input[data-pick="compare"]'))return;const id=input.dataset.playerId;if(!playerCatalog[id])return;if(input.checked)compared.add(id);else compared.delete(id);render();});
-  $(document).on('draw.dt',render);document.addEventListener('active-week-changed',render);document.addEventListener('player-rank-changed',render);sync();
+  $(document).on('draw.dt',render);document.addEventListener('active-week-changed',render);document.addEventListener('player-rank-changed',render);document.addEventListener('site-preferences-changed',render);sync();
  });
 })();

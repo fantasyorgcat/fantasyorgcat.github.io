@@ -18,7 +18,8 @@ with sync_playwright() as p:
   def geometry():
    return page.evaluate('''()=>{const c=tables[activeWeek].table().container(),head=c.querySelector('.dt-scroll-head'),body=c.querySelector('.dt-scroll-body');const hs=[...head.querySelectorAll('th')].map(e=>e.getBoundingClientRect()),ds=[...body.querySelector('tbody tr').cells].map(e=>e.getBoundingClientRect());return {available:body.clientWidth,width:body.scrollWidth,aligned:hs.length===ds.length&&hs.every((r,i)=>Math.abs(r.width-ds[i].width)<2&&Math.abs(r.x-ds[i].x)<2),documentFits:document.documentElement.scrollWidth<=innerWidth+1,cols:hs.map(r=>r.width),rankVisible:hs.at(-1).right<=body.getBoundingClientRect().right+1};}''')
   team_widths=page.locator('#teamTableWCustom thead th').evaluate_all('(hs)=>hs.slice(2).map(h=>h.getBoundingClientRect().width)')
-  assert all(abs(n-84)<1 for n in team_widths),team_widths
+  assert all(n>0 for n in team_widths),team_widths
+  assert page.locator('#WeekCustom .team-section').evaluate('(e)=>Math.abs(e.getBoundingClientRect().width-e.parentElement.querySelector(".player-section").getBoundingClientRect().width)<2')
   page.locator('#WeekCustom .team-section').screenshot(path=str(OUT/f'schedule-{width}.png'))
   geo=geometry();assert geo['aligned'] and geo['documentFits'],geo
   if width>600:assert geo['rankVisible'] and geo['width']<=geo['available']+1,geo

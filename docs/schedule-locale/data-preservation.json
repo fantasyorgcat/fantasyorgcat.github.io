@@ -1,0 +1,12 @@
+{
+  "playerCatalog": "unchanged",
+  "platformPeriods": "unchanged",
+  "quickPeriods": "unchanged",
+  "scheduleGeneratedAt": "unchanged",
+  "schedule_event_facts": "unchanged; presentation HTML only",
+  "events": 1200,
+  "embedded_sources": "match generator source files",
+  "roto_core.js": "23e0982801f2565186a24b67e8f79f72b437eaf419e8772afc6d5722dd74f3eb",
+  "roto_data.js": "12615653f6424ea905ed81a3a1a4f3a6c8507e18d189763c684c16fe17b543d1",
+  "data_snapshot.json": "c1ff96ecbc3698bd209e2c19f7246061fbf29b3250553f4df943987ac4cd80d2"
+}

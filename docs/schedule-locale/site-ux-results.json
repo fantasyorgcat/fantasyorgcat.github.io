@@ -1,0 +1,58 @@
+[
+  {
+    "width": 1500,
+    "no_document_overflow": true,
+    "home_navigation_and_comparison_entry": true,
+    "empty_state_and_target_actions": true,
+    "section_focus_navigation": true,
+    "selected_only_uncheck_and_clear_search": true,
+    "picker_feedback": true,
+    "unsaved_name_roster_and_simulation_undo": true,
+    "new_and_clear_base_undo": true,
+    "opponent_delete_undo": true,
+    "saved_roster_delete_undo": true,
+    "no_js_csp_errors_or_external_requests": true
+  },
+  {
+    "width": 390,
+    "no_document_overflow": true,
+    "home_navigation_and_comparison_entry": true,
+    "empty_state_and_target_actions": true,
+    "section_focus_navigation": true,
+    "selected_only_uncheck_and_clear_search": true,
+    "picker_feedback": true,
+    "unsaved_name_roster_and_simulation_undo": true,
+    "new_and_clear_base_undo": true,
+    "opponent_delete_undo": true,
+    "saved_roster_delete_undo": true,
+    "no_js_csp_errors_or_external_requests": true
+  },
+  {
+    "width": 360,
+    "no_document_overflow": true,
+    "home_navigation_and_comparison_entry": true,
+    "empty_state_and_target_actions": true,
+    "section_focus_navigation": true,
+    "selected_only_uncheck_and_clear_search": true,
+    "picker_feedback": true,
+    "unsaved_name_roster_and_simulation_undo": true,
+    "new_and_clear_base_undo": true,
+    "opponent_delete_undo": true,
+    "saved_roster_delete_undo": true,
+    "no_js_csp_errors_or_external_requests": true
+  },
+  {
+    "width": 320,
+    "no_document_overflow": true,
+    "home_navigation_and_comparison_entry": true,
+    "empty_state_and_target_actions": true,
+    "section_focus_navigation": true,
+    "selected_only_uncheck_and_clear_search": true,
+    "picker_feedback": true,
+    "unsaved_name_roster_and_simulation_undo": true,
+    "new_and_clear_base_undo": true,
+    "opponent_delete_undo": true,
+    "saved_roster_delete_undo": true,
+    "no_js_csp_errors_or_external_requests": true
+  }
+]

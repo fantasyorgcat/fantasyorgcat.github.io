@@ -23,10 +23,9 @@ def matchup_badge(opp_abbr, is_home, ratings):
         rank,population=info['Rank'],info['Population']
         color=utils.get_color_for_rank(rank,population)
         note=f"PBP Stats 最近10場已完成例行賽 (可跨季): {info['DefRtg']:.1f}失分/100防守回合; 排名 {rank}/{population}; {info['Games']}/10場; {info['Start']}–{info['End']}"
-        difficulty=['較難打','稍難打','中段','稍好打','較好打'][min(4,int((rank-1)/population*5))]
-        detail=f"{difficulty} {rank}/{population} · {info['Games']}/10"
+        detail=f"#{rank}"
     else:
-        color,note,detail=utils.get_color_for_rank(None),'最近10場例行賽防守資料暫缺','防守暫缺 · 0/10'
+        color,note,detail=utils.get_color_for_rank(None),'最近10場例行賽防守資料暫缺','—'
     return f"<div class='matchup' style='background-color:{color};padding:4px;border-radius:4px;text-align:center;font-weight:bold' title='{escape(note,quote=True)}'>{label}<br><small>{escape(detail)}</small></div>"
 
 
@@ -38,11 +37,9 @@ def scheduled_matchup(row, ratings):
     if stamp:
         from zoneinfo import ZoneInfo
         instant=datetime.fromisoformat(stamp.replace('Z','+00:00'))
-        et=instant.astimezone(ZoneInfo('America/New_York')).strftime('%m/%d %H:%M')
-        taipei=instant.astimezone(ZoneInfo('Asia/Taipei')).strftime('%m/%d %H:%M')
-        clock=f'美東 {et} · 台北 {taipei}'
-    else:clock='開賽時間待定'
-    return badge+f"<small class='game-time'>{escape(clock)}<br>{escape(labels[row['STATUS']])}</small>"
+        clock=instant.astimezone(ZoneInfo('Asia/Taipei')).strftime('%m/%d %H:%M')
+    else:clock='時間待定'
+    return badge+f"<time class='game-time' datetime='{escape(stamp or '',quote=True)}' title='{escape(labels[row['STATUS']],quote=True)}'>{escape(clock)}</time>"
 
 
 def schedule_event_payload(schedule, ratings):
@@ -461,7 +458,7 @@ def generate_html_report():
         "NBA 賽程週採美東週一至週日，首場當季例行賽所在週為 Week 1；Yahoo 採經核對的當季公開預設週表；ESPN 採已核實當季的全季 Weekly 週曆，未核實球季不開放。聯盟 matchup／季後賽日期可自訂。近1週從今天起至週日。僅列來源已公布日期，尚未排定賽事不虛構；無比賽週仍保留。 "
         f"報告產生時間：{generated_at}。ESPN 球員資料：當季 {metadata['season']}，上季 {metadata['last_season']} "
         f"例行賽來源期間至 {last_end}。近期窗口為美東日期 {today} 前完整7／14天。"
-        f"球隊／球員名單取自本次 ESPN roster；比賽日期使用美東時間，四週範圍 {w1_start}–{final_end}。"
+        f"球隊／球員名單取自本次 ESPN roster；週次依美東計分日；賽事日期與時間依所選時區顯示，四週範圍 {w1_start}–{final_end}。"
         f"各期 PR 母體：當季 {len(stats_dict['Season'])}、近7天 {len(stats_dict['L7'])}、近14天 {len(stats_dict['L14'])}、上季 {len(stats_dict['LastSeason'])} 位有出賽球員。"
     )
     if stats_dict['Season'].empty:
@@ -491,6 +488,7 @@ def generate_html_report():
     tools_js=Path('player_tools.js').read_text(encoding='utf-8')
     schedule_js=Path('schedule_tools.js').read_text(encoding='utf-8')
     table_js=Path('table_tools.js').read_text(encoding='utf-8')
+    site_ui_js=Path('site_ui.js').read_text(encoding='utf-8')
     events_json=json.dumps(events_payload,ensure_ascii=False,allow_nan=False).replace('<','\\u003c')
     periods_json=json.dumps(quick_periods,ensure_ascii=False).replace('<','\\u003c')
 
@@ -519,6 +517,7 @@ def generate_html_report():
             var quickPeriods = {periods_json};
             var scheduleGeneratedAt = '{generated_at}';
             var customPlayerTemplate;
+            {site_ui_js}
 
             $(document).ready( function () {{
                 // Shared labels also apply to dynamically built season/custom tables.
@@ -655,8 +654,8 @@ def generate_html_report():
     </head>
     <body class="dashboard-page">
         <div class="container">
-            <header class="appbar"><div class="brand"><span class="brand-mark">FC</span><div>FANTASYORGCAT<small>NBA FANTASY 工具箱</small></div></div><div class="app-status">ESPN + PBP Stats<br>更新 {escape(generated_at)}</div><nav class="site-nav" aria-label="網站導覽"><a href="index.html" aria-current="page">球員與賽程</a><a href="roto.html">九項配隊</a></nav></header>
-            <section class="hero"><div><h1>賽程與球員比較</h1><p>選擇週次、篩選球隊，再勾選球員一起比較。</p></div><div class="hero-meta"><strong>{escape(metadata['season'])} NBA</strong>{escape(str(w1_start))} — {escape(str(final_end))}</div></section>
+            <header class="appbar"><div class="brand"><span class="brand-mark">FC</span><div>FANTASYORGCAT<small>NBA FANTASY 工具箱</small></div></div><div class="app-status">ESPN + PBP Stats<br>更新 {escape(generated_at)}</div><div class="site-preferences" data-site-preferences></div><nav class="site-nav" aria-label="網站導覽"><a href="index.html" aria-current="page">球員與賽程</a><a href="roto.html">九項配隊</a></nav></header>
+            <section class="hero"><div><h1>把下一場排入你的賽程</h1><p>選擇週次、篩選球隊，再勾選球員一起比較。</p></div><div class="hero-meta"><strong>{escape(metadata['season'])} NBA</strong><span id="hero-period-range">{escape(str(w1_start))} — {escape(str(final_end))}</span></div></section>
             <details class="data-details"><summary>資料快照與來源 · {escape(fixture_caption)}</summary><div class="metric-grid">
                 <div class="metric-card"><span>現役球員</span><strong>{roster_count}</strong><small>人</small></div>
                 <div class="metric-card"><span>四週賽程</span><strong>{provenance.get('schedule',{}).get('events_in_window',0)}</strong><small>場</small></div>
