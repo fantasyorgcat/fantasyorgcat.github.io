@@ -7,7 +7,7 @@ from unittest.mock import patch
 import pandas as pd
 import utils
 from player_catalog import build_catalog
-from roto_data import build_data, records_from_catalog, source_reference, write_data
+from roto_data import benchmark, build_data, records_from_catalog, source_reference, write_data
 
 class RotoData(unittest.TestCase):
     def catalog(self):
@@ -21,6 +21,10 @@ class RotoData(unittest.TestCase):
     def snapshot(self):return dict(period_populations={'LastSeason':2},players_2026={'season':'2025-26','source_period_start':'2025-10-21','source_period_end':'2026-04-13'},schedule={'season':'2026-27'},generated_at='2026-10-10 17:34 UTC',stats_source='ESPN')
     def test_complete_same_season_and_immutable_benchmark(self):
         c=self.catalog();original=copy.deepcopy(c);d=build_data(c,self.snapshot());self.assertTrue(d['data_ready']);self.assertEqual(d['reference']['shooting_complete'],2);self.assertEqual(d['season'],'2025-26');self.assertEqual(d['benchmark']['perGame']['PTS']['mean'],2.5);self.assertEqual(d['players']['1']['shots']['FGA'],60);self.assertEqual(c,original)
+    def test_reference_calculation_is_order_independent(self):
+        from roto_boxscore import load_source
+        reference,_=load_source()
+        self.assertEqual(benchmark(reference),benchmark(list(reversed(reference))))
     def test_missing_denominators_not_inferred_from_percent(self):
         c=self.catalog();c['1']['periods']['ls']['shooting']['FGA']=None;c['1']['periods']['ls']['avg']['FG%']['value']=50
         d=build_data(c,self.snapshot());self.assertFalse(d['data_ready']);self.assertIsNone(d['players']['1']['shots']['FGA']);self.assertEqual(d['reference']['shooting_complete'],1)

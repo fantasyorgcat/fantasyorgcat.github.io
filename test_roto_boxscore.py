@@ -21,13 +21,21 @@ class BoxScore(unittest.TestCase):
             bad=Path(tmp)/'bad.csv';bad.write_bytes(CSV_PATH.read_bytes()+b' ')
             with self.assertRaisesRegex(ValueError,'byte/hash mismatch'):load_source(bad)
     def test_unique_mapping_and_whole_source_not_mixed(self):
-        s=self.data['mapping']['summary'];self.assertEqual((s['matched'],s['not_in_source'],s['ambiguous'],s['source_unmapped']),(481,129,0,101))
-        self.assertEqual(s['old_comparable'],479);self.assertEqual(s['old_totals_disagreements'],0)
+        s=self.data['mapping']['summary'];self.assertEqual((s['matched'],s['not_in_source'],s['ambiguous'],s['source_unmapped']),(481,len(self.catalog)-481,0,101))
+        expected_comparable=sum(p['periods']['ls']['gp'] is not None for pid,p in self.catalog.items() if self.data['players'][pid]['status']=='matched')
+        self.assertEqual(s['old_comparable'],expected_comparable);self.assertEqual(s['old_totals_disagreements'],0)
         byname={r['source_name']:r for r in self.rows}
         for p in self.data['players'].values():
             if p['status']=='matched':
                 r=byname[p['source_name']];self.assertEqual(p['totals'],r['totals']);self.assertEqual(p['gp'],r['gp']);self.assertEqual(p['shots'],r['shots'])
             else:self.assertIsNone(p['gp']);self.assertTrue(all(v is None for v in p['totals'].values()))
+    def test_new_unknown_candidate_does_not_change_archived_reference(self):
+        catalog=copy.deepcopy(self.catalog);p=copy.deepcopy(catalog['1966']);p.update(id='99999999',name='New rookie outside archived source');catalog[p['id']]=p
+        changed=build_boxscore_data(catalog,self.snapshot)
+        self.assertEqual(changed['mapping']['summary']['not_in_source'],self.data['mapping']['summary']['not_in_source']+1)
+        self.assertIsNone(changed['players'][p['id']]['gp'])
+        self.assertEqual(changed['benchmark'],self.data['benchmark'])
+        self.assertEqual(changed['reference']['id'],self.data['reference']['id'])
     def test_suffix_alias_requires_exact_historical_fingerprint(self):
         record=next(m for m in self.data['mapping']['records'] if m['name']=='Bobby Portis')
         self.assertEqual(record['method'],'explicit_suffix_alias_plus_exact_GP_and_seven_totals')

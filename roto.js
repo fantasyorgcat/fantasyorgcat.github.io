@@ -2,7 +2,7 @@
  'use strict';
  const C=RotoCore,packageData=ROTO_DATA,$=id=>document.getElementById(id),NS='http://www.w3.org/2000/svg';
  let period=packageData.default_period||packageData.period_key||'ls',data=packageData.extra_periods?.[period]||packageData,picker=null;
- const state={base:[],opponent:[],outgoing:[],incoming:[]};let mode='totals',saved=[];
+ const state={base:[],opponent:[],outgoing:[],incoming:[]};let mode='totals',saved=[],activeBase='';
  let opponents=[{id:'opponent',name:'對手 1',players:[],savedAt:''}],activeOpponent='opponent',opponentsWritable=true;const hiddenOpponents=new Set();
  const opponentColors=['#b48259','#798979','#9286a2','#829da1','#b99770'];
  const names={base:'原陣容',opponent:'對手',simulation:'換人後'},colors={base:'#516a78',simulation:'#a77581'};
@@ -89,15 +89,27 @@
   const query=$('player-search').value;if(picker.search()!==query)picker.search(query).draw();syncPicks();
   $('search-count').textContent='正在編輯 '+($('add-target').value==='incoming'?'換人後名單':names[$('add-target').value])+' · 已勾選 '+selection($('add-target').value).length+' 人 · '+data.season+' · '+(mode==='totals'?'整季總量':'每人1場');
  }
- function render(rebuild=false){$('mode').value=mode;$('table-mode').value=mode;syncOpponent();opponentControls();const teams={base:C.knownView(C.aggregate(state.base,data,mode),data,mode)};for(const t of opponents)teams[t.id]=C.knownView(C.aggregate(t.players,data,mode),data,mode);teams.simulation=C.knownView(C.aggregate(simulation(),data,mode),data,mode);
+ function render(rebuild=false){$('mode').value=mode;$('table-mode').value=mode;baseOptions();syncOpponent();opponentControls();const teams={base:C.knownView(C.aggregate(state.base,data,mode),data,mode)};for(const t of opponents)teams[t.id]=C.knownView(C.aggregate(t.players,data,mode),data,mode);teams.simulation=C.knownView(C.aggregate(simulation(),data,mode),data,mode);
   $('base-count').textContent=teams.base.size+' 人';$('opponent-count').textContent=opponents.length+' 隊 · 目前 '+state.opponent.length+' 人';$('simulation-count').textContent=state.outgoing.length+' 移出／'+state.incoming.length+' 加入';
   $('coverage').textContent='原陣容 '+teams.base.size+' 人 · GP資料 '+teams.base.gpKnown+'/'+teams.base.size+' · 所選季別球員出賽合計 '+teams.base.gp+'（不是聯盟已計入場數）';
   $('unit-note').textContent=mode==='perGame'?'每人 1 場：逐員所選季別總量 ÷ 個人 GP 後合計；投籃同口徑加權，不平均百分比。':'所選季別整季總量：逐員實績總量合計，含個人不同出賽數；不是聯盟每日先發已計入成績。';
   const radarTeams=mode==='perGame'?teams:Object.fromEntries(Object.entries(teams).map(([target,team])=>[target,C.knownView(C.aggregate(team.ids,data,'perGame'),data,'perGame')]));
   radar(radarTeams);metrics(teams);rosterList('base');rosterList('opponent');rosterList('incoming');outgoingList();search(rebuild);
  }
- function savedOptions(selected=''){const host=$('saved-rosters');host.replaceChildren(element('option','選擇陣容'));host.firstChild.value='';for(const r of saved){const option=element('option',r.name+' · '+r.players.length+' 人');option.value=r.id;host.append(option);}host.value=selected;}
- function storageWarning(error){$('storage-warning').hidden=false;$('storage-warning').textContent='本地保存無法使用：'+error.message+'。本次編輯仍可繼續；既有資料未清除。';}
+ function baseOptions(){const host=$('base-roster-select');host.replaceChildren(element('option','選擇已儲存的聯盟／陣容'));host.firstChild.value='';for(const r of saved){const option=element('option',r.name+' · '+r.players.length+' 人');option.value=r.id;host.append(option);}if(!saved.some(r=>r.id===activeBase))activeBase='';host.value=activeBase;
+  const entry=saved.find(r=>r.id===activeBase),dirty=entry&&JSON.stringify(entry.players)!==JSON.stringify(state.base);
+  $('base-save-status').textContent=entry?'目前「'+entry.name+'」'+(dirty?'有未儲存的名單變更，請再按儲存。':'已儲存；可從上方選單切換陣容。'):'這份原陣容尚未儲存；不同聯盟請使用不同名稱。';
+ }
+ function savedOptions(selected=''){const host=$('saved-rosters');host.replaceChildren(element('option','選擇陣容'));host.firstChild.value='';for(const r of saved){const option=element('option',r.name+' · '+r.players.length+' 人');option.value=r.id;host.append(option);}host.value=selected;baseOptions();}
+ function storageWarning(error){for(const id of ['storage-warning','base-storage-warning']){$(id).hidden=false;$(id).textContent='本地保存無法使用：'+error.message+'。本次編輯仍可繼續；既有資料未清除。';}}
+ function saveRoster(name,players){if($('save-roster').disabled)return null;if(!name){message('請先替陣容命名。');return null;}if(!players.length){message('空陣容未保存。');return null;}
+  const existing=saved.find(r=>r.name===name),entry={id:existing?existing.id:crypto.randomUUID(),name,players:[...players],savedAt:new Date().toISOString()},next=[...saved.filter(r=>r.id!==entry.id),entry];
+  try{C.save(localStorage,next);saved=next;savedOptions(entry.id);for(const id of ['storage-warning','base-storage-warning'])$(id).hidden=true;message('已保存「'+name+'」至此裝置。');return entry;}catch(e){storageWarning(e);return null;}
+ }
+ function loadBase(entry){activeBase=entry.id;$('base-roster-name').value=entry.name;$('add-target').value='base';setRoster('base',entry.players);message('已載入原陣容「'+entry.name+'」；換人模擬已重設，其他保存未改動。');}
+ $('base-roster-select').addEventListener('change',e=>{const entry=saved.find(r=>r.id===e.target.value);if(entry)loadBase(entry);else baseOptions();});
+ $('save-base-roster').addEventListener('click',()=>{const entry=saveRoster($('base-roster-name').value.trim(),state.base);if(entry){activeBase=entry.id;render();}});
+ $('new-base-roster').addEventListener('click',()=>{activeBase='';$('base-roster-name').value='';$('add-target').value='base';setRoster('base',[]);message('已建立空白原陣容；已儲存的聯盟／陣容仍保留。');});
  function setMode(value){mode=value;describeData();render(true);}
  for(const id of ['mode','table-mode'])$(id).addEventListener('change',e=>setMode(e.target.value));$('compare-efficiency').addEventListener('click',()=>setMode('perGame'));for(const target of ['base','opponent','simulation'])$('show-'+target).addEventListener('change',render);
  $('player-search').addEventListener('input',()=>search());$('add-target').addEventListener('change',search);
@@ -110,11 +122,8 @@
  $('add-opponent').addEventListener('click',()=>newOpponent());$('delete-opponent').addEventListener('click',()=>{opponents=opponents.filter(t=>t.id!==activeOpponent);hiddenOpponents.delete(activeOpponent);activeOpponent=opponents[0]?.id||'';syncOpponent();persistOpponents();render();});
  $('clear-base').addEventListener('click',()=>setRoster('base',[]));$('clear-opponent').addEventListener('click',()=>setRoster('opponent',[]));$('reset-simulation').addEventListener('click',()=>{reset();render();message('模擬已重設，原陣容不變。');});
  $('save-target').addEventListener('change',e=>{if(e.target.value==='opponent'&&activeTeam())$('roster-name').value=activeTeam().name;});
- $('save-roster').addEventListener('click',()=>{const name=$('roster-name').value.trim();if(!name){message('請先替陣容命名。');return;}const target=$('save-target').value,players=target==='simulation'?simulation():state[target];if(!players.length){message('空陣容未保存。');return;}
-  const existing=saved.find(r=>r.name===name),entry={id:existing?existing.id:crypto.randomUUID(),name,players:[...players],savedAt:new Date().toISOString()},next=[...saved.filter(r=>r.id!==entry.id),entry];
-  try{C.save(localStorage,next);saved=next;savedOptions(entry.id);message('已保存「'+name+'」至此裝置。');}catch(e){storageWarning(e);}
- });
- $('load-roster').addEventListener('click',()=>{const entry=saved.find(r=>r.id===$('saved-rosters').value);if(!entry){message('先選擇已保存的陣容。');return;}const target=$('load-target').value;if(target==='new-opponent')newOpponent(entry.name,entry.players);else{if(target==='opponent'&&activeTeam())activeTeam().name=entry.name;setRoster(target,entry.players);}message('已載入「'+entry.name+'」；使用目前快照，未知球員不補零。');});
+ $('save-roster').addEventListener('click',()=>{const target=$('save-target').value,entry=saveRoster($('roster-name').value.trim(),target==='simulation'?simulation():state[target]);if(entry&&target==='base'){activeBase=entry.id;$('base-roster-name').value=entry.name;}baseOptions();});
+ $('load-roster').addEventListener('click',()=>{const entry=saved.find(r=>r.id===$('saved-rosters').value);if(!entry){message('先選擇已保存的陣容。');return;}const target=$('load-target').value;if(target==='base'){loadBase(entry);return;}if(target==='new-opponent')newOpponent(entry.name,entry.players);else{if(target==='opponent'&&activeTeam())activeTeam().name=entry.name;setRoster(target,entry.players);}message('已載入「'+entry.name+'」；使用目前快照，未知球員不補零。');});
  $('delete-roster').addEventListener('click',()=>{const entry=saved.find(r=>r.id===$('saved-rosters').value);if(!entry)return;const next=saved.filter(r=>r.id!==entry.id);try{C.save(localStorage,next);saved=next;savedOptions();message('已刪除這份本地保存。');}catch(e){storageWarning(e);}});
  function describeData(){$('period-label').textContent=data.season+' 例行賽實績 · 比較陣容體質與換人產效';$('snapshot-label').textContent=data.source_info?'來源 build '+data.source_info.publisher_build:'實績快照 '+data.generated_at;
  $('season-context').textContent=period==='season'?(data.stats_available?'正在使用本季實績：平均產效反映目前樣本，請搭配 GP 與每場分鐘看。':'本季尚無例行賽實績。可切到上季參考歷史體質，開季後有有效資料時預設使用本季。'):'正在使用 '+data.season+' 歷史實績：適合回顧體質，球員角色、分鐘與健康可能改變；不能直接當作本季或剩餘球季預測。有效本季資料出現後，重新開啟此頁會預設使用本季。';
@@ -124,11 +133,11 @@
  if(data.fixture){$('data-warning').hidden=false;$('data-warning').textContent='UI TEST ONLY · 合成資料驗證；不可發布或當作真實球員數據。';}
  else if(data.source_info){$('data-warning').hidden=false;const s=data.mapping.summary;$('data-warning').textContent='BoxScore Lab／CC BY 4.0 · 2025–26二手例行賽實績，非官方全表驗證。名單 '+s.matched+'/'+s.catalog+' 唯一映射；其餘 '+s.not_in_source+' 位此來源無適用資料，保持未知。Jabari Smith Jr. FGA 存975／974來源差異，未裁定，選入時FG%未知。';}
  else if(!data.data_ready){$('data-warning').hidden=false;$('data-warning').textContent='所選季別資料尚未完整，保留已知小計與覆蓋率；缺投籃分母或固定完整母體時，相關雷達留白，不當成0。';}
-  if(data.stats_available&&C.metrics.some(k=>data.benchmark.perGame[k].sd===0)){$('data-warning').hidden=false;$('data-warning').textContent+=' 某些類別參考母體沒有變異，該雷達軸留白，實際數值仍可查看。';}
+  if(data.stats_available&&C.metrics.some(k=>k==='TO'?data.benchmark.perGame[k].mean===0:data.benchmark.perGame[k].sd===0)){$('data-warning').hidden=false;$('data-warning').textContent+=' 某些類別參考母體沒有可用尺度，該雷達軸留白，實際數值仍可查看。';}
  }
  const options=[...Object.entries(packageData.extra_periods||{}),[packageData.period_key||'ls',packageData]];for(const [key,entry] of options){const option=element('option',entry.season+(key==='season'?' 本季':key==='ls'?' 上季':' 封存')+(entry.stats_available===false?'（尚無例行賽實績）':''));option.value=key;$('data-period').append(option);}$('data-period').value=period;describeData();
  try{const stored=localStorage.getItem(C.opponentsKey);if(stored!==null){opponents=C.loadOpponents(localStorage);activeOpponent=opponents[0]?.id||'';}syncOpponent();}catch(e){opponentsWritable=false;$('opponents-status').textContent='對手保存無法讀取：'+e.message+'。既有內容不會覆寫，本次仍可編輯。';}
- try{saved=C.load(localStorage);savedOptions();}catch(e){storageWarning(e);if(e.code==='ROTO_SAVE_FORMAT'){$('save-roster').disabled=true;$('delete-roster').disabled=true;}}
+ try{saved=C.load(localStorage);savedOptions();}catch(e){storageWarning(e);if(e.code==='ROTO_SAVE_FORMAT'){$('save-roster').disabled=true;$('save-base-roster').disabled=true;$('delete-roster').disabled=true;}}
  try{const fragment=new URLSearchParams(location.hash.slice(1)).get('players');if(fragment)state.base=C.ids(fragment.split(',').filter(Boolean));}catch(e){message('帶入名單無法辨識：'+e.message);}
  if(matchMedia('(max-width:600px)').matches)for(const id of ['base-editor','opponent-editor','simulation-editor'])$(id).open=false;
  render();

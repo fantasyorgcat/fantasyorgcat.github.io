@@ -4,6 +4,11 @@
  const counting=['PTS','REB','AST','3PM','STL','BLK','TO'],metrics=['PTS','REB','AST','3PM','STL','BLK','FG%','FT%','TO'],storageKey='fantasyorgcat:roto:rosters:v1',opponentsKey='fantasyorgcat:roto:opponents:v1';
  function ids(values){return [...new Set(values.map(v=>{const id=String(v);if(!/^\d+$/.test(id))throw Error('球員 ID 格式錯誤');return id;}))];}
  const valid=v=>typeof v==='number'&&Number.isFinite(v)&&v>=0;
+ function score(value,key,baseline){
+  if(!valid(value)||!baseline||!valid(baseline.mean))return null;
+  if(key==='TO')return baseline.mean>0?100/(1+value/baseline.mean):null;
+  return !valid(baseline.sd)||!baseline.sd?null:Math.max(0,Math.min(100,50+15*(value-baseline.mean)/baseline.sd));
+ }
  function aggregate(values,data,mode){
   if(!['perGame','totals'].includes(mode))throw Error('未知單位');
   const roster=ids(values),rows=roster.map(id=>data.players[id]),n=roster.length,cells={};
@@ -16,7 +21,7 @@
   }
   const scores={};for(const key of metrics){const v=cells[key].value,b=data.benchmark[mode][key];
    const comparable=key.endsWith('%')?v:v===null?null:v/n;
-   scores[key]=comparable===null||!b||b.mean===null||!b.sd?null:Math.max(0,Math.min(100,50+(key==='TO'?-15:15)*(comparable-b.mean)/b.sd));
+   scores[key]=score(comparable,key,b);
   }
   return {ids:roster,size:n,cells,scores,gp:rows.filter(p=>p&&valid(p.gp)).reduce((s,p)=>s+p.gp,0),gpKnown:rows.filter(p=>p&&valid(p.gp)).length,
    minutesKnown:rows.filter(p=>p&&valid(p.minutes)).length};
@@ -24,7 +29,7 @@
  function knownView(team,data,mode){const cells={},scores={};let partial=false;for(const key of metrics){const cell=team.cells[key],isPartial=cell.known<cell.total;
    const value=cell.value!==null?cell.value:!cell.known?null:key.endsWith('%')?(cell.attempts>0?100*cell.made/cell.attempts:null):cell.subtotal;
    cells[key]={...cell,value,partial:isPartial};partial=partial||isPartial;const b=data.benchmark[mode][key],v=key.endsWith('%')?value:value===null?null:value/cell.known;
-   scores[key]=v===null||!b||b.mean===null||!b.sd?null:Math.max(0,Math.min(100,50+(key==='TO'?-15:15)*(v-b.mean)/b.sd));
+   scores[key]=score(v,key,b);
   }return {...team,cells,scores,partial};}
  function simulate(base,outgoing,incoming){const remove=new Set(ids(outgoing));return ids([...ids(base).filter(id=>!remove.has(id)),...ids(incoming)]);}
  function differences(base,other){return Object.fromEntries(metrics.map(k=>[k,base.cells[k].partial||other.cells[k].partial||base.cells[k].value===null||other.cells[k].value===null?null:other.cells[k].value-base.cells[k].value]));}

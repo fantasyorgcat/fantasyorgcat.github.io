@@ -227,6 +227,9 @@ def run(origin,output):
         ctx.add_init_script("localStorage.setItem('fantasyorgcat:roto:rosters:v1','{bad');")
         page=ctx.new_page();page.goto(origin+'/roto.html#players=1966',wait_until='load')
         assert page.locator('#save-roster').is_disabled()
+        assert page.locator('#save-base-roster').is_disabled()
+        page.locator('#base-editor summary').click()
+        assert page.locator('#base-storage-warning').is_visible()
         assert page.evaluate('localStorage.getItem(RotoCore.storageKey)')=='{bad'
         ctx.close()
         # Corrupt opponent storage is not overwritten; edits stay in memory.
@@ -254,7 +257,73 @@ def run(origin,output):
         assert '自動保存失敗' in page.locator('#opponents-status').inner_text()
         assert page.locator('#active-opponent option').count()==2
         assert page.evaluate('[localStorage.getItem(RotoCore.opponentsKey),localStorage.getItem(RotoCore.storageKey)]')==before
+        page.locator('#base-editor summary').click()
+        page.locator('#base-roster-name').fill('不應覆寫舊盟');page.locator('#save-base-roster').click()
+        assert page.locator('#base-storage-warning').is_visible()
+        assert page.evaluate('[localStorage.getItem(RotoCore.opponentsKey),localStorage.getItem(RotoCore.storageKey)]')==before
         ctx.close();results.append(dict(corrupt_opponents_preserved=True,delete_all_restore_and_readd=True,quota_preserves_prior_storage=True))
+        # Real zero-TO player reaches the outer ring; saved base rosters work at the editor.
+        for width,height in [(1500,1000),(390,844)]:
+            ctx=browser.new_context(viewport={'width':width,'height':height})
+            ctx.add_init_script("if(!localStorage.getItem('fantasyorgcat:roto:rosters:v1'))localStorage.setItem('fantasyorgcat:roto:rosters:v1',JSON.stringify({version:1,rosters:[{id:'old',name:'舊盟',players:['3195'],savedAt:''}]}));")
+            page=ctx.new_page();errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
+            page.goto(origin+'/roto.html',wait_until='load')
+            zero=page.evaluate('Object.values(ROTO_DATA.players).filter(p=>p.gp>0&&p.totals.TO===0).sort((a,b)=>b.gp-a.gp)[0]')
+            high=page.evaluate('Object.values(ROTO_DATA.players).filter(p=>p.gp>0&&p.totals.TO>0).sort((a,b)=>b.totals.TO/b.gp-a.totals.TO/a.gp)[0]')
+            page.goto(origin+'/roto.html#players='+zero['id'],wait_until='load')
+            page.reload(wait_until='load')
+            def radius():
+                circle=page.locator('#radar [data-series="base"] circle[data-metric="TO"]')
+                return ((float(circle.get_attribute('cx'))-230)**2+(float(circle.get_attribute('cy'))-184)**2)**.5
+            assert abs(radius()-123)<1e-8
+            assert '0 失誤在最外圈' in page.locator('#to-scale-note').inner_text()
+            if width==390:page.locator('#base-editor summary').click()
+            page.locator('#base-roster-name').fill('H2H A盟');page.locator('#save-base-roster').click()
+            a=page.locator('#base-roster-select').input_value();assert a
+            assert 'H2H A盟' in page.locator('#base-save-status').inner_text()
+            page.locator('.radar-card').screenshot(path=str(output/f'zero-to-radar-{width}.png'))
+            page.locator('#new-base-roster').click()
+            assert page.locator('#base-count').inner_text()=='0 人'
+            assert page.locator('#base-roster-name').input_value()==''
+            page.locator('#player-search').fill(high['name'])
+            page.locator('input[data-roto-pick="'+high['id']+'"]').check()
+            assert 0<radius()<123
+            page.locator('#base-roster-name').fill('ROTO B盟');page.locator('#save-base-roster').click()
+            b=page.locator('#base-roster-select').input_value();assert b!=a
+            stored=page.evaluate('JSON.parse(localStorage.getItem(RotoCore.storageKey))')
+            assert stored['version']==1 and len(stored['rosters'])==3
+            assert next(r for r in stored['rosters'] if r['id']=='old')['players']==['3195']
+            if width==390:page.locator('#simulation-editor summary').click()
+            page.locator('[data-outgoing="'+high['id']+'"]').check()
+            page.locator('#base-roster-select').select_option(a)
+            assert page.locator('#base-list .roster-item').get_attribute('data-player-id')==zero['id']
+            assert page.locator('#base-roster-name').input_value()=='H2H A盟'
+            assert page.locator('#simulation-count').inner_text()=='0 移出／0 加入'
+            assert abs(radius()-123)<1e-8
+            page.locator('input[data-roto-pick="'+high['id']+'"]').check()
+            assert '未儲存的名單變更' in page.locator('#base-save-status').inner_text()
+            assert page.evaluate('JSON.parse(localStorage.getItem(RotoCore.storageKey))')==stored
+            page.locator('#save-base-roster').click()
+            assert page.locator('#base-roster-select').input_value()==a
+            updated=page.evaluate('JSON.parse(localStorage.getItem(RotoCore.storageKey))')
+            assert len(updated['rosters'])==3
+            assert next(r for r in updated['rosters'] if r['id']==a)['players']==[zero['id'],high['id']]
+            assert next(r for r in updated['rosters'] if r['id']==b)['players']==[high['id']]
+            page.reload(wait_until='load')
+            page.locator('#base-roster-select').select_option(b)
+            assert page.locator('#base-list .roster-item').get_attribute('data-player-id')==high['id']
+            page.locator('#base-roster-select').select_option(a)
+            assert page.locator('#base-list .roster-item').count()==2
+            if width==390:page.locator('#base-editor summary').click()
+            page.locator('#base-editor').screenshot(path=str(output/f'saved-base-editor-{width}.png'))
+            page.locator('.roto-toolbar').screenshot(path=str(output/f'saved-base-switch-{width}.png'))
+            page.locator('#base-roster-select').select_option('old')
+            assert page.locator('#base-list .roster-item').get_attribute('data-player-id')=='3195'
+            assert page.locator('#base-roster-name').input_value()=='舊盟'
+            assert page.evaluate('JSON.parse(localStorage.getItem(RotoCore.storageKey))')==updated
+            assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+1')
+            assert not errors
+            ctx.close();results.append(dict(width=width,zero_TO_outer_ring=True,positive_TO_inside=True,base_save_near_editor=True,named_base_switch_after_reload=True,legacy_save_unchanged=True,same_name_updates_same_id=True,switch_resets_simulation=True,unsaved_edits_do_not_overwrite_saved=True,no_js_errors=True))
         # Existing checkbox entry opens a new same-origin ROTO page with canonical ESPN IDs.
         ctx=browser.new_context(viewport={'width':390,'height':844});page=ctx.new_page()
         page.goto(origin+'/index.html',wait_until='load',timeout=60000);page.wait_for_function('Object.keys(tables).length===5')

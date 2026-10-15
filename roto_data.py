@@ -10,6 +10,7 @@ import statistics
 COUNTING = ['PTS','REB','AST','3PM','STL','BLK','TO']
 SHOTS = ['FGM','FGA','FTM','FTA']
 METRICS = COUNTING[:6]+['FG%','FT%','TO']
+RADAR_SCALE = 'Eight axes: 50 + 15 × z, clipped 0–100; counting uses roster average per member. TO: 100 / (1 + roster average / same-season reference mean); zero TO = 100.'
 
 
 def numeric(value):
@@ -54,8 +55,10 @@ def benchmark(reference):
         for prefix in ['FG','FT']:
             pairs=[(r['shots'].get(prefix+'M'),r['shots'].get(prefix+'A'),r['gp']) for r in reference]
             pairs=[(m/(gp if mode=='perGame' else 1),a/(gp if mode=='perGame' else 1)) for m,a,gp in pairs if m is not None and a is not None and a>0 and gp and gp>0]
-            mean=100*sum(m for m,a in pairs)/sum(a for m,a in pairs) if pairs else None
-            sd=math.sqrt(sum(a*(100*m/a-mean)**2 for m,a in pairs)/sum(a for m,a in pairs)) if pairs else None
+            # fsum keeps reference output reproducible across the producer and Pages Python runtimes.
+            weight=math.fsum(a for m,a in pairs)
+            mean=100*math.fsum(m for m,a in pairs)/weight if pairs else None
+            sd=math.sqrt(math.fsum(a*(100*m/a-mean)**2 for m,a in pairs)/weight) if pairs else None
             result[mode][prefix+'%']=dict(mean=mean,sd=sd,samples=len(pairs))
     return result
 
@@ -84,7 +87,7 @@ def build_data(catalog,snapshot,reference=None,season=None):
         source_period={k:snapshot['players_'+str(int(snapshot['schedule']['season'][:4]))].get(k) for k in ['source_period_start','source_period_end']},
         data_ready=not fixture and len(reference)==expected and expected>0 and complete==expected,
         reference=dict(size=len(reference),expected=expected,shooting_complete=complete,
-            id='last-season-v1:'+season+':'+hashlib.sha256(json.dumps(reference,sort_keys=True,allow_nan=False).encode()).hexdigest()[:12],records=reference,scale='50 + 15 × z; clipped 0–100; counting uses roster average per member; TO reversed'),
+            id='last-season-v1:'+season+':'+hashlib.sha256(json.dumps(reference,sort_keys=True,allow_nan=False).encode()).hexdigest()[:12],records=reference,scale=RADAR_SCALE),
         benchmark=benchmark(reference),players=players)
 
 
