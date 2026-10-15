@@ -72,6 +72,8 @@ CHROMIUM_PATH=/path/to/chromium python test_schedule_browser.py /tmp/fantasy-sch
 
 TO 雷達以 0 失誤對應最外圈 100，同季來源每場平均對應 50，依 `100 / (1 + 每位成員平均 TO / 同季來源平均 TO)` 持續遞減；未知值或缺有效基準仍留白。其他八軸維持原尺度。原陣容編輯區可直接命名儲存／更新同名，並從上方比較設定切換聯盟／原陣容；新增空白名單不刪除已存資料，未儲存變更會提示。沿用既有命名陣容格式與 key，不複製或遷移舊保存；切換只載入球員名單並重設換人模擬，對手仍由既有比較勾選管理。
 
+雷達節點可用滑鼠靠近、手機點選或鍵盤聚焦類別名稱查看數值；同類別同時列出目前顯示的所有陣容，節點重疊也可比較。主值為成員每場平均，另列名單每人各1場合計；命中率依出手加權，未知／已知部分與覆蓋率明示。提示跟隨雷達每場口徑，不隨總量表切換；重繪清除舊提示。
+
 頁面提供 H2H 類別制與 ROTO 用途說明，以及本季／歷史資料提示。H2H 當週結果需球員可排進每日先發的場次；ROTO 補強目標需同一時間點全聯盟各隊已計入累計、FGM／FGA／FTM／FTA與剩餘先發假設，才能推估名次與分數。目前未實作聯盟累計輸入、當週先發預測或 ROTO 積分計算，換人差異僅代表所選季別產效差異。路徑與既有 localStorage key 保留，舊連結／陣容可繼續使用。
 
 2025–26封存CSV（582人）保留於`data/roto/`，同份資料整套計算，不拼接舊七項與新分母。610候選唯一匹配481，129不適用／未匹配保留unknown，0姓名歧義；benchmark不強湊舊ESPN578。封存來源、署名、映射見 [ROTO_QA.md](ROTO_QA.md)；新介面與季別迭代驗收見 [整合QA](docs/roto/named-opponents/QA.md)。本地匯出：`python roto_data.py`；數學：`node test_roto_core.cjs`；契約：`python -m unittest test_roto_data test_roto_boxscore test_roto_package`。年度來源須合法取得與核hash後更新，不重試被拒URL或硬改ready flag。

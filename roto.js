@@ -6,6 +6,7 @@
  let opponents=[{id:'opponent',name:'對手 1',players:[],savedAt:''}],activeOpponent='opponent',opponentsWritable=true;const hiddenOpponents=new Set();
  const opponentColors=['#b48259','#798979','#9286a2','#829da1','#b99770'];
  const names={base:'原陣容',opponent:'對手',simulation:'換人後'},colors={base:'#516a78',simulation:'#a77581'};
+ let radarEntries=[],radarPoints=[],radarLabels={},tooltipMetric=null,touchStart=null;
  const allPlayers=Object.values(packageData.players).sort((a,b)=>a.name.localeCompare(b.name));
  const selection=target=>target==='incoming'?simulation():state[target];
  const message=text=>{$('status').textContent=text;};
@@ -40,15 +41,43 @@
  }if(!state.base.length)host.append(element('small','先建立原陣容再選擇移出球員'));
  }
  function svg(tag,attributes,text){const e=document.createElementNS(NS,tag);for(const [key,v] of Object.entries(attributes))e.setAttribute(key,String(v));if(text!==undefined)e.textContent=text;return e;}
- function radar(teams){const host=$('radar');host.replaceChildren(svg('title',{id:'radar-title'},'固定所選季別每場產效雷達；未知類別留白'),svg('desc',{id:'radar-description'},'原陣容、自訂對手隊伍與換人後，以每場產效比較，TO低為佳。表格切換單位不改雷達口徑，實際數字及未知原因在比較表。'));
+ function hideRadarTooltip(){tooltipMetric=null;$('radar-tooltip').hidden=true;}
+ function showRadarTooltip(key,anchor){if(!radarEntries.length||!anchor){hideRadarTooltip();return;}const tip=$('radar-tooltip');
+  if(tooltipMetric!==key||tip.hidden){tip.replaceChildren(element('strong',key==='TO'?'TO · 失誤越少越佳':key+' · 每場產效'),element('p',data.season+' 例行賽實績 · '+radarEntries.length+' 組陣容'));const list=element('ul');
+   for(const entry of radarEntries){const cell=entry.team.cells[key],percent=key.endsWith('%'),value=cell.value===null?null:percent?cell.value:cell.value/cell.known,row=element('li');row.dataset.tooltipTeam=entry.target;row.dataset.value=value===null?'':String(value);row.dataset.total=cell.value===null?'':String(cell.value);
+    const name=element('span',entry.name,'tooltip-team');name.style.setProperty('--series',entry.color);row.append(name,element('strong',value===null?'—':value.toFixed(2)+(percent?'%':'／人／場'),'tooltip-value'));
+    row.append(element('small',cell.known+'/'+cell.total+' 人有資料'+(cell.partial?' · 已知部分':'')));
+    if(cell.value!==null)row.append(element('small',percent?'命中 '+cell.made.toFixed(2)+'／出手 '+cell.attempts.toFixed(2)+'（每人各 1 場合計）':'每人各 1 場合計 '+cell.value.toFixed(2)));
+    if(cell.reason)row.append(element('small',cell.reason));list.append(row);
+   }tip.append(list,element('small','計數節點依成員每場平均定位；命中率依出手量加權。'));tooltipMetric=key;tip.dataset.metric=key;
+  }
+  tip.hidden=false;const host=$('radar'),matrix=host.getScreenCTM(),rect=$('radar-plot').getBoundingClientRect();if(!matrix)return;
+  tip.style.maxHeight=Math.max(120,rect.height-16)+'px';const x=matrix.a*anchor.x+matrix.c*anchor.y+matrix.e-rect.left,y=matrix.b*anchor.x+matrix.d*anchor.y+matrix.f-rect.top;
+  tip.style.left=Math.max(8,Math.min(x+14,rect.width-tip.offsetWidth-8))+'px';tip.style.top=Math.max(8,Math.min(y+14,rect.height-tip.offsetHeight-8))+'px';
+ }
+ function radarHit(event,radius=16){const label=event.target.closest?.('[data-radar-metric]');if(label)return {key:label.dataset.radarMetric,...radarLabels[label.dataset.radarMetric]};
+  const matrix=$('radar').getScreenCTM();if(!matrix)return null;let nearest=null,distance=radius*radius;
+  for(const p of radarPoints){const dx=matrix.a*p.x+matrix.c*p.y+matrix.e-event.clientX,dy=matrix.b*p.x+matrix.d*p.y+matrix.f-event.clientY,d=dx*dx+dy*dy;if(d<=distance){nearest=p;distance=d;}}return nearest;
+ }
+ $('radar').addEventListener('pointermove',e=>{if(e.pointerType==='touch')return;const hit=radarHit(e);if(hit)showRadarTooltip(hit.key,hit);else hideRadarTooltip();});
+ $('radar-plot').addEventListener('pointerleave',e=>{if(e.pointerType!=='touch')hideRadarTooltip();});
+ $('radar').addEventListener('pointerdown',e=>{if(e.pointerType==='touch')touchStart={x:e.clientX,y:e.clientY};});
+ $('radar').addEventListener('pointercancel',()=>{touchStart=null;});
+ $('radar').addEventListener('pointerup',e=>{if(e.pointerType!=='touch')return;const start=touchStart;touchStart=null;if(!start||Math.hypot(e.clientX-start.x,e.clientY-start.y)>8)return;const hit=radarHit(e,24);if(hit)showRadarTooltip(hit.key,hit);else hideRadarTooltip();});
+ $('radar').addEventListener('focusin',e=>{const key=e.target.dataset.radarMetric;if(key)showRadarTooltip(key,radarLabels[key]);});
+ $('radar').addEventListener('focusout',e=>{if(!$('radar-plot').contains(e.relatedTarget))hideRadarTooltip();});
+ $('radar').addEventListener('keydown',e=>{const key=e.target.dataset.radarMetric;if(key&&['Enter',' '].includes(e.key)){e.preventDefault();showRadarTooltip(key,radarLabels[key]);}});
+ document.addEventListener('keydown',e=>{if(e.key==='Escape')hideRadarTooltip();});document.addEventListener('pointerdown',e=>{if(!$('radar-plot').contains(e.target))hideRadarTooltip();});window.addEventListener('resize',hideRadarTooltip);
+ function radar(teams){hideRadarTooltip();radarEntries=[];radarPoints=[];radarLabels={};const host=$('radar');host.replaceChildren(svg('title',{id:'radar-title'},'固定所選季別每場產效雷達；未知類別留白'),svg('desc',{id:'radar-description'},'原陣容、自訂對手隊伍與換人後，以每場產效比較，TO低為佳。滑鼠靠近節點、手機點選，或聚焦類別名稱，可查看各陣容實際數值；表格單位不改雷達口徑。'));
   const center=[230,184],radius=123,point=(i,score)=>{const angle=-Math.PI/2+i*2*Math.PI/9;return [center[0]+Math.cos(angle)*radius*score/100,center[1]+Math.sin(angle)*radius*score/100];},points=values=>values.map((v,i)=>point(i,v).join(',')).join(' ');
   for(const ring of [20,40,60,80,100])host.append(svg('polygon',{points:points(Array(9).fill(ring)),fill:'none',stroke:'#c9c2b8','stroke-width':1}));
-  C.metrics.forEach((key,i)=>{const p=point(i,100),label=point(i,121);host.append(svg('line',{x1:center[0],y1:center[1],x2:p[0],y2:p[1],stroke:'#c9c2b8'}),svg('text',{x:label[0],y:label[1]+4,'text-anchor':'middle',fill:'#35434b','font-size':12},key==='TO'?'TO ↓':key));});
+  C.metrics.forEach((key,i)=>{const p=point(i,100),label=point(i,121);radarLabels[key]={x:label[0],y:label[1]};host.append(svg('line',{x1:center[0],y1:center[1],x2:p[0],y2:p[1],stroke:'#c9c2b8'}),svg('text',{x:label[0],y:label[1]+4,'text-anchor':'middle',fill:'#35434b','font-size':12,tabindex:0,role:'button','data-radar-metric':key,'aria-label':'查看 '+key+' 各陣容每場數值','aria-describedby':'radar-tooltip'},key==='TO'?'TO ↓':key));});
   const legend=$('legend');legend.replaceChildren();let plotted=false;
   for(const [target,team] of Object.entries(teams)){const opponent=opponents.find(t=>t.id===target);if(!(opponent?$('show-opponent').checked&&!hiddenOpponents.has(target):$('show-'+target).checked)||!team.size)continue;const scores=C.metrics.map(k=>team.scores[k]),color=opponent?opponentColors[opponents.indexOf(opponent)%opponentColors.length]:colors[target],dash=opponent?'6 4':target==='simulation'?'2 3':'';const group=svg('g',{'data-series':target});
+   radarEntries.push({target,team,name:opponent?opponent.name:names[target],color});
    if(!team.partial&&scores.every(v=>v!==null))group.append(svg('polygon',{points:points(scores),fill:color,'fill-opacity':.1,stroke:color,'stroke-width':2,'stroke-dasharray':dash}));
    else for(let i=0;i<9;i++){const j=(i+1)%9;if(scores[i]!==null&&scores[j]!==null){const a=point(i,scores[i]),b=point(j,scores[j]);group.append(svg('line',{x1:a[0],y1:a[1],x2:b[0],y2:b[1],stroke:color,'stroke-width':2,'stroke-dasharray':dash}));}}
-   scores.forEach((score,i)=>{if(score===null)return;const p=point(i,score);group.append(svg('circle',{cx:p[0],cy:p[1],r:3.5,fill:color,'data-metric':C.metrics[i]}));plotted=true;});host.append(group);
+   scores.forEach((score,i)=>{if(score===null)return;const p=point(i,score);radarPoints.push({key:C.metrics[i],x:p[0],y:p[1]});group.append(svg('circle',{cx:p[0],cy:p[1],r:3.5,fill:color,'data-metric':C.metrics[i]}));plotted=true;});host.append(group);
    const label=element('span',(opponent?opponent.name:names[target])+' · '+team.size+' 人'+(team.partial?'（已知部分）':''));label.style.setProperty('--series',color);legend.append(label);
   }
   if(!plotted)host.append(svg('text',{x:230,y:190,'text-anchor':'middle',fill:'#5e6364','font-size':13},Object.values(teams).some(t=>C.metrics.some(k=>t.cells[k].value!==null))?'此季別基準樣本不足，請先查看數值':'加入有所選季別實績的球員後顯示'));
