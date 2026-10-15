@@ -5,7 +5,7 @@
  let period=playerToolsMeta.defaultPeriod,mode='avg',sortKey='name',descending=false;
  function sync(){document.querySelectorAll('input[data-pick="compare"]').forEach(i=>{i.checked=compared.has(i.dataset.playerId);});}
  function button(text,action,label){const b=document.createElement('button');b.type='button';b.textContent=text;b.className='btn-stat';if(label)b.setAttribute('aria-label',label);b.addEventListener('click',action);return b;}
- function value(p,key){return key==='name'?p.name:key==='GP'?p.periods[period].gp:p.periods[period][mode][key].value;}
+ function value(p,key){return key==='name'?p.name:key==='GP'?p.periods[period].gp:key==='Rank'&&window.playerRank?window.playerRank(p,period,mode).value:p.periods[period][mode][key].value;}
  function render(){
   if(!byId('comparison-head'))return;sync();if(byId('open-roto'))byId('open-roto').href='roto.html#players='+Array.from(compared).join(',');byId('comparison-panel').hidden=!compared.size;
   if(byId('view-comparison')){byId('view-comparison').hidden=!compared.size;byId('view-comparison').textContent='比較 '+compared.size+' 人';}
@@ -15,19 +15,19 @@
   sortable('name','球員');const games=document.createElement('th');games.textContent='場次';tr.appendChild(games);
   const dayColumns=table?table.columns('[data-schedule-day]').indexes().toArray():[];
   const schedule=new Map();if(table)table.rows({search:'none'}).data().toArray().forEach(row=>{if(!schedule.has(row[1]))schedule.set(row[1],[row[2],...dayColumns.map(i=>row[i])]);});
-  for(const column of dayColumns){const th=document.createElement('th');th.textContent=table.column(column).header().textContent;tr.appendChild(th);}
-  for(const key of metrics)sortable(key,key);tr.lastChild.title='九項PR加總（含TO、不含MIN）的全體排名；同分並列，缺納入PR無排名';head.appendChild(tr);
+  for(const column of dayColumns){const th=document.createElement('th');const source=table.column(column).header();th.textContent=source.textContent;th.title=source.dataset.fullDate||source.textContent;th.setAttribute('aria-label',th.title);tr.appendChild(th);}
+  for(const key of metrics)sortable(key,key);tr.lastChild.title='依目前勾選的排名項目計算；9CAT 使用原始全體排名，自訂項目使用網站名單排名';head.appendChild(tr);
   const rows=Array.from(compared,id=>playerCatalog[id]).filter(Boolean);
   rows.sort((a,b)=>{const x=value(a,sortKey),y=value(b,sortKey);if(x===null)return y===null?0:1;if(y===null)return -1;const n=typeof x==='number'?x-y:String(x).localeCompare(String(y));return(descending?-n:n)||a.id.localeCompare(b.id);});
   for(const p of rows){
    const row=document.createElement('tr');row.dataset.playerId=p.id;const name=row.insertCell();name.textContent=p.name+' · '+p.team;name.appendChild(button('移除',()=>{compared.delete(p.id);render();},'從比較移除 '+p.name));
    const fixtures=schedule.get(p.team),count=row.insertCell();count.textContent=fixtures?String(fixtures[0]):'—';count.title=fixtures?'目前週次場次':'此球隊賽程資料暫缺';
    for(let d=0;d<dayColumns.length;d++){const td=row.insertCell();td.className='comparison-matchup';if(fixtures){const template=document.createElement('template');template.innerHTML=fixtures[d+1];td.appendChild(template.content.cloneNode(true));if(!td.textContent.trim())td.title='當日無賽程';}else{td.textContent='—';td.title='賽程資料暫缺';}}
-   for(const metric of metrics){const td=row.insertCell(),v=value(p,metric);td.dataset.metric=metric;td.dataset.value=v===null?'':String(v);td.textContent=v===null?'—':['GP','Rank'].includes(metric)||(mode==='tot'&&['PTS','REB','AST','3PM','STL','BLK','TO'].includes(metric))?String(v):v.toFixed(1)+(metric.endsWith('%')?'%':'');if(metric!=='GP'&&v!==null){const pr=p.periods[period][mode][metric].pr;if(pr!==null){const small=document.createElement('small');small.textContent='PR '+Math.round(pr);td.appendChild(small);}}}body.appendChild(row);
+   for(const metric of metrics){const td=row.insertCell(),v=value(p,metric);td.dataset.metric=metric;td.dataset.value=v===null?'':String(v);td.textContent=v===null?'—':['GP','Rank'].includes(metric)||(mode==='tot'&&['PTS','REB','AST','3PM','STL','BLK','TO'].includes(metric))?String(v):v.toFixed(1)+(metric.endsWith('%')?'%':'');if(metric!=='GP'&&v!==null){const pr=p.periods[period][mode][metric].pr;if(pr!==null){const small=document.createElement('small');small.textContent='PR '+Math.round(pr);td.appendChild(small);}}if(metric==='Rank'&&window.playerRank){const rank=window.playerRank(p,period,mode);if(rank.sum!==null){const small=document.createElement('small');small.textContent='Σ PR '+rank.sum.toFixed(1);td.appendChild(small);}}}body.appendChild(row);
   }
   const names={season:'本季 '+playerToolsMeta.season,l7:'近7天',l14:'近14天',ls:'上季 '+playerToolsMeta.lastSeason};
   const label=activeWeek==='WCustom'?byId('custom-period-heading').textContent:document.querySelector('.tablinks.active').textContent;
-  byId('comparison-meta').textContent=label+' · '+names[period]+' · '+mode.toUpperCase();
+  byId('comparison-meta').textContent=label+' · '+names[period]+' · '+mode.toUpperCase()+(window.playerRankLabel?' · 排名 '+window.playerRankLabel():'');
  }
  $(document).ready(function(){
   const navigation=document.querySelector('.workspace-bar');
@@ -36,6 +36,6 @@
   byId('jump-players').addEventListener('click',()=>{const section=document.querySelector('#Week'+activeWeek.replace('W','')+' .player-section');if(section){section.scrollIntoView({block:'start'});const heading=section.querySelector('h3');heading.setAttribute('tabindex','-1');heading.focus({preventScroll:true});}});
   byId('comparison-period').value=period;byId('comparison-period').addEventListener('change',e=>{period=e.target.value;render();});byId('comparison-mode').addEventListener('change',e=>{mode=e.target.value;render();});byId('clear-comparison').addEventListener('click',()=>{compared.clear();render();});
   document.addEventListener('change',e=>{const input=e.target;if(!input.matches('input[data-pick="compare"]'))return;const id=input.dataset.playerId;if(!playerCatalog[id])return;if(input.checked)compared.add(id);else compared.delete(id);render();});
-  $(document).on('draw.dt',render);document.addEventListener('active-week-changed',render);sync();
+  $(document).on('draw.dt',render);document.addEventListener('active-week-changed',render);document.addEventListener('player-rank-changed',render);sync();
  });
 })();

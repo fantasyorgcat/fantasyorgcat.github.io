@@ -1,0 +1,15 @@
+const assert=require('node:assert/strict');
+const {categories,rankPlayers,preferences}=require('./table_tools.js');
+const player=(id,reb,fg,to,rank=9)=>({id,periods:{ls:{avg:Object.fromEntries([...categories.map(k=>[k,{pr:k==='REB'?reb:k==='FG%'?fg:k==='TO'?to:40}]),['Rank',{value:rank,sum:555,pr:null}]])}}});
+const catalog={a:player('a',90,80,20),b:player('b',80,90,70),c:player('c',10,20,90),d:player('d',null,100,50)};
+let result=rankPlayers(catalog,'ls','avg',['REB','FG%']);
+assert.deepEqual(Object.values(result).map(c=>c.value),[1,1,3,null]);
+assert.equal(result.a.sum,170);assert.equal(result.d.sum,null);
+assert.deepEqual(Object.values(rankPlayers(catalog,'ls','avg',['TO'])).map(c=>c.value),[4,2,1,3]);
+assert.deepEqual(rankPlayers(catalog,'ls','avg',categories).a,{value:9,sum:555,pr:null});
+assert.ok(Object.values(rankPlayers(catalog,'ls','avg',[])).every(c=>c.value===null&&c.sum===null));
+assert.ok(Object.values(rankPlayers(catalog,'ls','avg',['MIN'])).every(c=>c.value===null));
+catalog.a.periods.ls.avg.REB.pr=90.01;assert.equal(rankPlayers(catalog,'ls','avg',['REB','FG%']).b.value,2);
+assert.deepEqual(preferences({font:100,padding:-1,dayWidth:'bad',schedule:true}),{font:18,padding:4,dayWidth:84,schedule:true});
+assert.deepEqual(preferences(null),{font:14,padding:6,dayWidth:84,schedule:false});
+console.log('Selected PR sums, full precision, ties, missing/empty categories, TO, original 9CAT and preference validation passed');

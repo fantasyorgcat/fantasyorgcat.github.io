@@ -23,6 +23,7 @@ def run(url, output):
             signature = page.evaluate('JSON.stringify([playerCatalog,scheduleEvents,platformPeriods,scheduleGeneratedAt])')
             page.locator('[data-platform="NBA"]').click()
             page.locator('#season-week').select_option('0')
+            page.locator('#WeekCustom [data-display-setting="schedule"]').check()
             body = page.locator('#playerTableWCustom_wrapper .dt-scroll-body')
             head = page.locator('#playerTableWCustom_wrapper .dt-scroll-head')
             first_row = page.locator('#playerTableWCustom tbody tr:first-child')

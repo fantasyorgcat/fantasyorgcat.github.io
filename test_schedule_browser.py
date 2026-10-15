@@ -17,7 +17,7 @@ ROOT=Path(__file__).resolve().parent
 
 def build_fixture(target):
     target=Path(target);target.mkdir(parents=True,exist_ok=True)
-    for name in ['dashboard.css','player_tools.js','schedule_tools.js','team_tools.js']:shutil.copyfile(ROOT/name,target/name)
+    for name in ['dashboard.css','player_tools.js','schedule_tools.js','team_tools.js','table_tools.js']:shutil.copyfile(ROOT/name,target/name)
     shutil.copytree(ROOT/'assets',target/'assets',dirs_exist_ok=True)
     records=[]
     # 25 calendar weeks, four-day opening shortcut, cross-year and DST events.
@@ -161,7 +161,7 @@ def run(url,output):
                 for selector in ['#custom-period-heading','#comparison-meta','#schedule-period-context']:
                     assert start+'–'+end in page.locator(selector).inner_text()
                 def merged_schedule():
-                    return page.evaluate("""()=>{const t=tables.WCustom,columns=t.columns('[data-schedule-day]').indexes().toArray(),r=t.rows({search:'none'}).data().toArray().find(r=>r[1]==='LAL');return {games:Number(r[2]),dates:columns.filter(i=>r[i]).map(i=>t.column(i).header().textContent.slice(0,10)),comparisonGames:Number(document.querySelector('#comparison-body tr').cells[1].textContent),comparisonDates:Array.from(document.querySelector('#comparison-body tr').cells).filter(c=>c.classList.contains('comparison-matchup')&&c.innerHTML).map(c=>document.querySelector('#comparison-head tr').cells[c.cellIndex].textContent.slice(0,10))};}""")
+                    return page.evaluate("""()=>{const t=tables.WCustom,columns=t.columns('[data-schedule-day]').indexes().toArray(),r=t.rows({search:'none'}).data().toArray().find(r=>r[1]==='LAL');return {games:Number(r[2]),dates:columns.filter(i=>r[i]).map(i=>(t.column(i).header().dataset.fullDate||t.column(i).header().textContent).slice(0,10)),comparisonGames:Number(document.querySelector('#comparison-body tr').cells[1].textContent),comparisonDates:Array.from(document.querySelector('#comparison-body tr').cells).filter(c=>c.classList.contains('comparison-matchup')&&c.innerHTML).map(c=>document.querySelector('#comparison-head tr').cells[c.cellIndex].title.slice(0,10))};}""")
                 merged=merged_schedule()
                 assert merged==dict(games=2,dates=event_dates,comparisonGames=2,comparisonDates=event_dates),merged
                 assert page.locator('#teamTableWCustom tr[data-team="LAL"] td').nth(1).inner_text()=='2'
