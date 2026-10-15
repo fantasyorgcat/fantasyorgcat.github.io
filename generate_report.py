@@ -267,14 +267,15 @@ def generate_html_report():
 
         player_html = f"""
         <div class="player-section"><div class="player-heading"><h3>球員名單</h3><span id="selection{table_id_suffix}">全體球員</span></div>
+            <p class="player-hint">可直接勾選或取消「比較」，再從上方「比較人數」查看；左右滑動可看完整數據。</p>
             <div class="controls">
                 <button class="btn-stat active" data-period="Season" onclick="switchStats('Season', '{table_id_suffix}')">本季</button>
                 <button class="btn-stat" data-period="L7" onclick="switchStats('L7', '{table_id_suffix}')">近7天</button>
                 <button class="btn-stat" data-period="L14" onclick="switchStats('L14', '{table_id_suffix}')">近14天</button>
                 <button class="btn-stat" data-period="LS" onclick="switchStats('LS', '{table_id_suffix}')">上季</button>
-                <span style="margin-left:20px">數值</span>
-                <button class="btn-stat active" data-mode="AVG" onclick="switchDisplayMode('AVG', '{table_id_suffix}')">AVG</button>
-                <button class="btn-stat" data-mode="TOT" onclick="switchDisplayMode('TOT', '{table_id_suffix}')">TOT</button>
+                <span class="stat-divider">數值</span>
+                <button class="btn-stat active" aria-pressed="true" data-mode="AVG" onclick="switchDisplayMode('AVG', '{table_id_suffix}')">平均 AVG</button>
+                <button class="btn-stat" aria-pressed="false" data-mode="TOT" onclick="switchDisplayMode('TOT', '{table_id_suffix}')">總量 TOT</button>
                 <button class="btn-reset" onclick="resetTeamFilter('{table_id_suffix}')">全體球員</button>
             </div>
             <table id="playerTable{table_id_suffix}" class="display" style="width:100%">
@@ -358,7 +359,7 @@ def generate_html_report():
                 pr_val = row.get(pr_key)
                 pr_html = ""
                 if pr_val is not None and not pd.isna(pr_val):
-                    pr_html = f"<br><span style='font-size:0.75em; color:var(--muted);'>PR {int(round(pr_val))}</span>"
+                    pr_html = f"<br><span class='stat-pr'>PR {int(round(pr_val))}</span>"
 
                 style = "" if visible else "display:none"
                 return f"<td class='{css_class}' style='{style}' data-order='{sort_val}'>{display_val}{pr_html}</td>"
@@ -499,7 +500,7 @@ def generate_html_report():
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width,initial-scale=1">
         <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src data:; connect-src 'none'; base-uri 'none'; form-action 'none'">
-        <title>Fantasy NBA Streaming Assistant V2</title>
+        <title>球員與賽程 | FANTASYORGCAT</title>
         <link rel="stylesheet" type="text/css" href="assets/datatables-2.3.7.min.css" integrity="{css_sri}">
         <style>{dashboard_css}</style>
         <script type="text/javascript" charset="utf8" src="assets/jquery-3.7.1.min.js" integrity="{jquery_sri}"></script>
@@ -519,6 +520,8 @@ def generate_html_report():
             var customPlayerTemplate;
 
             $(document).ready( function () {{
+                // Shared labels also apply to dynamically built season/custom tables.
+                $.extend(true, $.fn.dataTable.defaults, {{language:{{search:'搜尋球員',searchPlaceholder:'姓名或球隊',lengthMenu:'每頁 _MENU_ 人',info:'_START_–_END_ / _TOTAL_ 人',infoFiltered:'（全體 _MAX_ 人）',zeroRecords:'沒有符合球員，按全體球員清除篩選',infoEmpty:'0 人',paginate:{{first:'第一頁',previous:'上一頁',next:'下一頁',last:'最後頁'}}}}}});
                 // Initialize DataTables for all weeks
                 customPlayerTemplate=document.querySelector('#Week1 .player-section').cloneNode(true);
                 {table_initializers}
@@ -587,8 +590,10 @@ def generate_html_report():
                 var btns = container.querySelectorAll('.btn-stat[data-period]');
                 for (var i = 0; i < btns.length; i++) {{
                     btns[i].classList.remove('active');
+                    btns[i].setAttribute('aria-pressed','false');
                     if (btns[i].getAttribute('data-period') === period) {{
                         btns[i].classList.add('active');
+                        btns[i].setAttribute('aria-pressed','true');
                     }}
                 }}
                 applyStatView(suffix);
@@ -603,8 +608,10 @@ def generate_html_report():
                 var btns = container.querySelectorAll('.btn-stat[data-mode]');
                 for (var i = 0; i < btns.length; i++) {{
                     btns[i].classList.remove('active');
+                    btns[i].setAttribute('aria-pressed','false');
                     if (btns[i].getAttribute('data-mode') === mode) {{
                         btns[i].classList.add('active');
+                        btns[i].setAttribute('aria-pressed','true');
                     }}
                 }}
                 applyStatView(suffix);
@@ -644,21 +651,20 @@ def generate_html_report():
             {schedule_js}
         </script>
     </head>
-    <body>
+    <body class="dashboard-page">
         <div class="container">
-            <header class="appbar"><div class="brand"><span class="brand-mark">FC</span><div>FANTASYORGCAT<small>NBA · WEEKLY PLANNER</small><a href="roto.html" class="roto-link">九項配隊分析 ↗</a></div></div><div class="app-status">ESPN + PBP Stats<br>更新 {escape(generated_at)}</div></header>
-            <section class="hero"><div><div class="eyebrow">WEEKLY COMPARISON</div><h1>把下一場，排進你的陣容。</h1><p>四週賽程、球員表現與對手防守，一起看清楚。</p></div><div class="hero-meta"><strong>{escape(metadata['season'])} NBA</strong>{escape(str(w1_start))} — {escape(str(final_end))}</div></section>
-            <div class="metric-grid">
+            <header class="appbar"><div class="brand"><span class="brand-mark">FC</span><div>FANTASYORGCAT<small>NBA FANTASY 工具箱</small></div></div><div class="app-status">ESPN + PBP Stats<br>更新 {escape(generated_at)}</div><nav class="site-nav" aria-label="網站導覽"><a href="index.html" aria-current="page">球員與賽程</a><a href="roto.html">九項配隊</a></nav></header>
+            <section class="hero"><div><h1>賽程與球員比較</h1><p>選擇週次、篩選球隊，再勾選球員一起比較。</p></div><div class="hero-meta"><strong>{escape(metadata['season'])} NBA</strong>{escape(str(w1_start))} — {escape(str(final_end))}</div></section>
+            <details class="data-details"><summary>資料快照與來源 · {escape(fixture_caption)}</summary><div class="metric-grid">
                 <div class="metric-card"><span>現役球員</span><strong>{roster_count}</strong><small>人</small></div>
                 <div class="metric-card"><span>四週賽程</span><strong>{provenance.get('schedule',{}).get('events_in_window',0)}</strong><small>場</small></div>
                 <div class="metric-card"><span>防守資料 · 截至 {escape(str(defense_meta.get('last_game') or '暫缺'))}</span><strong>{defense_count}<small>/ 30 隊</small></strong></div>
                 <div class="metric-card"><span>上季 PR 母體</span><strong>{len(stats_dict['LastSeason'])}</strong><small>人</small></div>
-            </div>
-            <details class="data-details"><summary>資料說明 · {escape(fixture_caption)} · 防守近10場跨季接續</summary><p class="data-notice">{escape(data_notice)}</p><p class="defense-notice">{escape(defense_notice)}</p></details>
-            <div class="workspace-bar"><nav class="platform-switch" aria-label="週次類型">{platform_buttons}</nav>{season_select}<div class="filter-tools"><span id="active-selection" class="selection-label">全體球員</span><button id="show-all-players" class="global-reset" onclick="resetActiveTeamFilter()" aria-pressed="true" title="清除球隊與搜尋，保留統計期間及AVG/TOT">全體球員</button></div><p id="platform-note" class="platform-note" role="status"></p></div>
-            <section class="period-tools" aria-label="賽程資訊"><details id="schedule-extras"><summary>自訂期間／近期快捷</summary><nav class="tab" aria-label="近期週次">{tab_buttons}</nav><p>美東日期，含迄日；可依自己的聯盟設定輸入 1–31 天。</p><div class="period-inputs"><label>起日（美東）<input id="period-start" type="date" value="{w1_start}"></label><label>迄日（含，美東）<input id="period-end" type="date" value="{w1_end}"></label><button id="apply-custom-period" class="btn-stat" type="button">套用自訂期間</button></div><p id="period-error" role="alert" hidden></p></details><p id="schedule-freshness" role="status"></p><details id="schedule-metrics"><summary>剩餘排程、背靠背與低比賽日</summary><p>依目前快照與瀏覽時間計算球隊排程；未套用傷病、陣容、位置或 GP 上限，不代表可用上場場次。低比賽日指美東當日全聯盟 1–5 場。</p><p id="schedule-period-context"></p><div id="schedule-insights" class="schedule-scroll"></div><div id="schedule-pending"></div></details></section>
+            </div><p class="data-notice">{escape(data_notice)}</p><p class="defense-notice">{escape(defense_notice)}</p></details>
+            <div class="workspace-bar"><nav class="platform-switch" aria-label="週次類型">{platform_buttons}</nav>{season_select}<div class="filter-tools"><span id="active-selection" class="selection-label" role="status">全體球員</span><button id="show-all-players" class="global-reset" onclick="resetActiveTeamFilter()" aria-pressed="true" title="清除球隊與搜尋，保留統計期間及AVG/TOT">全體球員</button><button id="jump-players" type="button" class="btn-stat">球員名單 ↓</button><a id="view-comparison" href="#comparison-panel" class="btn-stat" hidden>比較 0 人</a></div></div>
+            <section class="period-tools" aria-label="賽程資訊"><details id="schedule-extras"><summary>自訂期間／近期快捷</summary><p id="platform-note" class="platform-note" role="status"></p><nav class="tab" aria-label="近期週次">{tab_buttons}</nav><p>美東日期，含迄日；可依自己的聯盟設定輸入 1–31 天。</p><div class="period-inputs"><label>起日（美東）<input id="period-start" type="date" value="{w1_start}"></label><label>迄日（含，美東）<input id="period-end" type="date" value="{w1_end}"></label><button id="apply-custom-period" class="btn-stat" type="button">套用自訂期間</button></div><p id="period-error" role="alert" hidden></p></details><p id="schedule-freshness" role="status"></p><details id="schedule-metrics"><summary>剩餘排程、背靠背與低比賽日</summary><p>依目前快照與瀏覽時間計算球隊排程；未套用傷病、陣容、位置或 GP 上限，不代表可用上場場次。低比賽日指美東當日全聯盟 1–5 場。</p><p id="schedule-period-context"></p><div id="schedule-insights" class="schedule-scroll"></div><div id="schedule-pending"></div></details></section>
             <div class="legend"><b>近10場對手防守</b><span><i class="dot" style="background:{utils.get_color_for_rank(30)}"></i>較好打</span><span><i class="dot" style="background:{utils.get_color_for_rank(15)}"></i>中段</span><span><i class="dot" style="background:{utils.get_color_for_rank(1)}"></i>較難打</span><span><i class="dot" style="background:{utils.get_color_for_rank(None)}"></i>暫缺</span></div>
-            <section id="comparison-panel" class="player-section" hidden><div class="player-heading"><h3>球員比較</h3><button id="clear-comparison" type="button" class="btn-stat">清空比較</button><a id="open-roto" href="roto.html" target="_blank" rel="noopener" class="btn-stat roto-link">用勾選配隊 ↗</a></div><div class="controls"><label>統計期間 <select id="comparison-period"><option value="season">本季</option><option value="l7">近7天</option><option value="l14">近14天</option><option value="ls">上季</option></select></label><label>顯示 <select id="comparison-mode"><option value="avg">AVG</option><option value="tot">TOT</option></select></label></div><p id="comparison-meta"></p><div class="comparison-scroll"><table id="comparison-table"><thead id="comparison-head"></thead><tbody id="comparison-body"></tbody></table></div></section>
+            <section id="comparison-panel" class="player-section" hidden><div class="player-heading"><h3>球員比較</h3><button id="clear-comparison" type="button" class="btn-stat">清空比較</button><a id="open-roto" href="roto.html" target="_blank" rel="noopener" class="btn-stat roto-link">用勾選配隊 ↗</a></div><div class="controls"><label>統計期間 <select id="comparison-period"><option value="season">本季</option><option value="l7">近7天</option><option value="l14">近14天</option><option value="ls">上季</option></select></label><label>顯示 <select id="comparison-mode"><option value="avg">平均 AVG</option><option value="tot">總量 TOT</option></select></label></div><p id="comparison-meta"></p><div class="comparison-scroll"><table id="comparison-table"><thead id="comparison-head"></thead><tbody id="comparison-body"></tbody></table></div></section>
             {week_panels}
             <footer class="footer">FANTASYORGCAT · 每日資料快照 · 球隊防守非位置別 DvP</footer>
         </div>

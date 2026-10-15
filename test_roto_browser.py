@@ -23,6 +23,7 @@ def run(origin,output):
             assert page.locator('#table-mode').input_value()=='totals'
             assert page.title()=='九項配隊分析 · FantasyOrgCat'
             assert '歷史實績' in page.locator('#season-context').inner_text()
+            page.locator('.analysis-guide > summary').click()
             assert page.locator('.format-guides summary').count()==2
             page.locator('.format-guides summary').last.click()
             assert 'FGM／FGA／FTM／FTA' in page.locator('.format-guides details').last.inner_text()
@@ -36,6 +37,7 @@ def run(origin,output):
             assert page.locator('#base-count').inner_text()=='2 人'
             assert 'Noto Sans' in page.locator('body').evaluate('(e)=>getComputedStyle(e).fontFamily')
             assert float(page.locator('.category-table td small').first.evaluate('(e)=>getComputedStyle(e).fontSize').removesuffix('px'))>=13
+            page.locator('.data-notes > summary').click()
             assert page.locator('#data-warning').is_visible()
             assert page.evaluate('ROTO_DATA.data_ready')
             assert page.evaluate('ROTO_DATA.reference.size')==582
@@ -151,10 +153,13 @@ def run(origin,output):
             page.locator('#player-search').fill('Jokic');assert page.locator('#roto-player-table tbody input[data-roto-pick="3112335"]').is_visible()
             page.locator('#player-search').fill('');page.locator('#roto-player-table_wrapper select').select_option('25')
             head=page.locator('#roto-player-table_wrapper .dt-scroll-head');body=page.locator('#roto-player-table_wrapper .dt-scroll-body')
-            page.evaluate('scrollTo({top:document.querySelector("#roto-player-table_wrapper .dt-scroll-head").getBoundingClientRect().top+scrollY-50,behavior:"instant"})')
+            # Anchor to the non-sticky section: an already pinned header has no fixed document position.
+            page.evaluate('scrollTo({top:document.querySelector(".search-panel").getBoundingClientRect().top+scrollY+400,behavior:"instant"})')
             page.mouse.move(width/2,height/2);page.mouse.wheel(0,350);page.wait_for_timeout(300)
             controls=page.locator('.picker-controls').bounding_box();box=head.bounding_box()
-            assert abs(box['y']-(controls['y']+controls['height']))<2
+            assert abs(box['y']-(controls['y']+controls['height']))<2, dict(width=width,header=box,controls=controls,scroll=page.evaluate('scrollY'),page=page.evaluate('jQuery("#roto-player-table").DataTable().page.info()'),query=page.locator('#player-search').input_value(),checked=page.locator('#selected-only').get_attribute('aria-pressed'))
+            nav=page.locator('.section-nav').bounding_box()
+            assert controls['y']>=nav['y']+nav['height']-1
             assert body.evaluate('(e)=>e.scrollTop===0&&e.scrollHeight<=e.clientHeight+1')
             cell=page.locator('#roto-player-table tbody tr:first-child td:first-child');left=cell.bounding_box()['x']
             body.evaluate('(e)=>{e.scrollLeft=e.scrollWidth;e.dispatchEvent(new Event("scroll"));}')

@@ -1,0 +1,42 @@
+[
+  {
+    "width": 1500,
+    "touch": false,
+    "nearby_node_values": true,
+    "overlap_lists_all_visible_teams": true,
+    "weighted_shooting": true,
+    "units_and_known_coverage": true,
+    "keyboard_and_escape": true,
+    "outside_dismiss": true,
+    "table_unit_independent": true,
+    "period_change_clears_stale_values": true,
+    "partial_unknown_not_zero": true,
+    "hidden_series_excluded": true,
+    "unresolved_shots_unknown": true,
+    "names_safe_as_text": true,
+    "no_overflow": true,
+    "js_errors": [],
+    "csp_errors": [],
+    "external_requests": []
+  },
+  {
+    "width": 390,
+    "touch": true,
+    "nearby_node_values": true,
+    "overlap_lists_all_visible_teams": true,
+    "weighted_shooting": true,
+    "units_and_known_coverage": true,
+    "keyboard_and_escape": true,
+    "outside_dismiss": true,
+    "table_unit_independent": true,
+    "period_change_clears_stale_values": true,
+    "partial_unknown_not_zero": true,
+    "hidden_series_excluded": true,
+    "unresolved_shots_unknown": true,
+    "names_safe_as_text": true,
+    "no_overflow": true,
+    "js_errors": [],
+    "csp_errors": [],
+    "external_requests": []
+  }
+]
