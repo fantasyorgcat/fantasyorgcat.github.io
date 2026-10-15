@@ -280,6 +280,8 @@ def run(origin,output):
             if width==390:page.locator('#base-editor summary').click()
             page.locator('#base-roster-name').fill('H2H A盟');page.locator('#save-base-roster').click()
             a=page.locator('#base-roster-select').input_value();assert a
+            assert page.locator('#base-roster-select-inline').is_visible()
+            assert page.locator('#base-roster-select-inline').input_value()==a
             assert 'H2H A盟' in page.locator('#base-save-status').inner_text()
             page.locator('.radar-card').screenshot(path=str(output/f'zero-to-radar-{width}.png'))
             page.locator('#new-base-roster').click()
@@ -290,12 +292,14 @@ def run(origin,output):
             assert 0<radius()<123
             page.locator('#base-roster-name').fill('ROTO B盟');page.locator('#save-base-roster').click()
             b=page.locator('#base-roster-select').input_value();assert b!=a
+            assert page.locator('#base-roster-select-inline').input_value()==b
             stored=page.evaluate('JSON.parse(localStorage.getItem(RotoCore.storageKey))')
             assert stored['version']==1 and len(stored['rosters'])==3
             assert next(r for r in stored['rosters'] if r['id']=='old')['players']==['3195']
             if width==390:page.locator('#simulation-editor summary').click()
             page.locator('[data-outgoing="'+high['id']+'"]').check()
-            page.locator('#base-roster-select').select_option(a)
+            page.locator('#base-roster-select-inline').select_option(a)
+            assert page.locator('#base-roster-select').input_value()==a
             assert page.locator('#base-list .roster-item').get_attribute('data-player-id')==zero['id']
             assert page.locator('#base-roster-name').input_value()=='H2H A盟'
             assert page.locator('#simulation-count').inner_text()=='0 移出／0 加入'
@@ -311,10 +315,11 @@ def run(origin,output):
             assert next(r for r in updated['rosters'] if r['id']==b)['players']==[high['id']]
             page.reload(wait_until='load')
             page.locator('#base-roster-select').select_option(b)
+            assert page.locator('#base-roster-select-inline').input_value()==b
             assert page.locator('#base-list .roster-item').get_attribute('data-player-id')==high['id']
-            page.locator('#base-roster-select').select_option(a)
-            assert page.locator('#base-list .roster-item').count()==2
             if width==390:page.locator('#base-editor summary').click()
+            page.locator('#base-roster-select-inline').select_option(a)
+            assert page.locator('#base-list .roster-item').count()==2
             page.locator('#base-editor').screenshot(path=str(output/f'saved-base-editor-{width}.png'))
             page.locator('.roto-toolbar').screenshot(path=str(output/f'saved-base-switch-{width}.png'))
             page.locator('#base-roster-select').select_option('old')

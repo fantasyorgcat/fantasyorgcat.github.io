@@ -96,9 +96,9 @@
   const radarTeams=mode==='perGame'?teams:Object.fromEntries(Object.entries(teams).map(([target,team])=>[target,C.knownView(C.aggregate(team.ids,data,'perGame'),data,'perGame')]));
   radar(radarTeams);metrics(teams);rosterList('base');rosterList('opponent');rosterList('incoming');outgoingList();search(rebuild);
  }
- function baseOptions(){const host=$('base-roster-select');host.replaceChildren(element('option','選擇已儲存的聯盟／陣容'));host.firstChild.value='';for(const r of saved){const option=element('option',r.name+' · '+r.players.length+' 人');option.value=r.id;host.append(option);}if(!saved.some(r=>r.id===activeBase))activeBase='';host.value=activeBase;
+ function baseOptions(){if(!saved.some(r=>r.id===activeBase))activeBase='';for(const id of ['base-roster-select','base-roster-select-inline']){const host=$(id);host.replaceChildren(element('option','選擇已儲存的聯盟／陣容'));host.firstChild.value='';for(const r of saved){const option=element('option',r.name+' · '+r.players.length+' 人');option.value=r.id;host.append(option);}host.value=activeBase;}
   const entry=saved.find(r=>r.id===activeBase),dirty=entry&&JSON.stringify(entry.players)!==JSON.stringify(state.base);
-  $('base-save-status').textContent=entry?'目前「'+entry.name+'」'+(dirty?'有未儲存的名單變更，請再按儲存。':'已儲存；可從上方選單切換陣容。'):'這份原陣容尚未儲存；不同聯盟請使用不同名稱。';
+  $('base-save-status').textContent=entry?'目前「'+entry.name+'」'+(dirty?'有未儲存的名單變更，請再按儲存。':'已儲存；可使用本區的「切換已儲存陣容」。'):'這份原陣容尚未儲存；不同聯盟請使用不同名稱。';
  }
  function savedOptions(selected=''){const host=$('saved-rosters');host.replaceChildren(element('option','選擇陣容'));host.firstChild.value='';for(const r of saved){const option=element('option',r.name+' · '+r.players.length+' 人');option.value=r.id;host.append(option);}host.value=selected;baseOptions();}
  function storageWarning(error){for(const id of ['storage-warning','base-storage-warning']){$(id).hidden=false;$(id).textContent='本地保存無法使用：'+error.message+'。本次編輯仍可繼續；既有資料未清除。';}}
@@ -107,7 +107,7 @@
   try{C.save(localStorage,next);saved=next;savedOptions(entry.id);for(const id of ['storage-warning','base-storage-warning'])$(id).hidden=true;message('已保存「'+name+'」至此裝置。');return entry;}catch(e){storageWarning(e);return null;}
  }
  function loadBase(entry){activeBase=entry.id;$('base-roster-name').value=entry.name;$('add-target').value='base';setRoster('base',entry.players);message('已載入原陣容「'+entry.name+'」；換人模擬已重設，其他保存未改動。');}
- $('base-roster-select').addEventListener('change',e=>{const entry=saved.find(r=>r.id===e.target.value);if(entry)loadBase(entry);else baseOptions();});
+ for(const id of ['base-roster-select','base-roster-select-inline'])$(id).addEventListener('change',e=>{const entry=saved.find(r=>r.id===e.target.value);if(entry)loadBase(entry);else baseOptions();});
  $('save-base-roster').addEventListener('click',()=>{const entry=saveRoster($('base-roster-name').value.trim(),state.base);if(entry){activeBase=entry.id;render();}});
  $('new-base-roster').addEventListener('click',()=>{activeBase='';$('base-roster-name').value='';$('add-target').value='base';setRoster('base',[]);message('已建立空白原陣容；已儲存的聯盟／陣容仍保留。');});
  function setMode(value){mode=value;describeData();render(true);}
