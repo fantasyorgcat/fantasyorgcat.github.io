@@ -8,6 +8,7 @@
  function value(p,key){return key==='name'?p.name:key==='GP'?p.periods[period].gp:p.periods[period][mode][key].value;}
  function render(){
   if(!byId('comparison-head'))return;sync();if(byId('open-roto'))byId('open-roto').href='roto.html#players='+Array.from(compared).join(',');byId('comparison-panel').hidden=!compared.size;
+  if(byId('view-comparison')){byId('view-comparison').hidden=!compared.size;byId('view-comparison').textContent='比較 '+compared.size+' 人';}
   const body=byId('comparison-body');body.replaceChildren();if(!compared.size)return;
   const table=tables[activeWeek],head=byId('comparison-head');head.replaceChildren();const tr=document.createElement('tr');
   function sortable(key,label){const th=document.createElement('th'),b=button(label,()=>{descending=sortKey===key?!descending:!['name','Rank','TO'].includes(key);sortKey=key;render();});if(key==='TO')b.title='失誤越少PR越高';b.dataset.sort=key;b.setAttribute('aria-label',label+'，'+(sortKey===key?(descending?'目前降序':'目前升序'):'可排序'));th.appendChild(b);tr.appendChild(th);}
@@ -32,6 +33,7 @@
   const navigation=document.querySelector('.workspace-bar');
   function headerOffset(){document.documentElement.style.setProperty('--workspace-height',navigation.getBoundingClientRect().height+'px');}
   headerOffset();new ResizeObserver(headerOffset).observe(navigation);
+  byId('jump-players').addEventListener('click',()=>{const section=document.querySelector('#Week'+activeWeek.replace('W','')+' .player-section');if(section){section.scrollIntoView({block:'start'});const heading=section.querySelector('h3');heading.setAttribute('tabindex','-1');heading.focus({preventScroll:true});}});
   byId('comparison-period').value=period;byId('comparison-period').addEventListener('change',e=>{period=e.target.value;render();});byId('comparison-mode').addEventListener('change',e=>{mode=e.target.value;render();});byId('clear-comparison').addEventListener('click',()=>{compared.clear();render();});
   document.addEventListener('change',e=>{const input=e.target;if(!input.matches('input[data-pick="compare"]'))return;const id=input.dataset.playerId;if(!playerCatalog[id])return;if(input.checked)compared.add(id);else compared.delete(id);render();});
   $(document).on('draw.dt',render);document.addEventListener('active-week-changed',render);sync();

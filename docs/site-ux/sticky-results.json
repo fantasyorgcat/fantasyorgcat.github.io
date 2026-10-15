@@ -1,0 +1,34 @@
+[
+  {
+    "width": 1500,
+    "height": 1000,
+    "real_data": true,
+    "page_scroll_verified": true,
+    "touch_page_and_horizontal_scroll": false,
+    "player_vertical_inner_scroll": false,
+    "original_header_sticky_below_responsive_nav": true,
+    "column_alignment": true,
+    "original_palette_and_sort": true,
+    "rebuilt_periods_and_modes": true,
+    "original_team_scroller_preserved": true,
+    "data_preserved": true,
+    "js_errors": [],
+    "failed_requests": []
+  },
+  {
+    "width": 390,
+    "height": 844,
+    "real_data": true,
+    "page_scroll_verified": true,
+    "touch_page_and_horizontal_scroll": true,
+    "player_vertical_inner_scroll": false,
+    "original_header_sticky_below_responsive_nav": true,
+    "column_alignment": true,
+    "original_palette_and_sort": true,
+    "rebuilt_periods_and_modes": true,
+    "original_team_scroller_preserved": true,
+    "data_preserved": true,
+    "js_errors": [],
+    "failed_requests": []
+  }
+]

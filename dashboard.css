@@ -24,3 +24,77 @@
 .schedule-scroll thead{position:sticky;top:0;z-index:2}
 
 .roto-link{display:inline-block;color:var(--accent);font-size:11px;margin-top:4px;text-underline-offset:3px}
+
+/* Homepage workspace: readable data, clear destinations, compact secondary context. */
+body.dashboard-page{font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans TC','Microsoft JhengHei',sans-serif;font-size:15px;font-weight:500;line-height:1.55;--ink:#26343c;--muted:#4e5960;padding:20px}
+body.dashboard-page .container{max-width:1440px}
+body.dashboard-page .appbar{flex-wrap:wrap;gap:12px;margin-bottom:16px}
+body.dashboard-page .brand{font-size:15px;letter-spacing:0}
+body.dashboard-page .brand small{font-size:13px;letter-spacing:.25px}
+body.dashboard-page .app-status{font-size:13px;margin-left:auto}
+body.dashboard-page .site-nav{display:flex;gap:8px}
+body.dashboard-page .site-nav a{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:9px 16px;border:1px solid var(--control-line);border-radius:10px;color:var(--ink);background:var(--paper);text-decoration:none;font-size:14px;font-weight:650;white-space:nowrap}
+body.dashboard-page .site-nav a[aria-current="page"]{background:var(--accent);border-color:var(--accent);color:var(--paper)}
+body.dashboard-page .site-nav a:not([aria-current]):hover{background:var(--accent-soft)}
+body.dashboard-page .hero{padding:18px 24px;margin-bottom:12px;gap:16px}
+body.dashboard-page .hero h1{font-size:clamp(24px,2.4vw,32px);letter-spacing:-.6px;margin:0 0 6px;line-height:1.3}
+body.dashboard-page .hero p{font-size:15px;line-height:1.6}
+body.dashboard-page .hero-meta{font-size:13px;line-height:1.6}
+body.dashboard-page .hero-meta strong{font-size:16px;margin-bottom:2px}
+body.dashboard-page .data-details{font-size:13px;line-height:1.7;margin:0 0 10px;background:transparent}
+body.dashboard-page .data-details summary{min-height:44px;padding:10px 14px}
+body.dashboard-page .metric-grid{gap:0;margin:0 14px 12px;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+body.dashboard-page .metric-card{border:0;border-radius:0;border-right:1px solid var(--line);padding:12px 16px}
+body.dashboard-page .metric-card:last-child{border-right:0}
+body.dashboard-page .metric-card :is(span,small){font-size:13px}
+body.dashboard-page .metric-card span{margin-bottom:4px}
+body.dashboard-page .metric-card strong{font-size:22px}
+body.dashboard-page .workspace-bar{gap:10px;padding:10px 0;background:var(--bg);border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-bottom:12px}
+body.dashboard-page .platform-switch{gap:6px}
+body.dashboard-page .platform-button{font-size:14px;padding:8px 13px}
+body.dashboard-page .platform-button small{font-size:13px}
+body.dashboard-page .season-picker{font-size:14px;gap:6px}
+body.dashboard-page .season-picker select{font-size:14px;padding:8px;min-height:44px}
+body.dashboard-page .filter-tools{gap:8px}
+body.dashboard-page .selection-label{font-size:13px;line-height:1.4}
+body.dashboard-page :is(.global-reset,.btn-stat,.btn-reset,.tab button){font-size:14px;min-height:44px;padding:9px 12px}
+body.dashboard-page .global-reset{box-shadow:none}
+body.dashboard-page #view-comparison{display:inline-flex;align-items:center;background:var(--accent-soft);color:var(--ink);font-weight:650;text-decoration:none}
+body.dashboard-page .period-tools{font-size:14px;line-height:1.65;padding:12px 16px}
+body.dashboard-page :is(.platform-note,.period-tools #schedule-freshness){font-size:13px;line-height:1.6}
+body.dashboard-page .period-tools summary{min-height:32px;display:list-item;padding:4px 0}
+body.dashboard-page h3{font-size:17px;line-height:1.5;letter-spacing:0}
+body.dashboard-page :is(h3 small,.player-heading span,.legend,.footer,.roto-link){font-size:13px;line-height:1.6}
+body.dashboard-page .player-heading{flex-wrap:wrap;gap:10px;margin-bottom:8px}
+body.dashboard-page .player-hint{margin:0 0 14px;font-size:13px;color:var(--muted);line-height:1.6}
+body.dashboard-page .player-section{scroll-margin-top:calc(var(--workspace-height,0px) + 12px)}
+body.dashboard-page .controls{gap:8px;padding-bottom:12px}
+body.dashboard-page .controls>span{font-size:13px}
+body.dashboard-page .stat-divider{margin-left:12px;padding-left:12px;border-left:1px solid var(--line)}
+body.dashboard-page :is(table,.team-section table){font-size:14px;font-variant-numeric:tabular-nums}
+body.dashboard-page th{font-size:13px;padding:12px 10px}
+body.dashboard-page td{padding:11px 10px}
+body.dashboard-page .stat-pr{font-size:13px;color:var(--muted)}
+body.dashboard-page .matchup{min-width:104px;max-width:136px;font-size:14px}
+body.dashboard-page :is(.matchup small,.game-time,.comparison-scroll small){font-size:13px;line-height:1.5}
+body.dashboard-page .game-time{max-width:150px}
+body.dashboard-page .pick-controls{font-size:14px;margin-top:8px}
+body.dashboard-page .pick-controls label{min-height:44px;gap:8px;width:max-content;padding:4px 8px;border-radius:8px;background:#516a780d}
+body.dashboard-page .pick-controls label:has(input:checked){background:var(--accent-soft);font-weight:700}
+body.dashboard-page .pick-controls input{width:20px;height:20px;margin:0}
+body.dashboard-page .player-section .dt-layout-row{font-size:14px;line-height:1.5}
+body.dashboard-page div.dt-container .dt-input{min-height:44px;font-size:16px}
+body.dashboard-page div.dt-container .dt-paging .dt-paging-button{font-size:14px;min-width:44px;min-height:44px}
+body.dashboard-page #comparison-meta{font-size:14px}
+body.dashboard-page #comparison-panel select{min-height:44px;font-size:16px}
+body.dashboard-page #comparison-panel .controls{gap:12px}
+body.dashboard-page #comparison-panel .roto-link{margin:0;text-decoration:none;display:inline-flex;align-items:center}
+@media(max-width:1000px){body.dashboard-page .filter-tools{width:auto;margin-left:auto}body.dashboard-page .workspace-bar .season-picker{flex:1 1 260px}body.dashboard-page .site-nav{flex-basis:100%}body.dashboard-page .site-nav a{flex:1}}
+@media(max-width:600px){body.dashboard-page{padding:10px;font-size:15px}body.dashboard-page .appbar{gap:10px;margin:2px 0 14px}body.dashboard-page .brand{font-size:14px}body.dashboard-page .brand-mark{width:36px;height:36px}body.dashboard-page .app-status{max-width:152px;font-size:13px}body.dashboard-page .site-nav{gap:8px}body.dashboard-page .hero{padding:16px;display:block}body.dashboard-page .hero p{font-size:14px}body.dashboard-page .hero-meta{margin-top:8px;text-align:left;font-size:13px;white-space:normal}body.dashboard-page .hero-meta strong{display:inline;margin-right:8px;font-size:14px}body.dashboard-page .metric-card{padding:10px 12px}body.dashboard-page .metric-card:nth-child(2){border-right:0}body.dashboard-page .metric-card:nth-child(-n+2){border-bottom:1px solid var(--line)}body.dashboard-page .workspace-bar{gap:8px;padding:8px 0}body.dashboard-page .platform-switch{display:flex;width:auto}body.dashboard-page .platform-button{padding:8px 12px}body.dashboard-page .workspace-bar .season-picker{flex-basis:100%}body.dashboard-page .filter-tools{width:100%;margin:0;gap:6px;justify-content:flex-start;flex-wrap:wrap}body.dashboard-page .selection-label{margin-right:auto;max-width:90px}body.dashboard-page .filter-tools :is(.global-reset,.btn-stat){padding:8px;font-size:13px}body.dashboard-page .period-tools{padding:10px 12px}body.dashboard-page .team-section,body.dashboard-page .player-section{padding:12px}body.dashboard-page h3 small{display:block;margin:3px 0 0}body.dashboard-page .player-heading span{max-width:50%;text-align:right}body.dashboard-page .stat-divider{margin-left:0!important;padding-left:0;border-left:0;flex-basis:100%}body.dashboard-page .controls{gap:6px}body.dashboard-page .btn-reset{margin-left:auto}body.dashboard-page .legend{gap:8px;margin:12px 0}body.dashboard-page .dt-search input{max-width:200px}body.dashboard-page .player-section .dt-layout-row{gap:10px}body.dashboard-page .footer{font-size:13px}}
+@media(prefers-reduced-motion:reduce){html:has(body.dashboard-page){scroll-behavior:auto}body.dashboard-page *{transition:none!important}}
+body.dashboard-page .filter-tools .selection-label{max-width:none;flex:1;min-width:0}
+body.dashboard-page .player-section .dt-scroll-head th:first-child{position:sticky;left:0;z-index:3;box-shadow:1px 0 var(--line)}
+body.dashboard-page .player-section .dt-scroll-body>table>tbody>tr>td:first-child{position:sticky;left:0;z-index:1;min-width:140px;max-width:180px;background:var(--paper);box-shadow:1px 0 var(--line)}
+body.dashboard-page .player-section .dt-scroll-body>table>tbody>tr:nth-child(even)>td:first-child{background:var(--panel)}
+body.dashboard-page .stat-pr,body.dashboard-page .comparison-scroll small{white-space:nowrap}
+@media(max-width:360px){body.dashboard-page .app-status{max-width:none;flex-basis:100%;text-align:left}}

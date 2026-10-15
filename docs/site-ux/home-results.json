@@ -1,0 +1,44 @@
+{
+  "data_and_source_sync": true,
+  "results": [
+    {
+      "width": 1500,
+      "first_team_panel_y": 550.765625,
+      "navigation": true,
+      "source_details_preserved": true,
+      "labels_localized": true,
+      "sticky_shortcuts": true,
+      "comparison_selection_hash": true,
+      "pinned_player_selection": true,
+      "checkbox_min_height": 44,
+      "no_page_overflow": true,
+      "errors": []
+    },
+    {
+      "width": 390,
+      "first_team_panel_y": 758.15625,
+      "navigation": true,
+      "source_details_preserved": true,
+      "labels_localized": true,
+      "sticky_shortcuts": true,
+      "comparison_selection_hash": true,
+      "pinned_player_selection": true,
+      "checkbox_min_height": 44,
+      "no_page_overflow": true,
+      "errors": []
+    },
+    {
+      "width": 320,
+      "first_team_panel_y": 871.21875,
+      "navigation": true,
+      "source_details_preserved": true,
+      "labels_localized": true,
+      "sticky_shortcuts": true,
+      "comparison_selection_hash": true,
+      "pinned_player_selection": true,
+      "checkbox_min_height": 44,
+      "no_page_overflow": true,
+      "errors": []
+    }
+  ]
+}
