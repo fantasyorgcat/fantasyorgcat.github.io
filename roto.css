@@ -28,3 +28,4 @@
 
 .base-save-controls{display:grid;gap:10px;margin:12px 0}.base-save-controls label{display:grid;gap:6px}.base-save-controls input{width:100%;min-width:0}.base-save-controls>div{display:flex;flex-wrap:wrap;gap:8px}.base-roster-switch{min-width:0}.roto-page #base-roster-select{max-width:300px;min-width:0}.roto-page #base-storage-warning{color:var(--rose-ink)}
 @media(max-width:600px){.roto-toolbar>.base-roster-switch{display:grid;width:100%}.roto-page #base-roster-select{width:100%;max-width:100%}}
+.base-save-controls select{width:100%;min-width:0}
