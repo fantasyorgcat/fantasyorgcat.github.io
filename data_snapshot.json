@@ -7,7 +7,7 @@
     "first_game": "2026-10-20",
     "last_game": "2027-04-11",
     "coverage": "All dated regular-season events currently published by ESPN; excludes preseason/postseason",
-    "start": "2026-10-15",
+    "start": "2026-10-16",
     "end": "2026-11-08",
     "events_in_window": 146
   },
@@ -21,12 +21,12 @@
   },
   "current_stats_last_game": null,
   "recent_windows": {
-    "start_7": "2026-10-08",
-    "start_14": "2026-10-01",
-    "end_exclusive": "2026-10-15",
+    "start_7": "2026-10-09",
+    "start_14": "2026-10-02",
+    "end_exclusive": "2026-10-16",
     "timezone": "America/New_York"
   },
-  "roster_players": 627,
+  "roster_players": 630,
   "defense": {
     "source": "PBP Stats",
     "season": "2026-27",
@@ -943,7 +943,7 @@
       "events": 57
     }
   ],
-  "generated_at": "2026-10-15 13:30 UTC",
+  "generated_at": "2026-10-16 13:18 UTC",
   "stats_source": "ESPN",
   "defense_source": "PBP Stats",
   "period_populations": {
@@ -23945,9 +23945,9 @@
     "timezone": "America/New_York",
     "quick_periods": {
       "W1": {
-        "start": "2026-10-15",
+        "start": "2026-10-16",
         "end": "2026-10-18",
-        "label": "近1週 (10/15 - 10/18)"
+        "label": "近1週 (10/16 - 10/18)"
       },
       "W2": {
         "start": "2026-10-19",
