@@ -14,7 +14,7 @@
   function sortable(key,label){const th=document.createElement('th'),b=button(label,()=>{descending=sortKey===key?!descending:!['name','Rank','TO'].includes(key);sortKey=key;render();});if(key==='TO')b.title='失誤越少PR越高';b.dataset.sort=key;b.setAttribute('aria-label',label+'，'+(sortKey===key?(descending?'目前降序':'目前升序'):'可排序'));th.appendChild(b);tr.appendChild(th);}
   sortable('name','球員');const games=document.createElement('th');games.textContent='場次';tr.appendChild(games);
   const dayColumns=table?table.columns('[data-schedule-day]').indexes().toArray():[];
-  const schedule=new Map();if(table)table.rows({search:'none'}).data().toArray().forEach(row=>{if(!schedule.has(row[1]))schedule.set(row[1],[row[2],...dayColumns.map(i=>row[i])]);});
+  const shared=table&&window.scheduleForTable?.(table.table().node()),schedule=shared||new Map();if(table&&!shared)table.rows({search:'none'}).data().toArray().forEach(row=>{if(!schedule.has(row[1]))schedule.set(row[1],[row[2],...dayColumns.map(i=>row[i])]);});
   for(const column of dayColumns){const th=document.createElement('th');const source=table.column(column).header();th.textContent=source.textContent;th.title=source.dataset.fullDate||source.textContent;th.setAttribute('aria-label',th.title);tr.appendChild(th);}
   for(const key of metrics)sortable(key,key);tr.lastChild.title='依目前勾選的排名項目計算；9CAT 使用原始全體排名，自訂項目使用網站名單排名';head.appendChild(tr);
   const rows=Array.from(compared,id=>playerCatalog[id]).filter(Boolean);
@@ -36,6 +36,6 @@
   byId('jump-players').addEventListener('click',()=>{const section=document.querySelector('#Week'+activeWeek.replace('W','')+' .player-section');if(section){section.scrollIntoView({block:'start'});const heading=section.querySelector('h3');heading.setAttribute('tabindex','-1');heading.focus({preventScroll:true});}});
   byId('comparison-period').value=period;byId('comparison-period').addEventListener('change',e=>{period=e.target.value;render();});byId('comparison-mode').addEventListener('change',e=>{mode=e.target.value;render();});byId('clear-comparison').addEventListener('click',()=>{compared.clear();render();});
   document.addEventListener('change',e=>{const input=e.target;if(!input.matches('input[data-pick="compare"]'))return;const id=input.dataset.playerId;if(!playerCatalog[id])return;if(input.checked)compared.add(id);else compared.delete(id);render();});
-  $(document).on('draw.dt',render);document.addEventListener('active-week-changed',render);document.addEventListener('player-rank-changed',render);document.addEventListener('site-preferences-changed',render);sync();
+  $(document).on('draw.dt',(_,settings)=>{if(settings.nTable===tables[activeWeek]?.table().node())render();});document.addEventListener('active-week-changed',render);document.addEventListener('player-rank-changed',render);document.addEventListener('site-preferences-changed',render);sync();
  });
 })();

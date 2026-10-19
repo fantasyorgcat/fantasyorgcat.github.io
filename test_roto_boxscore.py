@@ -21,7 +21,13 @@ class BoxScore(unittest.TestCase):
             bad=Path(tmp)/'bad.csv';bad.write_bytes(CSV_PATH.read_bytes()+b' ')
             with self.assertRaisesRegex(ValueError,'byte/hash mismatch'):load_source(bad)
     def test_unique_mapping_and_whole_source_not_mixed(self):
-        s=self.data['mapping']['summary'];self.assertEqual((s['matched'],s['not_in_source'],s['ambiguous'],s['source_unmapped']),(481,len(self.catalog)-481,0,101))
+        s=self.data['mapping']['summary']
+        matched=[p for p in self.data['players'].values() if p['status']=='matched']
+        source_names={p['source_name'] for p in matched}
+        self.assertEqual(len(source_names),len(matched),'A source player must not map to multiple active players')
+        self.assertTrue(source_names.issubset({r['source_name'] for r in self.rows}))
+        self.assertEqual((s['matched'],s['not_in_source'],s['ambiguous'],s['source_unmapped']),
+                         (len(matched),len(self.catalog)-len(matched),0,len(self.rows)-len(source_names)))
         expected_comparable=sum(p['periods']['ls']['gp'] is not None for pid,p in self.catalog.items() if self.data['players'][pid]['status']=='matched')
         self.assertEqual(s['old_comparable'],expected_comparable);self.assertEqual(s['old_totals_disagreements'],0)
         byname={r['source_name']:r for r in self.rows}

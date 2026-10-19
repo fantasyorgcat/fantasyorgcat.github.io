@@ -28,13 +28,15 @@
   return result;
  }
  if(typeof module!=='undefined'&&module.exports){module.exports={categories,rankPlayers,preferences};return;}
- let selected=[...categories],prefs={...defaults},ready=false,storageAvailable=true;
+ let selected=[...categories],prefs={...defaults},storageAvailable=true;
+ try{prefs=preferences(JSON.parse(localStorage.getItem(storageKey)));}catch{storageAvailable=false;}
  const rankCache=new Map(),updatedRanks=new WeakMap(),installed=new WeakSet(),sized=new WeakSet();
  function ranks(period,mode){
   const key=period+'|'+mode+'|'+selected.join(',');
   if(!rankCache.has(key))rankCache.set(key,rankPlayers(playerCatalog,period,mode,selected));
   return rankCache.get(key);
  }
+ root.playerScheduleVisible=()=>prefs.schedule;
  root.playerRank=(player,period,mode)=>ranks(period,mode)[player.id];
  root.playerRankLabel=()=>selectionLabel();
  function node(tag,text,className){const e=document.createElement(tag);if(text)e.textContent=text;if(className)e.className=className;return e;}
@@ -56,9 +58,9 @@
  function updateRank(table,suffix){
   const state=viewState[suffix]||{period:playerToolsMeta.defaultPeriod,mode:'avg'},selector='.rank-'+state.period+'-'+state.mode;
   const index=table.column(selector).index();if(index===undefined)return;
-  const container=table.table().container(),signature=state.period+'|'+state.mode+'|'+selected.join(',');
-  if(updatedRanks.get(container)===signature)return;
-  const values=ranks(state.period,state.mode),header=table.column(index).header();
+  const header=table.column(index).header(),signature=state.period+'|'+state.mode+'|'+selected.join(',');
+  if(updatedRanks.get(header)===signature)return;
+  const values=ranks(state.period,state.mode);
   header.title=selected.length===9?'九項 PR 加總的全體排名；數字越小越前面':'所選 PR 加總的網站名單排名；數字越小越前面';
   table.rows().every(function(){
    const row=this.node(),id=row.querySelector('[data-player-id]')?.dataset.playerId,c=values[id];if(!c)return;
@@ -69,13 +71,14 @@
    td.title=c.sum===null?'所選項目 PR 不完整，無排名':'PR 合計 '+String(c.sum)+'；'+selectionLabel();
    table.cell(this.index(),index).invalidate('dom');
   });
-  updatedRanks.set(container,signature);
+  updatedRanks.set(header,signature);
  }
  function setPreferences(){
   const body=document.body;body.style.setProperty('--table-font',prefs.font+'px');body.style.setProperty('--table-padding',prefs.padding+'px');body.style.setProperty('--schedule-width',prefs.dayWidth+'px');
   updateLabels();
-  Object.entries(tables).forEach(([suffix,table])=>{table.columns('[data-schedule-day]').visible(prefs.schedule,false);table.columns.adjust().draw(false);sizeTable(table);});
-  sizeTeams();
+  const table=activeTable();
+  if(table&&table.columns('[data-schedule-day]').visible().toArray().some(visible=>visible!==prefs.schedule))applyStatView(activeWeek);
+  requestSizes();
  }
  function savePreferences(){
   try{localStorage.setItem(storageKey,JSON.stringify(prefs));storageAvailable=true;}catch{storageAvailable=false;}
@@ -103,12 +106,19 @@
   const scroll=container.querySelector('.dt-scroll'),body=scroll.querySelector('.dt-scroll-body'),bar=node('div',null,'table-x-scroll');bar.tabIndex=0;bar.setAttribute('role','region');bar.setAttribute('aria-label','左右捲動完整球員數據');bar.appendChild(node('div'));scroll.before(bar);
   bar.addEventListener('scroll',()=>{if(Math.abs(body.scrollLeft-bar.scrollLeft)>1)body.scrollLeft=bar.scrollLeft;});body.addEventListener('scroll',()=>{if(Math.abs(bar.scrollLeft-body.scrollLeft)>1)bar.scrollLeft=body.scrollLeft;});
   const hint=node('div',null,'table-scroll-hint');hint.append(node('span','欄名與球員固定；左右滑動查看全部欄位。'),button('跳至 Rank →',()=>{body.scrollLeft=body.scrollWidth;}),button('← 球員',()=>{body.scrollLeft=0;}));bar.before(hint);
-  table.on('column-sizing',()=>sizeTable(table));
-  new ResizeObserver(()=>sizeTable(table)).observe(container);
+  table.on('column-sizing',()=>requestSizes());
+  const observer=new ResizeObserver(()=>requestSizes());observer.observe(container);
+  table.on('destroy',()=>observer.disconnect());
   updateLabels();
  }
  function shortDate(header){
   const text=header.textContent.trim();if(/^\d{4}-\d{2}-\d{2}/.test(text)){header.title=text;header.setAttribute('aria-label',text);header.dataset.fullDate=text;const label=header.querySelector('.dt-column-title')||header;label.textContent=text.slice(5).replace('-','/');}
+ }
+ // Coalesce DataTables draw/column-sizing and ResizeObserver notifications per frame.
+ let sizingFrame=0;
+ function requestSizes(){
+  if(sizingFrame)return;
+  sizingFrame=requestAnimationFrame(()=>{sizingFrame=0;const table=activeTable();if(table)sizeTable(table);sizeTeams();});
  }
  function sizeTable(table){
   const container=table.table().container();if(!container.offsetWidth||sized.has(container))return;sized.add(container);
@@ -125,6 +135,7 @@
  }
  function sizeTeams(){
   document.querySelectorAll('.team-section').forEach(section=>{
+   if(!section.offsetWidth)return;
    const table=section.querySelector('table');if(!table)return;
    table.style.width='100%';table.style.tableLayout='auto';
    const headers=Array.from(table.tHead?.rows[0]?.cells||[]);
@@ -136,17 +147,16 @@
    scroll.style.height=(table.tHead.getBoundingClientRect().height+rows.reduce((sum,row)=>sum+row.getBoundingClientRect().height,0)+2+gutter)+'px';
   });
  }
- function enhance(suffix){
+ // Prepare visibility, ranks and ordering before the caller's single draw.
+ root.preparePlayerTable=function(suffix){
   const table=tables[suffix];if(!table)return;install(table);updateRank(table,suffix);
   const state=viewState[suffix]||{period:playerToolsMeta.defaultPeriod,mode:'avg'},rankColumn=table.column('.rank-'+state.period+'-'+state.mode).index();
   table.order(table.order().map(([index,direction])=>[table.column(index).header().className.includes('rank-')?rankColumn:index,direction]));
-  table.columns('[data-schedule-day]').visible(prefs.schedule,false);table.columns.adjust().draw(false);sizeTable(table);sizeTeams();
- }
- const apply=root.applyStatView;root.applyStatView=function(suffix){apply(suffix);if(ready)enhance(suffix);};
+  table.columns('[data-schedule-day]').every(function(){if(prefs.schedule)shortDate(this.header());if(this.visible()!==prefs.schedule)this.visible(prefs.schedule,false);});
+ };
  $(document).ready(function(){
-  try{prefs=preferences(JSON.parse(localStorage.getItem(storageKey)));}catch{storageAvailable=false;}
-  ready=true;Object.keys(tables).forEach(enhance);setPreferences();
-  $(document).on('draw.dt',(_,settings)=>{if(settings.nTable.id.startsWith('playerTable'))sizeTable(new $.fn.dataTable.Api(settings));});
-  document.addEventListener('active-week-changed',()=>{enhance(activeWeek);updateLabels();});
+  Object.values(tables).forEach(install);setPreferences();
+  $(document).on('draw.dt',(_,settings)=>{if(settings.nTable===activeTable()?.table().node())requestSizes();});
+  document.addEventListener('active-week-changed',()=>{updateLabels();requestSizes();});
  });
 })(typeof window==='undefined'?globalThis:window);

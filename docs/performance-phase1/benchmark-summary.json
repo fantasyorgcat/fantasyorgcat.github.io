@@ -1,0 +1,230 @@
+{
+  "1440": {
+    "before": {
+      "cold": {
+        "fcp": 344,
+        "longTasks": 6396,
+        "maxTask": 3019,
+        "lastTaskEnd": 7105.6
+      },
+      "warm": {
+        "fcp": 132,
+        "longTasks": 6418,
+        "maxTask": 3178,
+        "lastTaskEnd": 7187.9
+      },
+      "interactions": {
+        "mode": {
+          "first_ms": 441.7,
+          "median_ms": 445.7,
+          "p95_ms": 500.8,
+          "max_ms": 552.9,
+          "draws_first": 2,
+          "insights_replacements": 30
+        },
+        "period": {
+          "first_ms": 405.5,
+          "median_ms": 390.5,
+          "p95_ms": 444,
+          "max_ms": 593.2,
+          "draws_first": 2,
+          "insights_replacements": 30
+        },
+        "page": {
+          "first_ms": 38.4,
+          "median_ms": 40.4,
+          "p95_ms": 55.4,
+          "max_ms": 56,
+          "draws_first": 1,
+          "insights_replacements": 30
+        },
+        "search": {
+          "first_ms": 35.1,
+          "median_ms": 44.1,
+          "p95_ms": 58.6,
+          "max_ms": 60.7,
+          "draws_first": 1,
+          "insights_replacements": 30
+        },
+        "week": {
+          "first_ms": 2033.8,
+          "median_ms": 2273.7,
+          "p95_ms": 3033.1,
+          "max_ms": 3501.4,
+          "draws_first": 7,
+          "insights_replacements": 30
+        }
+      }
+    },
+    "after": {
+      "cold": {
+        "fcp": 400,
+        "longTasks": 3605,
+        "maxTask": 1948,
+        "lastTaskEnd": 4384.4
+      },
+      "warm": {
+        "fcp": 132,
+        "longTasks": 3286,
+        "maxTask": 2022,
+        "lastTaskEnd": 4144.5
+      },
+      "interactions": {
+        "mode": {
+          "first_ms": 334.7,
+          "median_ms": 124.7,
+          "p95_ms": 153.9,
+          "max_ms": 334.7,
+          "draws_first": 1,
+          "insights_replacements": 0
+        },
+        "period": {
+          "first_ms": 259,
+          "median_ms": 103.0,
+          "p95_ms": 219,
+          "max_ms": 259,
+          "draws_first": 1,
+          "insights_replacements": 0
+        },
+        "page": {
+          "first_ms": 33.2,
+          "median_ms": 34.2,
+          "p95_ms": 37.8,
+          "max_ms": 40.8,
+          "draws_first": 1,
+          "insights_replacements": 0
+        },
+        "search": {
+          "first_ms": 30.2,
+          "median_ms": 36.2,
+          "p95_ms": 42.5,
+          "max_ms": 44.2,
+          "draws_first": 1,
+          "insights_replacements": 0
+        },
+        "week": {
+          "first_ms": 941.6,
+          "median_ms": 919.6,
+          "p95_ms": 1107.1,
+          "max_ms": 1130.7,
+          "draws_first": 2,
+          "insights_replacements": 29
+        }
+      }
+    }
+  },
+  "390": {
+    "before": {
+      "cold": {
+        "fcp": 1096,
+        "longTasks": 34708,
+        "maxTask": 15036,
+        "lastTaskEnd": 35580.5
+      },
+      "warm": {
+        "fcp": 456,
+        "longTasks": 34841,
+        "maxTask": 15127,
+        "lastTaskEnd": 35653.2
+      },
+      "interactions": {
+        "mode": {
+          "first_ms": 2475.4,
+          "median_ms": 2393.9,
+          "p95_ms": 2686.2,
+          "max_ms": 2797,
+          "draws_first": 2,
+          "insights_replacements": 30
+        },
+        "period": {
+          "first_ms": 2079.5,
+          "median_ms": 2193.5,
+          "p95_ms": 2482.6,
+          "max_ms": 2836.3,
+          "draws_first": 2,
+          "insights_replacements": 30
+        },
+        "page": {
+          "first_ms": 304.3,
+          "median_ms": 236.4,
+          "p95_ms": 282.4,
+          "max_ms": 304.3,
+          "draws_first": 1,
+          "insights_replacements": 30
+        },
+        "search": {
+          "first_ms": 165.4,
+          "median_ms": 222.2,
+          "p95_ms": 291.8,
+          "max_ms": 312.8,
+          "draws_first": 1,
+          "insights_replacements": 30
+        },
+        "week": {
+          "first_ms": 11673.2,
+          "median_ms": 13484.8,
+          "p95_ms": 16774.8,
+          "max_ms": 16994.5,
+          "draws_first": 7,
+          "insights_replacements": 30
+        }
+      }
+    },
+    "after": {
+      "cold": {
+        "fcp": 1228,
+        "longTasks": 19022,
+        "maxTask": 9029,
+        "lastTaskEnd": 20045.1
+      },
+      "warm": {
+        "fcp": 456,
+        "longTasks": 18508,
+        "maxTask": 9220,
+        "lastTaskEnd": 19289.3
+      },
+      "interactions": {
+        "mode": {
+          "first_ms": 1565.6,
+          "median_ms": 744.1,
+          "p95_ms": 824.1,
+          "max_ms": 1565.6,
+          "draws_first": 1,
+          "insights_replacements": 0
+        },
+        "period": {
+          "first_ms": 1499,
+          "median_ms": 661.2,
+          "p95_ms": 992.7,
+          "max_ms": 1499,
+          "draws_first": 1,
+          "insights_replacements": 0
+        },
+        "page": {
+          "first_ms": 232,
+          "median_ms": 224.6,
+          "p95_ms": 249.5,
+          "max_ms": 254.6,
+          "draws_first": 1,
+          "insights_replacements": 0
+        },
+        "search": {
+          "first_ms": 156.4,
+          "median_ms": 198.5,
+          "p95_ms": 289.5,
+          "max_ms": 289.8,
+          "draws_first": 1,
+          "insights_replacements": 0
+        },
+        "week": {
+          "first_ms": 4955.3,
+          "median_ms": 4907.2,
+          "p95_ms": 5415,
+          "max_ms": 5770.5,
+          "draws_first": 2,
+          "insights_replacements": 30
+        }
+      }
+    }
+  }
+}

@@ -33,7 +33,7 @@ with sync_playwright() as p:
   assert section.locator('[data-rank-category]:checked').count()==2
   def validate():
    return page.evaluate('''()=>{const t=tables[activeWeek],s=viewState[activeWeek],all=Object.values(playerCatalog),valid=all.map(p=>{const d=p.periods[s.period][s.mode];return {id:p.id,sum:d.REB.pr===null||d['FG%'].pr===null?null:d.REB.pr+d['FG%'].pr};}),col=t.column('.rank-'+s.period+'-'+s.mode).index();for(const row of t.rows({search:'none'}).indexes().toArray()){const id=t.row(row).node().querySelector('[data-player-id]').dataset.playerId,expected=valid.find(p=>p.id===id),cell=t.cell(row,col).node(),v=expected.sum===null?null:1+valid.filter(p=>p.sum!==null&&p.sum>expected.sum).length;if(cell.dataset.rankValue!==(v===null?'':String(v))||cell.dataset.rankSum!==(expected.sum===null?'':String(expected.sum)))throw Error('PR sum/rank mismatch '+id);}if(t.order()[0][0]!==col)throw Error('Rank ordering did not follow stat period/mode');const ordered=t.column(col,{order:'applied'}).nodes().toArray().map(c=>Number(c.dataset.order));if(!ordered.every((n,i)=>!i||ordered[i-1]<=n))throw Error('Rank sort stale');return t.rows({search:'applied'}).count();}''')
-  assert validate()==622
+  assert validate()==page.evaluate("Object.keys(playerCatalog).length")
   page.evaluate("tables[activeWeek].search('Trae Young').draw()");assert validate()==1
   page.evaluate("tables[activeWeek].search('').draw()")
   section.locator('[data-mode="TOT"]').click();validate();assert geometry()['aligned']

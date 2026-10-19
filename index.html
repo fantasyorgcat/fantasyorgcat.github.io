@@ -612,7 +612,7 @@ function localize(rootNode){
 }
 const pending=new Set();let queued=false;
 function observe(){observer?.observe(document.body,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['title','aria-label','placeholder']});}
-function flush(){queued=false;if(flushing)return;flushing=true;observer?.disconnect();try{for(const n of pending)if(n.isConnected)localize(n);pending.clear();}finally{flushing=false;observe();}}
+function flush(){queued=false;if(flushing)return;flushing=true;observer?.disconnect();try{const roots=new Set(pending);pending.clear();for(const n of roots){if(!n.isConnected)continue;let ancestor=n.parentNode;while(ancestor&&!roots.has(ancestor))ancestor=ancestor.parentNode;if(!ancestor)localize(n);}}finally{flushing=false;observe();}}
 function queue(node){pending.add(node);if(!queued){queued=true;queueMicrotask(flush);}}
 function preferencesUI(){
  for(const host of document.querySelectorAll('[data-site-preferences]')){
@@ -636,15 +636,15 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
                 $.extend(true, $.fn.dataTable.defaults, {language:{search:'搜尋球員',searchPlaceholder:'姓名或球隊',lengthMenu:'每頁 _MENU_ 人',info:'_START_–_END_ / _TOTAL_ 人',infoFiltered:'（全體 _MAX_ 人）',zeroRecords:'沒有符合球員，按全體球員清除篩選',infoEmpty:'0 人',paginate:{first:'第一頁',previous:'上一頁',next:'下一頁',last:'最後頁'}}});
                 // Initialize DataTables for all weeks
                 customPlayerTemplate=document.querySelector('#Week1 .player-section').cloneNode(true);
-                tables['W1'] = $('#playerTableW1').DataTable({order:[[2,'desc']],pageLength:25,scrollX:true,language:{search:'搜尋',lengthMenu:'每頁 _MENU_ 人',info:'_START_–_END_ / _TOTAL_ 人',infoFiltered:'（全體 _MAX_ 人）',zeroRecords:'沒有符合球員，按全體球員清除篩選',infoEmpty:'0 人'}});if ($('#teamTableW1').length) { $('#teamTableW1').DataTable({paging:false,info:false,searching:false,order:[],columnDefs:[{targets:1,type:'team-games',orderable:false,render:function(data,type,row,meta){return type==='sort'?window.teamGamesSortValue(data,meta.row):data;}}]}); window.setupTeamGamesSort(document.getElementById('teamTableW1')); }tables['W2'] = $('#playerTableW2').DataTable({order:[[2,'desc']],pageLength:25,scrollX:true,language:{search:'搜尋',lengthMenu:'每頁 _MENU_ 人',info:'_START_–_END_ / _TOTAL_ 人',infoFiltered:'（全體 _MAX_ 人）',zeroRecords:'沒有符合球員，按全體球員清除篩選',infoEmpty:'0 人'}});if ($('#teamTableW2').length) { $('#teamTableW2').DataTable({paging:false,info:false,searching:false,order:[],columnDefs:[{targets:1,type:'team-games',orderable:false,render:function(data,type,row,meta){return type==='sort'?window.teamGamesSortValue(data,meta.row):data;}}]}); window.setupTeamGamesSort(document.getElementById('teamTableW2')); }tables['W3'] = $('#playerTableW3').DataTable({order:[[2,'desc']],pageLength:25,scrollX:true,language:{search:'搜尋',lengthMenu:'每頁 _MENU_ 人',info:'_START_–_END_ / _TOTAL_ 人',infoFiltered:'（全體 _MAX_ 人）',zeroRecords:'沒有符合球員，按全體球員清除篩選',infoEmpty:'0 人'}});if ($('#teamTableW3').length) { $('#teamTableW3').DataTable({paging:false,info:false,searching:false,order:[],columnDefs:[{targets:1,type:'team-games',orderable:false,render:function(data,type,row,meta){return type==='sort'?window.teamGamesSortValue(data,meta.row):data;}}]}); window.setupTeamGamesSort(document.getElementById('teamTableW3')); }tables['W4'] = $('#playerTableW4').DataTable({order:[[2,'desc']],pageLength:25,scrollX:true,language:{search:'搜尋',lengthMenu:'每頁 _MENU_ 人',info:'_START_–_END_ / _TOTAL_ 人',infoFiltered:'（全體 _MAX_ 人）',zeroRecords:'沒有符合球員，按全體球員清除篩選',infoEmpty:'0 人'}});if ($('#teamTableW4').length) { $('#teamTableW4').DataTable({paging:false,info:false,searching:false,order:[],columnDefs:[{targets:1,type:'team-games',orderable:false,render:function(data,type,row,meta){return type==='sort'?window.teamGamesSortValue(data,meta.row):data;}}]}); window.setupTeamGamesSort(document.getElementById('teamTableW4')); }
+                tables['W1'] = $('#playerTableW1').DataTable({...playerTableOptions(document.getElementById('playerTableW1'),'W1'),language:{search:'搜尋',lengthMenu:'每頁 _MENU_ 人',info:'_START_–_END_ / _TOTAL_ 人',infoFiltered:'（全體 _MAX_ 人）',zeroRecords:'沒有符合球員，按全體球員清除篩選',infoEmpty:'0 人'}});if ($('#teamTableW1').length) { $('#teamTableW1').DataTable({paging:false,info:false,searching:false,order:[],columnDefs:[{targets:1,type:'team-games',orderable:false,render:function(data,type,row,meta){return type==='sort'?window.teamGamesSortValue(data,meta.row):data;}}]}); window.setupTeamGamesSort(document.getElementById('teamTableW1')); }tables['W2'] = $('#playerTableW2').DataTable({...playerTableOptions(document.getElementById('playerTableW2'),'W2'),language:{search:'搜尋',lengthMenu:'每頁 _MENU_ 人',info:'_START_–_END_ / _TOTAL_ 人',infoFiltered:'（全體 _MAX_ 人）',zeroRecords:'沒有符合球員，按全體球員清除篩選',infoEmpty:'0 人'}});if ($('#teamTableW2').length) { $('#teamTableW2').DataTable({paging:false,info:false,searching:false,order:[],columnDefs:[{targets:1,type:'team-games',orderable:false,render:function(data,type,row,meta){return type==='sort'?window.teamGamesSortValue(data,meta.row):data;}}]}); window.setupTeamGamesSort(document.getElementById('teamTableW2')); }tables['W3'] = $('#playerTableW3').DataTable({...playerTableOptions(document.getElementById('playerTableW3'),'W3'),language:{search:'搜尋',lengthMenu:'每頁 _MENU_ 人',info:'_START_–_END_ / _TOTAL_ 人',infoFiltered:'（全體 _MAX_ 人）',zeroRecords:'沒有符合球員，按全體球員清除篩選',infoEmpty:'0 人'}});if ($('#teamTableW3').length) { $('#teamTableW3').DataTable({paging:false,info:false,searching:false,order:[],columnDefs:[{targets:1,type:'team-games',orderable:false,render:function(data,type,row,meta){return type==='sort'?window.teamGamesSortValue(data,meta.row):data;}}]}); window.setupTeamGamesSort(document.getElementById('teamTableW3')); }tables['W4'] = $('#playerTableW4').DataTable({...playerTableOptions(document.getElementById('playerTableW4'),'W4'),language:{search:'搜尋',lengthMenu:'每頁 _MENU_ 人',info:'_START_–_END_ / _TOTAL_ 人',infoFiltered:'（全體 _MAX_ 人）',zeroRecords:'沒有符合球員，按全體球員清除篩選',infoEmpty:'0 人'}});if ($('#teamTableW4').length) { $('#teamTableW4').DataTable({paging:false,info:false,searching:false,order:[],columnDefs:[{targets:1,type:'team-games',orderable:false,render:function(data,type,row,meta){return type==='sort'?window.teamGamesSortValue(data,meta.row):data;}}]}); window.setupTeamGamesSort(document.getElementById('teamTableW4')); }
 
-                Object.keys(tables).forEach(function(suffix) { tables[suffix].column(1).visible(false); switchStats('LS',suffix); });
+                Object.keys(tables).forEach(function(suffix) { tables[suffix].column(1).visible(false,false); switchStats('LS',suffix); });
                 Object.keys(tables).forEach(function(suffix) { tables[suffix].on('draw',function() { updateSelection(suffix); }); });
                 // Open default tab
                 document.getElementById("defaultOpen").click();
             });
 
-            function openWeek(evt, weekName) {
+            function openWeek(evt, weekName, notify = true) {
                 var i, tabcontent, tablinks;
                 tabcontent = document.getElementsByClassName("tabcontent");
                 for (i = 0; i < tabcontent.length; i++) {
@@ -660,9 +660,8 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
                 evt.currentTarget.className += " active";
                 activeWeek = weekName.replace('Week','W');
                 if (activeWeek !== 'WCustom' && window.clearPlatformSelection) window.clearPlatformSelection();
-                if (tables[activeWeek]) tables[activeWeek].columns.adjust();
                 updateSelection(activeWeek);
-                document.dispatchEvent(new Event('active-week-changed'));
+                if (notify) document.dispatchEvent(new Event('active-week-changed'));
             }
 
             function selectSeasonWeek(value) {
@@ -674,22 +673,41 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
             // (Season/L7/L14/LS) and the active display mode (AVG/TOT); both toggles
             // funnel through applyStatView so they stay orthogonal.
             var viewState = {};
+            function playerTableOptions(node, suffix, pageLength = 25) {
+                var state = viewState[suffix] || {period:playerToolsMeta.defaultPeriod,mode:'avg'};
+                var hidden = [];
+                Array.from(node.tHead.rows[0].cells).forEach(function(header,index) {
+                    var stat = header.className.indexOf('stat-') !== -1;
+                    if (index === 1 || (header.hasAttribute('data-schedule-day') && !window.playerScheduleVisible()) ||
+                        (stat && !(header.classList.contains('stat-' + state.period) && header.classList.contains('stat-' + state.mode)))) hidden.push(index);
+                });
+                return {order:[[2,'desc']],pageLength:pageLength,scrollX:true,columnDefs:[{targets:hidden,visible:false}]};
+            }
+
             function applyStatView(suffix) {
                 var state = viewState[suffix] || {period:'season',mode:'avg'};
                 var table = tables[suffix];
+                // Hidden views keep their state; synchronize when shown, not on every setting change.
+                if (!table || !table.table().container().offsetWidth) return;
                 table.columns().every(function () {
                     var header = this.header();
-                    if (header.className.indexOf('stat-') !== -1) {
-                        $(header).css('display', '');
-                        this.nodes().to$().css('display', '');
-                        this.visible(header.classList.contains('stat-' + state.period) &&
-                                     header.classList.contains('stat-' + state.mode), false);
+                    if (header.classList.contains('stat-season') || header.classList.contains('stat-l7') ||
+                        header.classList.contains('stat-l14') || header.classList.contains('stat-ls')) {
+                        var visible = header.classList.contains('stat-' + state.period) &&
+                                      header.classList.contains('stat-' + state.mode);
+                        // Clear the generated inline hiding only on the first use of these cells.
+                        if (visible && header.style.display === 'none') {
+                            header.style.display = '';
+                            this.nodes().to$().css('display', '');
+                        }
+                        if (this.visible() !== visible) this.visible(visible, false);
                     }
                 });
+                if (window.preparePlayerTable) window.preparePlayerTable(suffix);
                 table.columns.adjust().draw(false);
             }
 
-            function switchStats(period, suffix) {
+            function switchStats(period, suffix, refresh = true) {
                 viewState[suffix] = viewState[suffix] || {period:'season',mode:'avg'};
                 viewState[suffix].period = period.toLowerCase();
                 // Update Buttons
@@ -708,11 +726,11 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
                         btns[i].setAttribute('aria-pressed','true');
                     }
                 }
-                applyStatView(suffix);
+                if (refresh) applyStatView(suffix);
             }
 
             // --- Feature: Switch Display Mode (AVG / TOT) ---
-            function switchDisplayMode(mode, suffix) {
+            function switchDisplayMode(mode, suffix, refresh = true) {
                 viewState[suffix] = viewState[suffix] || {period:'season',mode:'avg'};
                 viewState[suffix].mode = mode.toLowerCase();
                 // Scoped to [data-mode] so the period buttons are left alone.
@@ -726,7 +744,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
                         btns[i].setAttribute('aria-pressed','true');
                     }
                 }
-                applyStatView(suffix);
+                if (refresh) applyStatView(suffix);
             }
 
             function updateSelection(suffix) {
@@ -747,6 +765,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
                 teamSelection[suffix] = teamAbbr;
                 tables[suffix].column(1).search('^' + $.fn.dataTable.util.escapeRegex(teamAbbr) + '$', true, false).draw();
                 updateSelection(suffix);
+                document.dispatchEvent(new Event('team-filter-changed'));
             }
             function resetTeamFilter(suffix) {
                 var table = tables[suffix];
@@ -756,6 +775,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
                 table.search('').columns().search('').draw();
                 $(table.table().container()).find('input[type="search"]').val('');
                 updateSelection(suffix);
+                document.dispatchEvent(new Event('team-filter-changed'));
             }
             function resetActiveTeamFilter() { resetTeamFilter(activeWeek); }
             /* Sort the existing team table by its current period's game counts. */
@@ -823,7 +843,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   function sortable(key,label){const th=document.createElement('th'),b=button(label,()=>{descending=sortKey===key?!descending:!['name','Rank','TO'].includes(key);sortKey=key;render();});if(key==='TO')b.title='失誤越少PR越高';b.dataset.sort=key;b.setAttribute('aria-label',label+'，'+(sortKey===key?(descending?'目前降序':'目前升序'):'可排序'));th.appendChild(b);tr.appendChild(th);}
   sortable('name','球員');const games=document.createElement('th');games.textContent='場次';tr.appendChild(games);
   const dayColumns=table?table.columns('[data-schedule-day]').indexes().toArray():[];
-  const schedule=new Map();if(table)table.rows({search:'none'}).data().toArray().forEach(row=>{if(!schedule.has(row[1]))schedule.set(row[1],[row[2],...dayColumns.map(i=>row[i])]);});
+  const shared=table&&window.scheduleForTable?.(table.table().node()),schedule=shared||new Map();if(table&&!shared)table.rows({search:'none'}).data().toArray().forEach(row=>{if(!schedule.has(row[1]))schedule.set(row[1],[row[2],...dayColumns.map(i=>row[i])]);});
   for(const column of dayColumns){const th=document.createElement('th');const source=table.column(column).header();th.textContent=source.textContent;th.title=source.dataset.fullDate||source.textContent;th.setAttribute('aria-label',th.title);tr.appendChild(th);}
   for(const key of metrics)sortable(key,key);tr.lastChild.title='依目前勾選的排名項目計算；9CAT 使用原始全體排名，自訂項目使用網站名單排名';head.appendChild(tr);
   const rows=Array.from(compared,id=>playerCatalog[id]).filter(Boolean);
@@ -845,7 +865,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   byId('jump-players').addEventListener('click',()=>{const section=document.querySelector('#Week'+activeWeek.replace('W','')+' .player-section');if(section){section.scrollIntoView({block:'start'});const heading=section.querySelector('h3');heading.setAttribute('tabindex','-1');heading.focus({preventScroll:true});}});
   byId('comparison-period').value=period;byId('comparison-period').addEventListener('change',e=>{period=e.target.value;render();});byId('comparison-mode').addEventListener('change',e=>{mode=e.target.value;render();});byId('clear-comparison').addEventListener('click',()=>{compared.clear();render();});
   document.addEventListener('change',e=>{const input=e.target;if(!input.matches('input[data-pick="compare"]'))return;const id=input.dataset.playerId;if(!playerCatalog[id])return;if(input.checked)compared.add(id);else compared.delete(id);render();});
-  $(document).on('draw.dt',render);document.addEventListener('active-week-changed',render);document.addEventListener('player-rank-changed',render);document.addEventListener('site-preferences-changed',render);sync();
+  $(document).on('draw.dt',(_,settings)=>{if(settings.nTable===tables[activeWeek]?.table().node())render();});document.addEventListener('active-week-changed',render);document.addEventListener('player-rank-changed',render);document.addEventListener('site-preferences-changed',render);sync();
  });
 })();
 
@@ -855,6 +875,12 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
  const byId=id=>document.getElementById(id),DAY=86400000,excluded=new Set(['cancelled','postponed','suspended']);
  const statusLabels={scheduled:'未開賽',in_progress:'進行中',final:'已完賽',postponed:'延賽',cancelled:'取消',suspended:'暫停',delayed:'延遲',unknown:'狀態待確認'};
  let customPeriod=null,platformKey='YAHOO',platformAnchor=null;
+ // These caches share the immutable snapshot lifetime; no persistent data or roster writes.
+ const periodEvents=new Map(),tableSchedules=new WeakMap(),daily=new Map();
+ const pendingEvents=scheduleEvents.filter(e=>!e.date_et||excluded.has(e.status));
+ for(const e of scheduleEvents)if(e.date_et&&e.season_type===2&&eligible(e))daily.set(e.date_et,(daily.get(e.date_et)||0)+1);
+ window.scheduleForTable=table=>tableSchedules.get(table);
+ let insightSignature='';
  function parseDate(value){const stamp=Date.parse(value+'T12:00:00Z');return Number.isFinite(stamp)&&new Date(stamp).toISOString().slice(0,10)===value?stamp:null;}
  function dates(start,end){const out=[];for(let stamp=parseDate(start);stamp<=parseDate(end);stamp+=DAY)out.push(new Date(stamp).toISOString().slice(0,10));return out;}
  function selectedPeriod(){
@@ -898,12 +924,18 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   const index=Number(value),period=platformPeriods[platformKey].periods[index];if(!period)return;
   appliedSeasonWeek=index;platformAnchor=anchor||period.start;renderPeriod(period);
  };
- function selectedEvents(period){return scheduleEvents.filter(e=>e.season_type===2&&e.date_et&&e.date_et>=period.start&&e.date_et<=period.end);}
+ function selectedEvents(period){
+  const key=period.start+'|'+period.end;
+  if(!periodEvents.has(key)){
+   if(periodEvents.size>=16)periodEvents.delete(periodEvents.keys().next().value);
+   periodEvents.set(key,scheduleEvents.filter(e=>e.season_type===2&&e.date_et&&e.date_et>=period.start&&e.date_et<=period.end));
+  }
+  return periodEvents.get(key);
+ }
  function eligible(e){return !excluded.has(e.status);}
  function remaining(e,now){return e.status==='scheduled'&&e.time_confirmed&&Date.parse(e.tipoff_utc)>now;}
  function summary(period,now){
-  const selected=selectedEvents(period),daily=new Map(),teams=new Map();
-  for(const e of scheduleEvents)if(e.date_et&&e.season_type===2&&eligible(e))daily.set(e.date_et,(daily.get(e.date_et)||0)+1);
+  const selected=selectedEvents(period),teams=new Map();
   for(const e of selected)for(const team of [e.home,e.away]){
    if(!team)continue;
    const row=teams.get(team)||{team,games:0,remaining:0,pending:0,dates:[],light:0};
@@ -917,7 +949,9 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
  }
  function renderInsights(){
   const period=selectedPeriod();if(!period||!byId('schedule-insights'))return;
-  const now=Date.now(),result=summary(period,now),box=byId('schedule-insights');box.replaceChildren();
+  const now=Date.now(),signature=[period.start,period.end,period.label,teamSelection[activeWeek]||'',Math.floor(now/60000),window.SiteUI?.language,window.SiteUI?.timezone].join('|');
+  if(signature===insightSignature)return;insightSignature=signature;
+  const result=summary(period,now),box=byId('schedule-insights');box.replaceChildren();
   byId('schedule-period-context').textContent='美東 '+period.start+'–'+period.end+'（含迄日） · '+(period.platform?period.label:period.kind==='custom'?'自訂計分期間':'網站近期期間')+' · 剩餘場次截止 '+new Date(now).toISOString().slice(0,16).replace('T',' ')+' UTC';
   const table=document.createElement('table'),head=table.createTHead().insertRow();
   for(const label of ['球隊','期間排程','尚未開賽','剩餘 B2B 組','剩餘低比賽日','待確認']){const th=document.createElement('th');th.textContent=label;head.appendChild(th);}
@@ -925,7 +959,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   const rows=Array.from(result.teams.values()).filter(r=>!chosen||r.team===chosen).sort((a,b)=>b.remaining-a.remaining||b.light-a.light||a.team.localeCompare(b.team));
   for(const data of rows){const tr=body.insertRow();tr.dataset.team=data.team;for(const value of [data.team,data.games,data.remaining,data.b2b,data.light,data.pending])tr.insertCell().textContent=String(value);}
   if(!rows.length){const td=body.insertRow().insertCell();td.colSpan=6;td.textContent='這個期間沒有已公布日期的球隊賽程。';}box.appendChild(table);
-  const pending=scheduleEvents.filter(e=>!e.date_et||excluded.has(e.status)),pendingBox=byId('schedule-pending');pendingBox.replaceChildren();
+  const pending=pendingEvents,pendingBox=byId('schedule-pending');pendingBox.replaceChildren();
   if(pending.length){const p=document.createElement('p');p.textContent='當季待定／延賽／取消／暫停：'+pending.length+' 場，未計入尚未開賽。未公布的 NBA Cup 賽事不補造。';pendingBox.appendChild(p);const list=document.createElement('ul');for(const e of pending.slice(0,10)){const li=document.createElement('li');li.textContent=e.away+' @ '+e.home+' · '+(e.date_et||'日期待定')+' · '+statusLabels[e.status];list.appendChild(li);}pendingBox.appendChild(list);}
   const age=(now-Date.parse(scheduleGeneratedAt.replace(' UTC',':00Z').replace(' ','T')))/DAY;
   byId('schedule-freshness').textContent='資料快照：'+scheduleGeneratedAt+(age>2?' · 已超過 48 小時；狀態與改期可能已變更。':' · 賽事狀態以快照為準，非即時比分。');
@@ -982,13 +1016,13 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   if(targetKey==='WCustom')byId('custom-period-heading').textContent=period.label;
   const zoneNote=document.createElement('p');zoneNote.className='schedule-zone-note';zoneNote.textContent=window.SiteUI?SiteUI.zoneNote():'美東時間';title.after(zoneNote);
   // Show the panel before DataTables measures its scroll columns.
-  openWeek({currentTarget:targetKey==='WCustom'?byId('apply-custom-period'):document.querySelector('[onclick*="Week'+targetKey.slice(1)+'"]')},targetKey==='WCustom'?'WeekCustom':'Week'+targetKey.slice(1));
-  const table=$(playerTable).DataTable({order:[[2,'desc']],pageLength,scrollX:true});tables[targetKey]=table;table.column(1).visible(false);table.on('draw',()=>updateSelection(targetKey));
-  switchStats(state.period==='ls'?'LS':state.period==='season'?'Season':state.period.toUpperCase(),targetKey);switchDisplayMode(state.mode.toUpperCase(),targetKey);
+  openWeek({currentTarget:targetKey==='WCustom'?byId('apply-custom-period'):document.querySelector('[onclick*="Week'+targetKey.slice(1)+'"]')},targetKey==='WCustom'?'WeekCustom':'Week'+targetKey.slice(1),false);
+  const table=$(playerTable).DataTable(playerTableOptions(playerTable,targetKey,pageLength));tables[targetKey]=table;table.column(1).visible(false,false);const fixtures=new Map(Array.from(byTeam,([team,data])=>[team,[data.games,...data.days]]));for(const p of Object.values(playerCatalog))if(!fixtures.has(p.team))fixtures.set(p.team,[0,...dayList.map(()=> '')]);tableSchedules.set(playerTable,fixtures);table.on('draw',()=>updateSelection(targetKey));
+  switchStats(state.period==='ls'?'LS':state.period==='season'?'Season':state.period.toUpperCase(),targetKey,false);switchDisplayMode(state.mode.toUpperCase(),targetKey,false);
   if(chosen)table.column(1).search('^'+$.fn.dataTable.util.escapeRegex(chosen)+'$',true,false);
   table.search(search);
   if(order){const mapped=order.map(o=>{const index=table.columns().indexes().toArray().find(i=>headerKey(table.column(i).header())===o.key);return [index===undefined?2:index,o.direction];});table.order(mapped);}
-  table.columns.adjust().draw(false);document.dispatchEvent(new Event('active-week-changed'));
+  applyStatView(targetKey);document.dispatchEvent(new Event('active-week-changed'));
   updatePeriodControls();
  }
  $(document).ready(function(){
@@ -1000,7 +1034,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   let rebuilding=false;
   document.addEventListener('active-week-changed',()=>{if(activeWeek!=='WCustom'&&!rebuilding){rebuilding=true;try{renderPeriod(quickPeriods[activeWeek],activeWeek);}finally{rebuilding=false;}}});
   document.addEventListener('site-preferences-changed',e=>{document.querySelectorAll('.schedule-zone-note').forEach(n=>n.textContent=SiteUI.zoneNote());if(e.detail?.timezoneChanged){rebuilding=true;try{renderPeriod(selectedPeriod(),activeWeek);}finally{rebuilding=false;}}renderInsights();});
-  document.addEventListener('active-week-changed',renderInsights);$(document).on('draw.dt',renderInsights);
+  document.addEventListener('active-week-changed',renderInsights);document.addEventListener('team-filter-changed',renderInsights);
   setInterval(renderInsights,60000);
   document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')renderInsights();});
   renderInsights();
@@ -1037,13 +1071,15 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   return result;
  }
  if(typeof module!=='undefined'&&module.exports){module.exports={categories,rankPlayers,preferences};return;}
- let selected=[...categories],prefs={...defaults},ready=false,storageAvailable=true;
+ let selected=[...categories],prefs={...defaults},storageAvailable=true;
+ try{prefs=preferences(JSON.parse(localStorage.getItem(storageKey)));}catch{storageAvailable=false;}
  const rankCache=new Map(),updatedRanks=new WeakMap(),installed=new WeakSet(),sized=new WeakSet();
  function ranks(period,mode){
   const key=period+'|'+mode+'|'+selected.join(',');
   if(!rankCache.has(key))rankCache.set(key,rankPlayers(playerCatalog,period,mode,selected));
   return rankCache.get(key);
  }
+ root.playerScheduleVisible=()=>prefs.schedule;
  root.playerRank=(player,period,mode)=>ranks(period,mode)[player.id];
  root.playerRankLabel=()=>selectionLabel();
  function node(tag,text,className){const e=document.createElement(tag);if(text)e.textContent=text;if(className)e.className=className;return e;}
@@ -1065,9 +1101,9 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
  function updateRank(table,suffix){
   const state=viewState[suffix]||{period:playerToolsMeta.defaultPeriod,mode:'avg'},selector='.rank-'+state.period+'-'+state.mode;
   const index=table.column(selector).index();if(index===undefined)return;
-  const container=table.table().container(),signature=state.period+'|'+state.mode+'|'+selected.join(',');
-  if(updatedRanks.get(container)===signature)return;
-  const values=ranks(state.period,state.mode),header=table.column(index).header();
+  const header=table.column(index).header(),signature=state.period+'|'+state.mode+'|'+selected.join(',');
+  if(updatedRanks.get(header)===signature)return;
+  const values=ranks(state.period,state.mode);
   header.title=selected.length===9?'九項 PR 加總的全體排名；數字越小越前面':'所選 PR 加總的網站名單排名；數字越小越前面';
   table.rows().every(function(){
    const row=this.node(),id=row.querySelector('[data-player-id]')?.dataset.playerId,c=values[id];if(!c)return;
@@ -1078,13 +1114,14 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
    td.title=c.sum===null?'所選項目 PR 不完整，無排名':'PR 合計 '+String(c.sum)+'；'+selectionLabel();
    table.cell(this.index(),index).invalidate('dom');
   });
-  updatedRanks.set(container,signature);
+  updatedRanks.set(header,signature);
  }
  function setPreferences(){
   const body=document.body;body.style.setProperty('--table-font',prefs.font+'px');body.style.setProperty('--table-padding',prefs.padding+'px');body.style.setProperty('--schedule-width',prefs.dayWidth+'px');
   updateLabels();
-  Object.entries(tables).forEach(([suffix,table])=>{table.columns('[data-schedule-day]').visible(prefs.schedule,false);table.columns.adjust().draw(false);sizeTable(table);});
-  sizeTeams();
+  const table=activeTable();
+  if(table&&table.columns('[data-schedule-day]').visible().toArray().some(visible=>visible!==prefs.schedule))applyStatView(activeWeek);
+  requestSizes();
  }
  function savePreferences(){
   try{localStorage.setItem(storageKey,JSON.stringify(prefs));storageAvailable=true;}catch{storageAvailable=false;}
@@ -1112,12 +1149,19 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   const scroll=container.querySelector('.dt-scroll'),body=scroll.querySelector('.dt-scroll-body'),bar=node('div',null,'table-x-scroll');bar.tabIndex=0;bar.setAttribute('role','region');bar.setAttribute('aria-label','左右捲動完整球員數據');bar.appendChild(node('div'));scroll.before(bar);
   bar.addEventListener('scroll',()=>{if(Math.abs(body.scrollLeft-bar.scrollLeft)>1)body.scrollLeft=bar.scrollLeft;});body.addEventListener('scroll',()=>{if(Math.abs(bar.scrollLeft-body.scrollLeft)>1)bar.scrollLeft=body.scrollLeft;});
   const hint=node('div',null,'table-scroll-hint');hint.append(node('span','欄名與球員固定；左右滑動查看全部欄位。'),button('跳至 Rank →',()=>{body.scrollLeft=body.scrollWidth;}),button('← 球員',()=>{body.scrollLeft=0;}));bar.before(hint);
-  table.on('column-sizing',()=>sizeTable(table));
-  new ResizeObserver(()=>sizeTable(table)).observe(container);
+  table.on('column-sizing',()=>requestSizes());
+  const observer=new ResizeObserver(()=>requestSizes());observer.observe(container);
+  table.on('destroy',()=>observer.disconnect());
   updateLabels();
  }
  function shortDate(header){
   const text=header.textContent.trim();if(/^\d{4}-\d{2}-\d{2}/.test(text)){header.title=text;header.setAttribute('aria-label',text);header.dataset.fullDate=text;const label=header.querySelector('.dt-column-title')||header;label.textContent=text.slice(5).replace('-','/');}
+ }
+ // Coalesce DataTables draw/column-sizing and ResizeObserver notifications per frame.
+ let sizingFrame=0;
+ function requestSizes(){
+  if(sizingFrame)return;
+  sizingFrame=requestAnimationFrame(()=>{sizingFrame=0;const table=activeTable();if(table)sizeTable(table);sizeTeams();});
  }
  function sizeTable(table){
   const container=table.table().container();if(!container.offsetWidth||sized.has(container))return;sized.add(container);
@@ -1134,6 +1178,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
  }
  function sizeTeams(){
   document.querySelectorAll('.team-section').forEach(section=>{
+   if(!section.offsetWidth)return;
    const table=section.querySelector('table');if(!table)return;
    table.style.width='100%';table.style.tableLayout='auto';
    const headers=Array.from(table.tHead?.rows[0]?.cells||[]);
@@ -1145,18 +1190,17 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
    scroll.style.height=(table.tHead.getBoundingClientRect().height+rows.reduce((sum,row)=>sum+row.getBoundingClientRect().height,0)+2+gutter)+'px';
   });
  }
- function enhance(suffix){
+ // Prepare visibility, ranks and ordering before the caller's single draw.
+ root.preparePlayerTable=function(suffix){
   const table=tables[suffix];if(!table)return;install(table);updateRank(table,suffix);
   const state=viewState[suffix]||{period:playerToolsMeta.defaultPeriod,mode:'avg'},rankColumn=table.column('.rank-'+state.period+'-'+state.mode).index();
   table.order(table.order().map(([index,direction])=>[table.column(index).header().className.includes('rank-')?rankColumn:index,direction]));
-  table.columns('[data-schedule-day]').visible(prefs.schedule,false);table.columns.adjust().draw(false);sizeTable(table);sizeTeams();
- }
- const apply=root.applyStatView;root.applyStatView=function(suffix){apply(suffix);if(ready)enhance(suffix);};
+  table.columns('[data-schedule-day]').every(function(){if(prefs.schedule)shortDate(this.header());if(this.visible()!==prefs.schedule)this.visible(prefs.schedule,false);});
+ };
  $(document).ready(function(){
-  try{prefs=preferences(JSON.parse(localStorage.getItem(storageKey)));}catch{storageAvailable=false;}
-  ready=true;Object.keys(tables).forEach(enhance);setPreferences();
-  $(document).on('draw.dt',(_,settings)=>{if(settings.nTable.id.startsWith('playerTable'))sizeTable(new $.fn.dataTable.Api(settings));});
-  document.addEventListener('active-week-changed',()=>{enhance(activeWeek);updateLabels();});
+  Object.values(tables).forEach(install);setPreferences();
+  $(document).on('draw.dt',(_,settings)=>{if(settings.nTable===activeTable()?.table().node())requestSizes();});
+  document.addEventListener('active-week-changed',()=>{updateLabels();requestSizes();});
  });
 })(typeof window==='undefined'?globalThis:window);
 
