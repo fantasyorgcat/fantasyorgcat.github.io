@@ -42,6 +42,19 @@ class Sources(unittest.TestCase):
         self.assertEqual(utils.get_color_for_rank(None,0),'#dedbd5')
         self.assertEqual(utils.get_color_for_rank(1,30),'#dfc5c8')
         self.assertEqual(utils.get_color_for_rank(30,30),'#c5d5dc')
+    def test_season_type_mismatch_reports_source_context_and_still_aborts(self):
+        for returned_year,returned_type in [(2026,2),(2027,1),(2027,3)]:
+            with self.subTest(year=returned_year,season_type=returned_type):
+                response={'requestedSeason':{'year':returned_year,'type':{'type':returned_type}},
+                          'currentSeason':{'year':2027,'type':{'id':'1','type':1}},'athletes':[]}
+                with patch.object(utils,'read_json',return_value=response):
+                    with self.assertRaises(ValueError) as caught:utils.league_stats(2027)
+                message=str(caught.exception)
+                self.assertIn('expected season=2027, type=2',message)
+                self.assertIn(f'returned season={returned_year!r}, type={returned_type!r}',message)
+                self.assertIn("current season=2027, type={'id': '1', 'type': 1}",message)
+                self.assertIn('athletes=0',message)
+                self.assertIn('season=2027&seasontype=2&limit=1000',message)
     def test_turnover_numeric_strings_zero_null_and_invalid(self):
         self.assertEqual(utils.parse_turnovers('0',total=True),0)
         self.assertEqual(utils.parse_turnovers(' 2.5 '),2.5)
