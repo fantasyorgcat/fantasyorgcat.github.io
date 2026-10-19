@@ -200,7 +200,12 @@ def league_stats(year):
         raise ValueError('ESPN season statistics unexpectedly missing')
     requested = d['requestedSeason']
     if requested['year'] != year or requested['type']['type'] != 2:
-        raise ValueError('ESPN statistics season/type mismatch')
+        current = d.get('currentSeason',{})
+        raise ValueError('ESPN statistics season/type mismatch: '
+                         f'expected season={year}, type=2; '
+                         f"returned season={requested['year']!r}, type={requested['type']['type']!r}; "
+                         f"current season={current.get('year')!r}, type={current.get('type')!r}; "
+                         f"athletes={len(d['athletes'])}; source={base}")
     athletes = list(d['athletes'])
     for page in range(2,d['pagination']['pages']+1):
         extra=read_json(base+f'&page={page}')
