@@ -4,6 +4,12 @@
  const byId=id=>document.getElementById(id),DAY=86400000,excluded=new Set(['cancelled','postponed','suspended']);
  const statusLabels={scheduled:'未開賽',in_progress:'進行中',final:'已完賽',postponed:'延賽',cancelled:'取消',suspended:'暫停',delayed:'延遲',unknown:'狀態待確認'};
  let customPeriod=null,platformKey='YAHOO',platformAnchor=null;
+ // These caches share the immutable snapshot lifetime; no persistent data or roster writes.
+ const periodEvents=new Map(),tableSchedules=new WeakMap(),daily=new Map();
+ const pendingEvents=scheduleEvents.filter(e=>!e.date_et||excluded.has(e.status));
+ for(const e of scheduleEvents)if(e.date_et&&e.season_type===2&&eligible(e))daily.set(e.date_et,(daily.get(e.date_et)||0)+1);
+ window.scheduleForTable=table=>tableSchedules.get(table);
+ let insightSignature='';
  function parseDate(value){const stamp=Date.parse(value+'T12:00:00Z');return Number.isFinite(stamp)&&new Date(stamp).toISOString().slice(0,10)===value?stamp:null;}
  function dates(start,end){const out=[];for(let stamp=parseDate(start);stamp<=parseDate(end);stamp+=DAY)out.push(new Date(stamp).toISOString().slice(0,10));return out;}
  function selectedPeriod(){
@@ -47,12 +53,18 @@
   const index=Number(value),period=platformPeriods[platformKey].periods[index];if(!period)return;
   appliedSeasonWeek=index;platformAnchor=anchor||period.start;renderPeriod(period);
  };
- function selectedEvents(period){return scheduleEvents.filter(e=>e.season_type===2&&e.date_et&&e.date_et>=period.start&&e.date_et<=period.end);}
+ function selectedEvents(period){
+  const key=period.start+'|'+period.end;
+  if(!periodEvents.has(key)){
+   if(periodEvents.size>=16)periodEvents.delete(periodEvents.keys().next().value);
+   periodEvents.set(key,scheduleEvents.filter(e=>e.season_type===2&&e.date_et&&e.date_et>=period.start&&e.date_et<=period.end));
+  }
+  return periodEvents.get(key);
+ }
  function eligible(e){return !excluded.has(e.status);}
  function remaining(e,now){return e.status==='scheduled'&&e.time_confirmed&&Date.parse(e.tipoff_utc)>now;}
  function summary(period,now){
-  const selected=selectedEvents(period),daily=new Map(),teams=new Map();
-  for(const e of scheduleEvents)if(e.date_et&&e.season_type===2&&eligible(e))daily.set(e.date_et,(daily.get(e.date_et)||0)+1);
+  const selected=selectedEvents(period),teams=new Map();
   for(const e of selected)for(const team of [e.home,e.away]){
    if(!team)continue;
    const row=teams.get(team)||{team,games:0,remaining:0,pending:0,dates:[],light:0};
@@ -66,7 +78,9 @@
  }
  function renderInsights(){
   const period=selectedPeriod();if(!period||!byId('schedule-insights'))return;
-  const now=Date.now(),result=summary(period,now),box=byId('schedule-insights');box.replaceChildren();
+  const now=Date.now(),signature=[period.start,period.end,period.label,teamSelection[activeWeek]||'',Math.floor(now/60000),window.SiteUI?.language,window.SiteUI?.timezone].join('|');
+  if(signature===insightSignature)return;insightSignature=signature;
+  const result=summary(period,now),box=byId('schedule-insights');box.replaceChildren();
   byId('schedule-period-context').textContent='美東 '+period.start+'–'+period.end+'（含迄日） · '+(period.platform?period.label:period.kind==='custom'?'自訂計分期間':'網站近期期間')+' · 剩餘場次截止 '+new Date(now).toISOString().slice(0,16).replace('T',' ')+' UTC';
   const table=document.createElement('table'),head=table.createTHead().insertRow();
   for(const label of ['球隊','期間排程','尚未開賽','剩餘 B2B 組','剩餘低比賽日','待確認']){const th=document.createElement('th');th.textContent=label;head.appendChild(th);}
@@ -74,7 +88,7 @@
   const rows=Array.from(result.teams.values()).filter(r=>!chosen||r.team===chosen).sort((a,b)=>b.remaining-a.remaining||b.light-a.light||a.team.localeCompare(b.team));
   for(const data of rows){const tr=body.insertRow();tr.dataset.team=data.team;for(const value of [data.team,data.games,data.remaining,data.b2b,data.light,data.pending])tr.insertCell().textContent=String(value);}
   if(!rows.length){const td=body.insertRow().insertCell();td.colSpan=6;td.textContent='這個期間沒有已公布日期的球隊賽程。';}box.appendChild(table);
-  const pending=scheduleEvents.filter(e=>!e.date_et||excluded.has(e.status)),pendingBox=byId('schedule-pending');pendingBox.replaceChildren();
+  const pending=pendingEvents,pendingBox=byId('schedule-pending');pendingBox.replaceChildren();
   if(pending.length){const p=document.createElement('p');p.textContent='當季待定／延賽／取消／暫停：'+pending.length+' 場，未計入尚未開賽。未公布的 NBA Cup 賽事不補造。';pendingBox.appendChild(p);const list=document.createElement('ul');for(const e of pending.slice(0,10)){const li=document.createElement('li');li.textContent=e.away+' @ '+e.home+' · '+(e.date_et||'日期待定')+' · '+statusLabels[e.status];list.appendChild(li);}pendingBox.appendChild(list);}
   const age=(now-Date.parse(scheduleGeneratedAt.replace(' UTC',':00Z').replace(' ','T')))/DAY;
   byId('schedule-freshness').textContent='資料快照：'+scheduleGeneratedAt+(age>2?' · 已超過 48 小時；狀態與改期可能已變更。':' · 賽事狀態以快照為準，非即時比分。');
@@ -131,13 +145,13 @@
   if(targetKey==='WCustom')byId('custom-period-heading').textContent=period.label;
   const zoneNote=document.createElement('p');zoneNote.className='schedule-zone-note';zoneNote.textContent=window.SiteUI?SiteUI.zoneNote():'美東時間';title.after(zoneNote);
   // Show the panel before DataTables measures its scroll columns.
-  openWeek({currentTarget:targetKey==='WCustom'?byId('apply-custom-period'):document.querySelector('[onclick*="Week'+targetKey.slice(1)+'"]')},targetKey==='WCustom'?'WeekCustom':'Week'+targetKey.slice(1));
-  const table=$(playerTable).DataTable({order:[[2,'desc']],pageLength,scrollX:true});tables[targetKey]=table;table.column(1).visible(false);table.on('draw',()=>updateSelection(targetKey));
-  switchStats(state.period==='ls'?'LS':state.period==='season'?'Season':state.period.toUpperCase(),targetKey);switchDisplayMode(state.mode.toUpperCase(),targetKey);
+  openWeek({currentTarget:targetKey==='WCustom'?byId('apply-custom-period'):document.querySelector('[onclick*="Week'+targetKey.slice(1)+'"]')},targetKey==='WCustom'?'WeekCustom':'Week'+targetKey.slice(1),false);
+  const table=$(playerTable).DataTable(playerTableOptions(playerTable,targetKey,pageLength));tables[targetKey]=table;table.column(1).visible(false,false);const fixtures=new Map(Array.from(byTeam,([team,data])=>[team,[data.games,...data.days]]));for(const p of Object.values(playerCatalog))if(!fixtures.has(p.team))fixtures.set(p.team,[0,...dayList.map(()=> '')]);tableSchedules.set(playerTable,fixtures);table.on('draw',()=>updateSelection(targetKey));
+  switchStats(state.period==='ls'?'LS':state.period==='season'?'Season':state.period.toUpperCase(),targetKey,false);switchDisplayMode(state.mode.toUpperCase(),targetKey,false);
   if(chosen)table.column(1).search('^'+$.fn.dataTable.util.escapeRegex(chosen)+'$',true,false);
   table.search(search);
   if(order){const mapped=order.map(o=>{const index=table.columns().indexes().toArray().find(i=>headerKey(table.column(i).header())===o.key);return [index===undefined?2:index,o.direction];});table.order(mapped);}
-  table.columns.adjust().draw(false);document.dispatchEvent(new Event('active-week-changed'));
+  applyStatView(targetKey);document.dispatchEvent(new Event('active-week-changed'));
   updatePeriodControls();
  }
  $(document).ready(function(){
@@ -149,7 +163,7 @@
   let rebuilding=false;
   document.addEventListener('active-week-changed',()=>{if(activeWeek!=='WCustom'&&!rebuilding){rebuilding=true;try{renderPeriod(quickPeriods[activeWeek],activeWeek);}finally{rebuilding=false;}}});
   document.addEventListener('site-preferences-changed',e=>{document.querySelectorAll('.schedule-zone-note').forEach(n=>n.textContent=SiteUI.zoneNote());if(e.detail?.timezoneChanged){rebuilding=true;try{renderPeriod(selectedPeriod(),activeWeek);}finally{rebuilding=false;}}renderInsights();});
-  document.addEventListener('active-week-changed',renderInsights);$(document).on('draw.dt',renderInsights);
+  document.addEventListener('active-week-changed',renderInsights);document.addEventListener('team-filter-changed',renderInsights);
   setInterval(renderInsights,60000);
   document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')renderInsights();});
   renderInsights();

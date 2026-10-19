@@ -417,7 +417,7 @@ function localize(rootNode){
 }
 const pending=new Set();let queued=false;
 function observe(){observer?.observe(document.body,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['title','aria-label','placeholder']});}
-function flush(){queued=false;if(flushing)return;flushing=true;observer?.disconnect();try{for(const n of pending)if(n.isConnected)localize(n);pending.clear();}finally{flushing=false;observe();}}
+function flush(){queued=false;if(flushing)return;flushing=true;observer?.disconnect();try{const roots=new Set(pending);pending.clear();for(const n of roots){if(!n.isConnected)continue;let ancestor=n.parentNode;while(ancestor&&!roots.has(ancestor))ancestor=ancestor.parentNode;if(!ancestor)localize(n);}}finally{flushing=false;observe();}}
 function queue(node){pending.add(node);if(!queued){queued=true;queueMicrotask(flush);}}
 function preferencesUI(){
  for(const host of document.querySelectorAll('[data-site-preferences]')){

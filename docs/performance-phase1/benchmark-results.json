@@ -1,0 +1,3458 @@
+{
+  "base_sha": "8fd07540415da196afe18f7d664f1c55224d3b05",
+  "method": "localhost same snapshot; cold=new context, warm=same-context navigation; 390px CPU4x is simulation; no production network measurements",
+  "runs": [
+    {
+      "width": 1440,
+      "cpu": 1,
+      "version": "before",
+      "cold": [
+        {
+          "fcp": 368,
+          "load": 1180.7000000001863,
+          "longTasks": 6129,
+          "maxTask": 2907,
+          "lastTaskEnd": 6908.100000000093,
+          "draws": {},
+          "elements": 9521
+        },
+        {
+          "fcp": 332,
+          "load": 1235.5,
+          "longTasks": 6696,
+          "maxTask": 3033,
+          "lastTaskEnd": 7434.199999999721,
+          "draws": {},
+          "elements": 9521
+        },
+        {
+          "fcp": 344,
+          "load": 1122.8999999999069,
+          "longTasks": 6105,
+          "maxTask": 2835,
+          "lastTaskEnd": 6819.700000000186,
+          "draws": {},
+          "elements": 9521
+        },
+        {
+          "fcp": 340,
+          "load": 1119.1999999997206,
+          "longTasks": 6396,
+          "maxTask": 3019,
+          "lastTaskEnd": 7105.600000000093,
+          "draws": {},
+          "elements": 9521
+        },
+        {
+          "fcp": 344,
+          "load": 1145.1000000000931,
+          "longTasks": 6528,
+          "maxTask": 3137,
+          "lastTaskEnd": 7257.5,
+          "draws": {},
+          "elements": 9521
+        }
+      ],
+      "warm": [
+        {
+          "fcp": 132,
+          "load": 1023.6000000000931,
+          "longTasks": 6185,
+          "maxTask": 2971,
+          "lastTaskEnd": 7027.600000000093,
+          "draws": {},
+          "elements": 9521
+        },
+        {
+          "fcp": 132,
+          "load": 992.1000000000931,
+          "longTasks": 6418,
+          "maxTask": 3293,
+          "lastTaskEnd": 7187.899999999907,
+          "draws": {},
+          "elements": 9521
+        },
+        {
+          "fcp": 124,
+          "load": 879.0999999996275,
+          "longTasks": 6379,
+          "maxTask": 3178,
+          "lastTaskEnd": 7071.699999999721,
+          "draws": {},
+          "elements": 9521
+        },
+        {
+          "fcp": 148,
+          "load": 1062.4000000003725,
+          "longTasks": 6608,
+          "maxTask": 3316,
+          "lastTaskEnd": 7350.9000000003725,
+          "draws": {},
+          "elements": 9521
+        },
+        {
+          "fcp": 132,
+          "load": 1100.2999999998137,
+          "longTasks": 6554,
+          "maxTask": 3080,
+          "lastTaskEnd": 7450.5,
+          "draws": {},
+          "elements": 9521
+        }
+      ],
+      "interactions": {
+        "mode": [
+          {
+            "ms": 441.6999999997206,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 449.09999999962747,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 442.29999999981374,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 458.79999999981374,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 424.10000000009313,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 552.8999999999069,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 407.20000000018626,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 432.5,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 413.6999999997206,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 430.29999999981374,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 421.5,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 459,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 459.3000000002794,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 441.59999999962747,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 478.20000000018626,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 456,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 483.40000000037253,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 480.29999999981374,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 440.70000000018626,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 422.70000000018626,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 430.40000000037253,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 434.29999999981374,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 466.6999999997206,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 500.8000000002794,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 467.70000000018626,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 461.5,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 418.79999999981374,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 432.20000000018626,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 462.10000000009313,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 463.10000000009313,
+            "draws": 2,
+            "insightsReplaced": true
+          }
+        ],
+        "period": [
+          {
+            "ms": 405.5,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 410.79999999981374,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 389.79999999981374,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 401.09999999962747,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 390.10000000009313,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 405.10000000009313,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 409.70000000018626,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 444,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 396.29999999981374,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 429.3000000002794,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 593.2000000001863,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 376.89999999990687,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 360.29999999981374,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 423.60000000009313,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 419.60000000009313,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 417.70000000018626,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 367.39999999990687,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 379,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 367.90000000037253,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 373,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 366.09999999962747,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 386.70000000018626,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 359.5,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 400.29999999981374,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 372.89999999990687,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 390.8000000002794,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 378.20000000018626,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 391.60000000009313,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 374,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 389.6999999997206,
+            "draws": 2,
+            "insightsReplaced": true
+          }
+        ],
+        "page": [
+          {
+            "ms": 38.39999999990687,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 38.10000000009313,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 36.8000000002794,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 41.1999999997206,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 40.39999999990687,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 49.10000000009313,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 43.799999999813735,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 42.89999999990687,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 40,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 37.89999999990687,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 39,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 40.299999999813735,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 40.1999999997206,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 39.10000000009313,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 43.60000000009313,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 48.10000000009313,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 56,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 40.5,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 36.90000000037253,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 39.09999999962747,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 37.700000000186265,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 47.799999999813735,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 45,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 44,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 53.5,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 44.5,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 41.39999999990687,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 55.39999999990687,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 39.39999999990687,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 38.1999999997206,
+            "draws": 1,
+            "insightsReplaced": true
+          }
+        ],
+        "search": [
+          {
+            "ms": 35.10000000009313,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 45.5,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 30.399999999906868,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 49.3000000002794,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 31.399999999906868,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 49.39999999990687,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 58.60000000009313,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 55.3000000002794,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 39.5,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 54.1999999997206,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 36.89999999990687,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 60.700000000186265,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 38.1999999997206,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 45.200000000186265,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 34.299999999813735,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 48.39999999990687,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 34.40000000037253,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 47.5,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 32,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 46.89999999990687,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 31.399999999906868,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 51.10000000009313,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 30.899999999906868,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 43,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 31.699999999720603,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 45.8000000002794,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 33.1999999997206,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 46,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 32.89999999990687,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 46.3000000002794,
+            "draws": 1,
+            "insightsReplaced": true
+          }
+        ],
+        "week": [
+          {
+            "ms": 2033.7999999998137,
+            "draws": 7,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2455,
+            "draws": 7,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 1948.0999999996275,
+            "draws": 7,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2206.2999999998137,
+            "draws": 7,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2255.100000000093,
+            "draws": 7,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2240.3000000002794,
+            "draws": 7,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2622.600000000093,
+            "draws": 7,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2346.7999999998137,
+            "draws": 7,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2069.6999999997206,
+            "draws": 7,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2449.2999999998137,
+            "draws": 7,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2755.6999999997206,
+            "draws": 7,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2867.2999999998137,
+            "draws": 7,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 3033.100000000093,
+            "draws": 7,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2187,
+            "draws": 7,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2336.600000000093,
+            "draws": 7,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2214.2000000001863,
+            "draws": 7,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2438.8000000002794,
+            "draws": 7,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2777.1999999997206,
+            "draws": 7,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 3501.399999999907,
+            "draws": 7,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2352.7999999998137,
+            "draws": 7,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2143.2999999998137,
+            "draws": 7,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2292.2000000001863,
+            "draws": 7,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2185.899999999907,
+            "draws": 7,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2233.899999999907,
+            "draws": 7,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2357.3000000002794,
+            "draws": 7,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2704.100000000093,
+            "draws": 7,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2064.7999999998137,
+            "draws": 7,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2172.1999999997206,
+            "draws": 7,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2134.899999999907,
+            "draws": 7,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2159.600000000093,
+            "draws": 7,
+            "insightsReplaced": true
+          }
+        ]
+      },
+      "errors": [],
+      "index_sha256": "b04f93d35881f06669b4c0fc6d7c0a44903465ced334b862859c2d468195ef98"
+    },
+    {
+      "width": 1440,
+      "cpu": 1,
+      "version": "after",
+      "cold": [
+        {
+          "fcp": 452,
+          "load": 1289.3999999999069,
+          "longTasks": 3605,
+          "maxTask": 2064,
+          "lastTaskEnd": 4384.399999999907,
+          "draws": {},
+          "elements": 9339
+        },
+        {
+          "fcp": 392,
+          "load": 1267.6000000000931,
+          "longTasks": 3355,
+          "maxTask": 1904,
+          "lastTaskEnd": 4153.100000000093,
+          "draws": {},
+          "elements": 9339
+        },
+        {
+          "fcp": 400,
+          "load": 1515.5,
+          "longTasks": 3644,
+          "maxTask": 1948,
+          "lastTaskEnd": 4569.899999999907,
+          "draws": {},
+          "elements": 9339
+        },
+        {
+          "fcp": 416,
+          "load": 1328.2999999998137,
+          "longTasks": 3448,
+          "maxTask": 1945,
+          "lastTaskEnd": 4273.100000000093,
+          "draws": {},
+          "elements": 9339
+        },
+        {
+          "fcp": 388,
+          "load": 1339.5,
+          "longTasks": 3654,
+          "maxTask": 2056,
+          "lastTaskEnd": 4425,
+          "draws": {},
+          "elements": 9339
+        }
+      ],
+      "warm": [
+        {
+          "fcp": 128,
+          "load": 1021.4000000003725,
+          "longTasks": 3069,
+          "maxTask": 1902,
+          "lastTaskEnd": 3882.600000000093,
+          "draws": {},
+          "elements": 9339
+        },
+        {
+          "fcp": 136,
+          "load": 1175.1999999997206,
+          "longTasks": 3286,
+          "maxTask": 1876,
+          "lastTaskEnd": 4317.5999999996275,
+          "draws": {},
+          "elements": 9339
+        },
+        {
+          "fcp": 132,
+          "load": 1011.8000000002794,
+          "longTasks": 3312,
+          "maxTask": 2090,
+          "lastTaskEnd": 4144.5,
+          "draws": {},
+          "elements": 9339
+        },
+        {
+          "fcp": 128,
+          "load": 998.3999999999069,
+          "longTasks": 3277,
+          "maxTask": 2027,
+          "lastTaskEnd": 4063.2999999998137,
+          "draws": {},
+          "elements": 9339
+        },
+        {
+          "fcp": 148,
+          "load": 1094.3000000002794,
+          "longTasks": 3403,
+          "maxTask": 2022,
+          "lastTaskEnd": 4154.300000000279,
+          "draws": {},
+          "elements": 9339
+        }
+      ],
+      "interactions": {
+        "mode": [
+          {
+            "ms": 334.70000000018626,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 143.10000000009313,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 114.1999999997206,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 138.20000000018626,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 152.3000000002794,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 143.09999999962747,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 148.60000000009313,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 137.3000000002794,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 132,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 131.5,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 139,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 153.89999999990687,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 126.20000000018626,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 133.70000000018626,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 123.20000000018626,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 126.40000000037253,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 130.40000000037253,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 122.6999999997206,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 122.09999999962747,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 121.60000000009313,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 108.89999999990687,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 115.89999999990687,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 108.70000000018626,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 117,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 112.6999999997206,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 111.70000000018626,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 111.89999999990687,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 115,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 103.79999999981374,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 103.29999999981374,
+            "draws": 1,
+            "insightsReplaced": false
+          }
+        ],
+        "period": [
+          {
+            "ms": 259,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 110.5,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 101.70000000018626,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 112,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 103.5,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 124.39999999990687,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 102.20000000018626,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 104.59999999962747,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 97.60000000009313,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 104.59999999962747,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 96.59999999962747,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 105.59999999962747,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 219,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 115.60000000009313,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 92.20000000018626,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 106.89999999990687,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 92.5,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 102.6999999997206,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 92.79999999981374,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 103.10000000009313,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 94.39999999990687,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 107.79999999981374,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 95.59999999962747,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 104.70000000018626,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 93.90000000037253,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 102.89999999990687,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 97.39999999990687,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 104.90000000037253,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 91.1999999997206,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 100.60000000009313,
+            "draws": 1,
+            "insightsReplaced": false
+          }
+        ],
+        "page": [
+          {
+            "ms": 33.200000000186265,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 34.3000000002794,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 32.1999999997206,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 31.899999999906868,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 35.60000000009313,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 32.89999999990687,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 33.39999999990687,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 40.799999999813735,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 32.60000000009313,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 32.799999999813735,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 34.799999999813735,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 33.6999999997206,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 34.200000000186265,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 32.3000000002794,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 33.89999999990687,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 36,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 33.8000000002794,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 33.39999999990687,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 32.299999999813735,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 34.59999999962747,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 34.200000000186265,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 37.799999999813735,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 36.6999999997206,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 35.39999999990687,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 35.60000000009313,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 35.5,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 34.10000000009313,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 35.299999999813735,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 34.700000000186265,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 35.89999999990687,
+            "draws": 1,
+            "insightsReplaced": false
+          }
+        ],
+        "search": [
+          {
+            "ms": 30.200000000186265,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 40.59999999962747,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 30,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 42.299999999813735,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 29.399999999906868,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 42.5,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 28.199999999720603,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 42.1999999997206,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 30.799999999813735,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 41.200000000186265,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 29.800000000279397,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 38.5,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 26.5,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 40.799999999813735,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 31.700000000186265,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 44.200000000186265,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 33.8000000002794,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 40.299999999813735,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 26.5,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 40.60000000009313,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 26.09999999962747,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 39.3000000002794,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 26.200000000186265,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 38.6999999997206,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 26.90000000037253,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 40.200000000186265,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 28.5,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 41,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 31.799999999813735,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 41.10000000009313,
+            "draws": 1,
+            "insightsReplaced": false
+          }
+        ],
+        "week": [
+          {
+            "ms": 941.6000000000931,
+            "draws": 2,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 868.5999999996275,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 873.7000000001863,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 918.7999999998137,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 1079.6999999997206,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 947.2000000001863,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 915,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 981.8000000002794,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 920.3999999999069,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 966.3999999999069,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 903.8000000002794,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 911.2999999998137,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 891,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 910.2999999998137,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 877.1000000000931,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 1107.0999999996275,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 926.3999999999069,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 926.6000000000931,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 886.5,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 902.8000000002794,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 876,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 909.8999999999069,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 940.8999999999069,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 929.6999999997206,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 936.8000000002794,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 944.3999999999069,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 1130.6999999997206,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 899.7000000001863,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 935.2000000001863,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 912.3000000002794,
+            "draws": 2,
+            "insightsReplaced": true
+          }
+        ]
+      },
+      "errors": [],
+      "index_sha256": "c8256a4f16a9c8ec08b0080d05ffe2308b31faa18156dffb53553ee919af41fa"
+    },
+    {
+      "width": 390,
+      "cpu": 4,
+      "version": "before",
+      "cold": [
+        {
+          "fcp": 1144,
+          "load": 5339.600000000093,
+          "longTasks": 34386,
+          "maxTask": 14816,
+          "lastTaskEnd": 35336.80000000028,
+          "draws": {},
+          "elements": 9515
+        },
+        {
+          "fcp": 1096,
+          "load": 5352,
+          "longTasks": 34708,
+          "maxTask": 15036,
+          "lastTaskEnd": 35580.5,
+          "draws": {},
+          "elements": 9515
+        },
+        {
+          "fcp": 1076,
+          "load": 5170,
+          "longTasks": 32911,
+          "maxTask": 13832,
+          "lastTaskEnd": 33840.799999999814,
+          "draws": {},
+          "elements": 9515
+        },
+        {
+          "fcp": 1112,
+          "load": 5353,
+          "longTasks": 35631,
+          "maxTask": 16125,
+          "lastTaskEnd": 36556.89999999991,
+          "draws": {},
+          "elements": 9515
+        },
+        {
+          "fcp": 996,
+          "load": 5109.800000000279,
+          "longTasks": 35281,
+          "maxTask": 15163,
+          "lastTaskEnd": 36151.700000000186,
+          "draws": {},
+          "elements": 9515
+        }
+      ],
+      "warm": [
+        {
+          "fcp": 456,
+          "load": 4748.200000000186,
+          "longTasks": 35114,
+          "maxTask": 15388,
+          "lastTaskEnd": 35893.700000000186,
+          "draws": {},
+          "elements": 9515
+        },
+        {
+          "fcp": 428,
+          "load": 4640,
+          "longTasks": 34223,
+          "maxTask": 14896,
+          "lastTaskEnd": 35061,
+          "draws": {},
+          "elements": 9515
+        },
+        {
+          "fcp": 520,
+          "load": 4964.899999999907,
+          "longTasks": 34841,
+          "maxTask": 15064,
+          "lastTaskEnd": 35653.19999999972,
+          "draws": {},
+          "elements": 9515
+        },
+        {
+          "fcp": 488,
+          "load": 4379.799999999814,
+          "longTasks": 34000,
+          "maxTask": 15127,
+          "lastTaskEnd": 34755,
+          "draws": {},
+          "elements": 9515
+        },
+        {
+          "fcp": 456,
+          "load": 4691.200000000186,
+          "longTasks": 37317,
+          "maxTask": 16240,
+          "lastTaskEnd": 38128.89999999991,
+          "draws": {},
+          "elements": 9515
+        }
+      ],
+      "interactions": {
+        "mode": [
+          {
+            "ms": 2475.399999999907,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2428.2999999998137,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2389.100000000093,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2404.399999999907,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2797,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2573.5,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2674.7000000001863,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2686.2000000001863,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2448.600000000093,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2332.600000000093,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2409.6999999997206,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2329.5,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2398.7000000001863,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2441.899999999907,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2608.6999999997206,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2517.899999999907,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2305.8000000002794,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2352.399999999907,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2362.2999999998137,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2538.899999999907,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2351.600000000093,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2233.399999999907,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2386.5999999996275,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2324.2000000001863,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2191.100000000093,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2113.2999999998137,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2239.899999999907,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2183.8000000002794,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2422.4000000003725,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2352.6999999997206,
+            "draws": 2,
+            "insightsReplaced": true
+          }
+        ],
+        "period": [
+          {
+            "ms": 2079.5,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2109,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 1983.2999999998137,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2223.100000000093,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2071.600000000093,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2178.100000000093,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2836.2999999998137,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2338.899999999907,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2070.2999999998137,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2202,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2288.100000000093,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2482.5999999996275,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2189.4000000003725,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 1913.2000000001863,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 1922,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2289.7000000001863,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2239.4000000003725,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2229.600000000093,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2054.7999999998137,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2030.5,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2009,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2220.7999999998137,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2197.5,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2184.600000000093,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2168.399999999907,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2232.9000000003725,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2240.2999999998137,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2211.2999999998137,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2168.2000000001863,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 2481.7999999998137,
+            "draws": 2,
+            "insightsReplaced": true
+          }
+        ],
+        "page": [
+          {
+            "ms": 304.29999999981374,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 241,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 222.40000000037253,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 237.3000000002794,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 237.70000000018626,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 222.39999999990687,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 262.09999999962747,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 234,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 222.1999999997206,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 238.20000000018626,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 237.89999999990687,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 235.39999999990687,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 261.39999999990687,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 278.5,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 241,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 258.89999999990687,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 282.39999999990687,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 258.09999999962747,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 229.6999999997206,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 216.60000000009313,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 225.39999999990687,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 247.6999999997206,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 201.3000000002794,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 215.6999999997206,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 262.6999999997206,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 235.5,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 224.89999999990687,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 211.79999999981374,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 192.6999999997206,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 219.10000000009313,
+            "draws": 1,
+            "insightsReplaced": true
+          }
+        ],
+        "search": [
+          {
+            "ms": 165.39999999990687,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 279,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 155.60000000009313,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 276.39999999990687,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 197.89999999990687,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 242,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 203.20000000018626,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 312.79999999981374,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 169.60000000009313,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 269.90000000037253,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 180.8000000002794,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 274.20000000018626,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 176.6999999997206,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 247.29999999981374,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 180,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 269.29999999981374,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 147.79999999981374,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 261.5,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 182.10000000009313,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 243.89999999990687,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 173.1999999997206,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 241.20000000018626,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 179.3000000002794,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 274.10000000009313,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 166.40000000037253,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 253.40000000037253,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 170.10000000009313,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 291.79999999981374,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 174.60000000009313,
+            "draws": 1,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 271.60000000009313,
+            "draws": 1,
+            "insightsReplaced": true
+          }
+        ],
+        "week": [
+          {
+            "ms": 11673.19999999972,
+            "draws": 7,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 11317.399999999907,
+            "draws": 7,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 12364.200000000186,
+            "draws": 7,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 16774.799999999814,
+            "draws": 7,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 13577.400000000373,
+            "draws": 7,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 12161,
+            "draws": 7,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 14364.599999999627,
+            "draws": 7,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 13089.19999999972,
+            "draws": 7,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 12015.100000000093,
+            "draws": 7,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 13411.900000000373,
+            "draws": 7,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 13453.299999999814,
+            "draws": 7,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 11573.69999999972,
+            "draws": 7,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 11832.099999999627,
+            "draws": 7,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 13609.900000000373,
+            "draws": 7,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 12528.100000000093,
+            "draws": 7,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 16994.5,
+            "draws": 7,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 16273.599999999627,
+            "draws": 7,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 16766.399999999907,
+            "draws": 7,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 15060,
+            "draws": 7,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 13516.399999999907,
+            "draws": 7,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 14941.30000000028,
+            "draws": 7,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 14757.299999999814,
+            "draws": 7,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 13795.799999999814,
+            "draws": 7,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 13438.799999999814,
+            "draws": 7,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 13858.5,
+            "draws": 7,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 12414.5,
+            "draws": 7,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 12897.700000000186,
+            "draws": 7,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 13667.299999999814,
+            "draws": 7,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 12183.80000000028,
+            "draws": 7,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 13674.200000000186,
+            "draws": 7,
+            "insightsReplaced": true
+          }
+        ]
+      },
+      "errors": [],
+      "index_sha256": "b04f93d35881f06669b4c0fc6d7c0a44903465ced334b862859c2d468195ef98"
+    },
+    {
+      "width": 390,
+      "cpu": 4,
+      "version": "after",
+      "cold": [
+        {
+          "fcp": 1324,
+          "load": 5577,
+          "longTasks": 19110,
+          "maxTask": 9229,
+          "lastTaskEnd": 20170.5,
+          "draws": {},
+          "elements": 9327
+        },
+        {
+          "fcp": 1280,
+          "load": 5521,
+          "longTasks": 19437,
+          "maxTask": 9452,
+          "lastTaskEnd": 20417.799999999814,
+          "draws": {},
+          "elements": 9327
+        },
+        {
+          "fcp": 1148,
+          "load": 5511.100000000559,
+          "longTasks": 19022,
+          "maxTask": 8714,
+          "lastTaskEnd": 20045.10000000056,
+          "draws": {},
+          "elements": 9327
+        },
+        {
+          "fcp": 1228,
+          "load": 5464.200000000186,
+          "longTasks": 18952,
+          "maxTask": 9029,
+          "lastTaskEnd": 19962.099999999627,
+          "draws": {},
+          "elements": 9327
+        },
+        {
+          "fcp": 1184,
+          "load": 5453.200000000186,
+          "longTasks": 18511,
+          "maxTask": 8757,
+          "lastTaskEnd": 19468.400000000373,
+          "draws": {},
+          "elements": 9327
+        }
+      ],
+      "warm": [
+        {
+          "fcp": 484,
+          "load": 5028.700000000186,
+          "longTasks": 18717,
+          "maxTask": 9220,
+          "lastTaskEnd": 19602.200000000186,
+          "draws": {},
+          "elements": 9327
+        },
+        {
+          "fcp": 432,
+          "load": 4935.600000000559,
+          "longTasks": 17775,
+          "maxTask": 8814,
+          "lastTaskEnd": 18621.60000000056,
+          "draws": {},
+          "elements": 9327
+        },
+        {
+          "fcp": 508,
+          "load": 5335,
+          "longTasks": 19752,
+          "maxTask": 9797,
+          "lastTaskEnd": 20622.599999999627,
+          "draws": {},
+          "elements": 9327
+        },
+        {
+          "fcp": 400,
+          "load": 4482.700000000186,
+          "longTasks": 17574,
+          "maxTask": 8742,
+          "lastTaskEnd": 18326.700000000186,
+          "draws": {},
+          "elements": 9327
+        },
+        {
+          "fcp": 456,
+          "load": 4675.899999999441,
+          "longTasks": 18508,
+          "maxTask": 9266,
+          "lastTaskEnd": 19289.299999999814,
+          "draws": {},
+          "elements": 9327
+        }
+      ],
+      "interactions": {
+        "mode": [
+          {
+            "ms": 1565.5999999996275,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 790,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 824.0999999996275,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 785.8999999994412,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 695,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 761.4000000003725,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 729.3999999994412,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 708.3999999994412,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 745.5,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 616.8000000007451,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 559.0999999996275,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 742.7000000001863,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 707.2999999998137,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 705.7999999998137,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 739.0999999996275,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 797.2999999998137,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 782.6000000005588,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 769.2999999998137,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 724.0999999996275,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 777.9000000003725,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 659.5999999996275,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 625,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 777.2999999998137,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 775.7000000001863,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 711.4000000003725,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 686.9000000003725,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 721.2000000001863,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 759.1000000005588,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 793.5,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 815.6999999992549,
+            "draws": 1,
+            "insightsReplaced": false
+          }
+        ],
+        "period": [
+          {
+            "ms": 1499,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 720.0999999996275,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 522.7999999998137,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 728.2000000001863,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 772.5,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 771.9000000003725,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 624.5,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 711.2000000001863,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 595,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 676.2999999998137,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 992.7000000001863,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 677.6000000005588,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 630.4000000003725,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 712.4000000003725,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 611.5999999996275,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 664.3999999994412,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 658.0999999996275,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 604.5999999996275,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 553.0999999996275,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 631.1999999992549,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 656.2000000001863,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 699.7999999998137,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 608.7000000001863,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 644.2000000001863,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 644.5999999996275,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 756,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 673.2999999998137,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 761.6999999992549,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 560.5999999996275,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 545.9000000003725,
+            "draws": 1,
+            "insightsReplaced": false
+          }
+        ],
+        "page": [
+          {
+            "ms": 232,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 213.40000000037253,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 220.79999999981374,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 213,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 238.20000000018626,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 206.90000000037253,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 213.30000000074506,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 237.70000000018626,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 235.90000000037253,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 224.90000000037253,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 234.59999999962747,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 224.29999999981374,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 248,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 208.1000000005588,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 227.29999999981374,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 254.59999999962747,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 200.20000000018626,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 186.09999999962747,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 190.90000000037253,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 216.1000000005588,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 216.09999999962747,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 233.30000000074506,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 249.5,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 226.6000000005588,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 228.20000000018626,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 219.79999999981374,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 231,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 241,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 208.70000000018626,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 178.70000000018626,
+            "draws": 1,
+            "insightsReplaced": false
+          }
+        ],
+        "search": [
+          {
+            "ms": 156.3999999994412,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 247.5,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 145.3999999994412,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 265.6000000005588,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 142.40000000037253,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 228,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 163.5,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 229.5,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 188.90000000037253,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 208,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 158.09999999962747,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 228.6000000005588,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 130.09999999962747,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 264.29999999981374,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 165.70000000018626,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 264.20000000018626,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 175.59999999962747,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 256.59999999962747,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 164.20000000018626,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 246.59999999962747,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 165.8999999994412,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 289.79999999981374,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 188.90000000037253,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 289.5,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 159.5,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 271.79999999981374,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 176.79999999981374,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 240.79999999981374,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 159.20000000018626,
+            "draws": 1,
+            "insightsReplaced": false
+          },
+          {
+            "ms": 232.20000000018626,
+            "draws": 1,
+            "insightsReplaced": false
+          }
+        ],
+        "week": [
+          {
+            "ms": 4955.299999999814,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 4945.9000000003725,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 4853.899999999441,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 5179.299999999814,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 4549.0999999996275,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 4664,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 4787,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 4935.5,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 5216.4000000003725,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 5233.299999999814,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 5372,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 5249.0999999996275,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 5366.700000000186,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 5124.5999999996275,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 5415,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 4433.4000000003725,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 4763.4000000003725,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 4760.299999999814,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 4660.5999999996275,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 4940.0999999996275,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 5770.5,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 5190,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 4879,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 4598.200000000186,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 4352.299999999814,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 4683.0999999996275,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 4629.9000000003725,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 4746.800000000745,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 5337.5999999996275,
+            "draws": 2,
+            "insightsReplaced": true
+          },
+          {
+            "ms": 4858.5,
+            "draws": 2,
+            "insightsReplaced": true
+          }
+        ]
+      },
+      "errors": [],
+      "index_sha256": "c8256a4f16a9c8ec08b0080d05ffe2308b31faa18156dffb53553ee919af41fa"
+    }
+  ]
+}

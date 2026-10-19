@@ -436,7 +436,7 @@ def generate_html_report():
     )
     week_panels += '<div id="WeekCustom" class="tabcontent"><h3 id="custom-period-heading"></h3><div id="custom-period-content"></div></div>'
     table_initializers = ''.join(
-        f"tables['W{i+1}'] = $('#playerTableW{i+1}').DataTable({{order:[[2,'desc']],pageLength:25,scrollX:true,language:{{search:'搜尋',lengthMenu:'每頁 _MENU_ 人',info:'_START_–_END_ / _TOTAL_ 人',infoFiltered:'（全體 _MAX_ 人）',zeroRecords:'沒有符合球員，按全體球員清除篩選',infoEmpty:'0 人'}}}});"
+        f"tables['W{i+1}'] = $('#playerTableW{i+1}').DataTable({{...playerTableOptions(document.getElementById('playerTableW{i+1}'),'W{i+1}'),language:{{search:'搜尋',lengthMenu:'每頁 _MENU_ 人',info:'_START_–_END_ / _TOTAL_ 人',infoFiltered:'（全體 _MAX_ 人）',zeroRecords:'沒有符合球員，按全體球員清除篩選',infoEmpty:'0 人'}}}});"
         f"if ($('#teamTableW{i+1}').length) {{ $('#teamTableW{i+1}').DataTable({{paging:false,info:false,searching:false,order:[],columnDefs:[{{targets:1,type:'team-games',orderable:false,render:function(data,type,row,meta){{return type==='sort'?window.teamGamesSortValue(data,meta.row):data;}}}}]}}); window.setupTeamGamesSort(document.getElementById('teamTableW{i+1}')); }}"
         for i in range(4)
     )
@@ -526,13 +526,13 @@ def generate_html_report():
                 customPlayerTemplate=document.querySelector('#Week1 .player-section').cloneNode(true);
                 {table_initializers}
 
-                Object.keys(tables).forEach(function(suffix) {{ tables[suffix].column(1).visible(false); switchStats('{default_period}',suffix); }});
+                Object.keys(tables).forEach(function(suffix) {{ tables[suffix].column(1).visible(false,false); switchStats('{default_period}',suffix); }});
                 Object.keys(tables).forEach(function(suffix) {{ tables[suffix].on('draw',function() {{ updateSelection(suffix); }}); }});
                 // Open default tab
                 document.getElementById("defaultOpen").click();
             }});
 
-            function openWeek(evt, weekName) {{
+            function openWeek(evt, weekName, notify = true) {{
                 var i, tabcontent, tablinks;
                 tabcontent = document.getElementsByClassName("tabcontent");
                 for (i = 0; i < tabcontent.length; i++) {{
@@ -548,9 +548,8 @@ def generate_html_report():
                 evt.currentTarget.className += " active";
                 activeWeek = weekName.replace('Week','W');
                 if (activeWeek !== 'WCustom' && window.clearPlatformSelection) window.clearPlatformSelection();
-                if (tables[activeWeek]) tables[activeWeek].columns.adjust();
                 updateSelection(activeWeek);
-                document.dispatchEvent(new Event('active-week-changed'));
+                if (notify) document.dispatchEvent(new Event('active-week-changed'));
             }}
 
             function selectSeasonWeek(value) {{
@@ -562,22 +561,41 @@ def generate_html_report():
             // (Season/L7/L14/LS) and the active display mode (AVG/TOT); both toggles
             // funnel through applyStatView so they stay orthogonal.
             var viewState = {{}};
+            function playerTableOptions(node, suffix, pageLength = 25) {{
+                var state = viewState[suffix] || {{period:playerToolsMeta.defaultPeriod,mode:'avg'}};
+                var hidden = [];
+                Array.from(node.tHead.rows[0].cells).forEach(function(header,index) {{
+                    var stat = header.className.indexOf('stat-') !== -1;
+                    if (index === 1 || (header.hasAttribute('data-schedule-day') && !window.playerScheduleVisible()) ||
+                        (stat && !(header.classList.contains('stat-' + state.period) && header.classList.contains('stat-' + state.mode)))) hidden.push(index);
+                }});
+                return {{order:[[2,'desc']],pageLength:pageLength,scrollX:true,columnDefs:[{{targets:hidden,visible:false}}]}};
+            }}
+
             function applyStatView(suffix) {{
                 var state = viewState[suffix] || {{period:'season',mode:'avg'}};
                 var table = tables[suffix];
+                // Hidden views keep their state; synchronize when shown, not on every setting change.
+                if (!table || !table.table().container().offsetWidth) return;
                 table.columns().every(function () {{
                     var header = this.header();
-                    if (header.className.indexOf('stat-') !== -1) {{
-                        $(header).css('display', '');
-                        this.nodes().to$().css('display', '');
-                        this.visible(header.classList.contains('stat-' + state.period) &&
-                                     header.classList.contains('stat-' + state.mode), false);
+                    if (header.classList.contains('stat-season') || header.classList.contains('stat-l7') ||
+                        header.classList.contains('stat-l14') || header.classList.contains('stat-ls')) {{
+                        var visible = header.classList.contains('stat-' + state.period) &&
+                                      header.classList.contains('stat-' + state.mode);
+                        // Clear the generated inline hiding only on the first use of these cells.
+                        if (visible && header.style.display === 'none') {{
+                            header.style.display = '';
+                            this.nodes().to$().css('display', '');
+                        }}
+                        if (this.visible() !== visible) this.visible(visible, false);
                     }}
                 }});
+                if (window.preparePlayerTable) window.preparePlayerTable(suffix);
                 table.columns.adjust().draw(false);
             }}
 
-            function switchStats(period, suffix) {{
+            function switchStats(period, suffix, refresh = true) {{
                 viewState[suffix] = viewState[suffix] || {{period:'season',mode:'avg'}};
                 viewState[suffix].period = period.toLowerCase();
                 // Update Buttons
@@ -596,11 +614,11 @@ def generate_html_report():
                         btns[i].setAttribute('aria-pressed','true');
                     }}
                 }}
-                applyStatView(suffix);
+                if (refresh) applyStatView(suffix);
             }}
 
             // --- Feature: Switch Display Mode (AVG / TOT) ---
-            function switchDisplayMode(mode, suffix) {{
+            function switchDisplayMode(mode, suffix, refresh = true) {{
                 viewState[suffix] = viewState[suffix] || {{period:'season',mode:'avg'}};
                 viewState[suffix].mode = mode.toLowerCase();
                 // Scoped to [data-mode] so the period buttons are left alone.
@@ -614,7 +632,7 @@ def generate_html_report():
                         btns[i].setAttribute('aria-pressed','true');
                     }}
                 }}
-                applyStatView(suffix);
+                if (refresh) applyStatView(suffix);
             }}
 
             function updateSelection(suffix) {{
@@ -635,6 +653,7 @@ def generate_html_report():
                 teamSelection[suffix] = teamAbbr;
                 tables[suffix].column(1).search('^' + $.fn.dataTable.util.escapeRegex(teamAbbr) + '$', true, false).draw();
                 updateSelection(suffix);
+                document.dispatchEvent(new Event('team-filter-changed'));
             }}
             function resetTeamFilter(suffix) {{
                 var table = tables[suffix];
@@ -644,6 +663,7 @@ def generate_html_report():
                 table.search('').columns().search('').draw();
                 $(table.table().container()).find('input[type="search"]').val('');
                 updateSelection(suffix);
+                document.dispatchEvent(new Event('team-filter-changed'));
             }}
             function resetActiveTeamFilter() {{ resetTeamFilter(activeWeek); }}
             {team_js}
