@@ -274,9 +274,27 @@ def player_gamelog(player, year):
     return list(rows.values())
 
 
-def recent_stats(season_df, year):
+def aggregate_games(player, selected):
+    n=len(selected);row={k:player[k] for k in IDENTITY};row['GP']=n
+    for k in ['MIN','PTS','REB','AST','STL','BLK','FG3M']:
+        values=[x.get(k) for x in selected];row[k]=sum(values)/n if all(v is not None for v in values) else None
+    turnovers=[x.get('TO') for x in selected]
+    row['TO']=sum(turnovers)/n if all(v is not None for v in turnovers) else None
+    for key in TOTAL_FIELDS:row[key+'_TOTAL']=(sum(turnovers) if all(v is not None for v in turnovers) else None) if key=='TO' else (sum(x[key] for x in selected) if all(x.get(key) is not None for x in selected) else None)
+    for prefix in ['FG','FT']:
+        for suffix in ['M','A']:
+            values=[x.get(prefix+suffix) for x in selected]
+            row[prefix+suffix]=sum(values) if all(v is not None for v in values) else None
+        attempts=row[prefix+'A'];made=row[prefix+'M']
+        row[prefix+'_PCT']=made/attempts if made is not None and attempts is not None and attempts>0 else None
+    return row
+
+
+def recent_stats(season_df, year, game_logs=None):
     cutoff=today();output={7:[],14:[]};latest=None
-    for player,logs in parallel_map(lambda item:(item,player_gamelog(item,year)),season_df.to_dict('records')):
+    players=season_df.to_dict('records')
+    pairs=parallel_map(lambda item:(item,player_gamelog(item,year)),players) if game_logs is None else [(p,game_logs[int(p['PLAYER_ID'])]) for p in players]
+    for player,logs in pairs:
         if len(logs)!=int(player['GP']):
             dates=sorted(str(x['date']) for x in logs)
             raise StatsSourceLagError(f"Player game log not complete for league statistics; source lag; player={int(player['PLAYER_ID'])} ({player['PLAYER_NAME']}); season={year}; GP={int(player['GP'])}; logs={len(logs)}; dates={dates}; group={season_label(year)} Regular Season; source={WEB}/athletes/{int(player['PLAYER_ID'])}/gamelog?season={year}&seasontype=2")
@@ -284,37 +302,18 @@ def recent_stats(season_df, year):
         for days in [7,14]:
             selected=[x for x in logs if cutoff-timedelta(days=days)<=x['date']<cutoff]
             if not selected:continue
-            n=len(selected);row={k:player[k] for k in IDENTITY};row['GP']=n
-            for k in ['MIN','PTS','REB','AST','STL','BLK','FG3M']:
-                values=[x.get(k) for x in selected];row[k]=sum(values)/n if all(v is not None for v in values) else None
-            turnovers=[x.get('TO') for x in selected]
-            row['TO']=sum(turnovers)/n if all(v is not None for v in turnovers) else None
-            for key in TOTAL_FIELDS:row[key+'_TOTAL']=(sum(turnovers) if all(v is not None for v in turnovers) else None) if key=='TO' else (sum(x[key] for x in selected) if all(x.get(key) is not None for x in selected) else None)
-            for prefix in ['FG','FT']:
-                for suffix in ['M','A']:
-                    values=[x.get(prefix+suffix) for x in selected]
-                    row[prefix+suffix]=sum(values) if all(v is not None for v in values) else None
-                attempts=row[prefix+'A'];made=row[prefix+'M']
-                row[prefix+'_PCT']=made/attempts if made is not None and attempts is not None and attempts>0 else None
-            output[days].append(row)
+            output[days].append(aggregate_games(player,selected))
     PROVENANCE['current_stats_last_game']=str(latest) if latest else None
     PROVENANCE['recent_windows']=dict(start_7=str(cutoff-timedelta(days=7)),start_14=str(cutoff-timedelta(days=14)),end_exclusive=str(cutoff),timezone='America/New_York')
     return pd.DataFrame(output[7],columns=COLUMNS),pd.DataFrame(output[14],columns=COLUMNS)
 
 
 def get_player_stats_multi_period():
+    from espn_boxscores import current_stats
     year=season_year();last_label=get_last_complete_season_str();last_year=int(last_label[:4])+1
-    for attempt in range(3):
-        try:
-            season=league_stats(year);last=season.copy() if last_year==year else league_stats(last_year)
-            if last.empty:raise ValueError('Last-season population missing')
-            l7,l14=recent_stats(season,year)
-            break
-        except StatsSourceLagError as error:
-            if attempt==2:raise
-            print(f'{error}; refreshing statistics sources in 30s (attempt {attempt+2}/3)',flush=True)
-            read_json.cache_clear()
-            time.sleep(30)
+    season,l7,l14=current_stats(year)
+    last=season.copy() if last_year==year else league_stats(last_year)
+    if last.empty:raise ValueError('Last-season population missing')
     return dict(Season=season,L7=l7,L14=l14,LastSeason=last,Roster=get_roster().copy(),metadata={'season':season_label(year),'last_season':last_label})
 
 

@@ -28,7 +28,7 @@ jobs:
           pip install -r requirements.txt
       - name: Generate Report
         run: |
-          python -m unittest test_sources test_defense test_schedule test_player_catalog test_roto_data test_roto_boxscore test_roto_package
+          python -m unittest test_sources test_espn_boxscores test_defense test_schedule test_player_catalog test_roto_data test_roto_boxscore test_roto_package
           node test_team_tools.cjs
           node test_roto_core.cjs
           python generate_report.py
