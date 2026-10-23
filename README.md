@@ -4,7 +4,7 @@
 
 每日 07:00 UTC 排程（台灣 15:00）；GitHub 排程可能延遲，設定時間不代表實際啟動或完成時間，請核對頁面快照時間及 Actions 結果。daily workflow 先測試、產生真實報告、檢查並提交，再由同一次 workflow 的獨立 deploy job 發布该報告的確切 commit。產生工作維持 contents:write；發布工作限 contents:read、pages:write、id-token:write，使用既有僅允許 main 的 github-pages environment。沒有新增 token。來源失敗時停止產生與發布，保留上次有效網站。
 
-ESPN 聯盟 GP 與球員例行賽逐場紀錄不同步時，最多讀取三輪來源；輪次間等待 30 秒並清除來源 JSON 快取，重新讀取聯盟統計及逐場紀錄。仍不一致就停止生成，錯誤會列出球員 ID、季別、GP、逐場筆數、日期與來源網址；缺少預期例行賽分組時另列實際分組名稱。錯季、重複比賽及其他資料錯誤仍直接停止，不以缺漏資料計算近 7／14 天。
+本季、近 7／14 天固定使用 ESPN 同一批已完賽例行賽：按月讀取 scoreboard（`dates=YYYYMM`），依 event 季別、賽事類型與 completed 篩選，再讀取 summary 的球員 boxscore。GP、整季與近期統計由相同出場列計算，不混用更新較慢的聯盟 overview 或 gamelog summary totals。球員沿用 ESPN athlete ID；DNP 排除，有有效 stats 且 didNotPlay=false 的出場仍計入，不以 active 或 reason 排除。近 7／14 天仍按美東完整日期、排除今天；FG／FT 由命中／出手加權，TO 與排名公式不變。snapshot 記錄讀取月份、完賽 event IDs、出場列與球員數。錯季、重複、缺必要統計或 Final 的 summary 不完整時停止發布，保留上次有效報告。上季已結束的歷史統計仍使用原 ESPN 季別來源。
 
 ## 操作與閱讀體驗
 
@@ -28,7 +28,7 @@ ESPN 聯盟 GP 與球員例行賽逐場紀錄不同步時，最多讀取三輪�
 
 ```sh
 pip install -r requirements.txt
-python -m unittest test_sources test_defense test_schedule test_player_catalog
+python -m unittest test_sources test_espn_boxscores test_defense test_schedule test_player_catalog
 python generate_report.py
 python security_gate.py --generated
 ```
