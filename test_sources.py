@@ -84,5 +84,47 @@ class Sources(unittest.TestCase):
         d['names'].pop();d['seasonTypes'][0]['categories'][0]['events'][0]['stats'].pop()
         with patch.object(utils,'read_json',return_value=d):
             self.assertIsNone(utils.player_gamelog({'PLAYER_ID':1},2026)[0]['TO'])
+        d['seasonTypes'][0]['displayName']='2026-27 Regular Season'
+        with patch.object(utils,'read_json',return_value=d):
+            with self.assertRaisesRegex(ValueError,'available groups=.*2026-27 Regular Season'):
+                utils.player_gamelog({'PLAYER_ID':1,'GP':1},2026)
+    def test_stats_source_lag_refreshes_both_sources_or_stops(self):
+        from functools import lru_cache
+        import pandas as pd
+        player=dict(PLAYER_ID=123,PLAYER_NAME='Lag Test',TEAM_ID=1,TEAM_ABBREVIATION='LAL',GP=2)
+        logs=[dict(date=date(2026,10,26+i),MIN=20,PTS=5,REB=1,AST=1,STL=0,BLK=0,FG3M=0,
+                   FGM=made,FGA=attempts,FTM=1,FTA=2,TO=turnovers)
+              for i,(made,attempts,turnovers) in enumerate([(1,2,0),(3,4,2),(2,6,1)])]
+        for resolves in [True,False]:
+            with self.subTest(resolves=resolves):
+                reads={'league':0,'logs':0}
+                @lru_cache(maxsize=None)
+                def source(kind):
+                    reads[kind]+=1
+                    return (3 if resolves and reads[kind]>1 else 2) if kind=='league' else (logs if resolves and reads[kind]>1 else logs[:1])
+                def league(year):
+                    return pd.DataFrame([{**player,'GP':source('league') if year==2027 else 50}])
+                with patch.multiple(utils,season_year=lambda:2027,get_last_complete_season_str=lambda:'2025-26',
+                                    today=lambda:date(2026,10,29),read_json=source,league_stats=league,
+                                    player_gamelog=lambda p,y:source('logs'),get_roster=lambda:pd.DataFrame([player])),patch.object(utils.time,'sleep') as pause,patch('builtins.print'):
+                    if resolves:
+                        data=utils.get_player_stats_multi_period()
+                        self.assertEqual(data['Season'].iloc[0]['GP'],3)
+                        self.assertEqual(data['L7'].iloc[0]['GP'],3)
+                        self.assertEqual(data['L7'].iloc[0]['PTS_TOTAL'],15)
+                        self.assertEqual(data['L7'].iloc[0]['TO_TOTAL'],3)
+                        self.assertAlmostEqual(data['L7'].iloc[0]['FG_PCT'],6/12)
+                        self.assertEqual(reads,{'league':2,'logs':2})
+                    else:
+                        with self.assertRaises(ValueError) as caught:utils.get_player_stats_multi_period()
+                        message=str(caught.exception)
+                        for detail in ['player=123','season=2027','GP=2','logs=1','2026-10-26']:
+                            self.assertIn(detail,message)
+                        self.assertEqual(reads,{'league':3,'logs':3})
+                        self.assertEqual(pause.call_count,2)
+    def test_season_mismatch_is_not_retried_as_source_lag(self):
+        with patch.object(utils,'season_year',return_value=2027),patch.object(utils,'get_last_complete_season_str',return_value='2025-26'),patch.object(utils,'league_stats',side_effect=ValueError('ESPN statistics season/type mismatch')) as league,patch.object(utils.time,'sleep') as pause:
+            with self.assertRaisesRegex(ValueError,'season/type'):utils.get_player_stats_multi_period()
+        self.assertEqual(league.call_count,1);pause.assert_not_called()
 
 if __name__=='__main__':unittest.main()
