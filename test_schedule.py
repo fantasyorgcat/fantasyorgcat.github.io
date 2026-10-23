@@ -63,10 +63,11 @@ class Schedule(unittest.TestCase):
             a,b,c,d=self.patches(lambda url:source)
             with a,b,c,d,self.assertRaises((ValueError,KeyError)):utils.get_season_schedule()
     def test_payload_keeps_cross_season_defense_badge(self):
-        ratings={'BOS':dict(Rank=3,Population=30,DefRtg=108.5,Games=10,Start='2026-03-24',End='2026-04-12')}
+        ratings={'BOS':dict(Estimated=True,Rank=3,Population=30,DefRtg=108.5,Games=10,Start='2026-03-24',End='2026-04-12')}
         frame=self.frame([date(2026,10,20)])
         badge=season_schedule_payload(frame,utils.season_weeks(frame),ratings)[0]['teams']['LAL']['days'][1]
         self.assertIn('可跨季',badge);self.assertIn('10/10',badge);self.assertIn('108.5',badge)
+        self.assertIn('估算防守效率',badge)
 
     def normalized(self,event):
         a,b,c,d=self.patches(lambda url:self.source([event]))
