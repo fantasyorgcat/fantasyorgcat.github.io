@@ -1,8 +1,8 @@
 name: Daily NBA Fantasy Update
 on:
   schedule:
-    # Run at 08:17 UTC daily (16:17 Taiwan); avoid the busy start of the hour.
-    - cron: '17 8 * * *'
+    # Target 07:00 UTC daily (15:00 Asia/Taipei); GitHub may delay scheduled runs.
+    - cron: '0 7 * * *'
   workflow_dispatch: # Allows manual trigger
 permissions:
   contents: write

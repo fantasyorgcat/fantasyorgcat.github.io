@@ -1,31 +1,33 @@
 import copy
-import json
-from pathlib import Path
 import unittest
 from player_catalog import build_catalog
 import pandas as pd
-from roto_data import read_report,records_from_catalog
+from roto_data import records_from_catalog
 from roto_package import build_package,live_period
 
 class RotoPackage(unittest.TestCase):
-    def sample(self,year='2026-27'):
+    def sample(self,year='2026-27',preseason=False):
         rows=[]
         for pid,gp in [(1,2),(2,3)]:
             row=dict(PLAYER_ID=pid,PLAYER_NAME='Test '+str(pid),TEAM_ABBREVIATION='LAL')
-            for suffix in ['', '_LS']:
+            for suffix in (['_LS'] if preseason else ['', '_LS']):
                 row.update({'GP'+suffix:gp,'MIN'+suffix:20,'FGM'+suffix:gp*2,'FGA'+suffix:gp*5,'FTM'+suffix:gp,'FTA'+suffix:gp*2})
                 for k in ['PTS','REB','AST','3PM','STL','BLK','TO']:row[k+'_TOT'+suffix]=gp*pid;row[k+suffix]=pid
             rows.append(row)
         catalog=build_catalog(pd.DataFrame(rows));previous=f'{int(year[:4])-1}-{year[2:4]}'
-        snapshot=dict(schedule={'season':year},generated_at='TEST ONLY',stats_source='ESPN',period_populations={'Season':2,'LastSeason':2},roto_references={})
+        snapshot=dict(schedule={'season':year},generated_at='TEST ONLY',stats_source='ESPN',period_populations={'Season':0 if preseason else 2,'LastSeason':2},roto_references={})
         for season,period,pop in [(year,'season','Season'),(previous,'ls','LastSeason')]:
             snapshot['players_'+str(int(season[:4])+1)]=dict(season=season,season_type='Regular Season',source_period_start='start',source_period_end='end')
-            snapshot['roto_references'][pop]=[dict(id=p['id'],gp=p['gp'],totals=p['totals'],shots=p['shots']) for p in records_from_catalog(catalog,period).values()]
+            snapshot['roto_references'][pop]=[dict(id=p['id'],gp=p['gp'],totals=p['totals'],shots=p['shots']) for p in records_from_catalog(catalog,period).values() if p['gp'] and p['gp']>0]
         return catalog,snapshot
-    def test_checked_in_preseason_has_no_fake_current_data(self):
-        d=build_package(read_report('index.html'),json.loads(Path('data_snapshot.json').read_text()))
+    def test_preseason_fixture_has_no_fake_current_data(self):
+        c,s=self.sample(preseason=True);d=build_package(c,s)
         self.assertEqual(d['default_period'],'ls');self.assertEqual(d['season'],'2025-26');self.assertEqual(d['extra_periods']['season']['season'],'2026-27')
-        self.assertFalse(d['extra_periods']['season']['stats_available']);self.assertEqual(d['catalog'],read_report('index.html'))
+        current=d['extra_periods']['season']
+        self.assertFalse(current['stats_available']);self.assertEqual(d['catalog'],c)
+        self.assertEqual(current['reference']['size'],0)
+        for player in current['players'].values():
+            self.assertIsNone(player['gp']);self.assertTrue(all(v is None for v in player['totals'].values()))
     def test_new_regular_season_automatically_becomes_default(self):
         c,s=self.sample();d=build_package(c,s)
         self.assertEqual(d['default_period'],'season');current=d['extra_periods']['season']
