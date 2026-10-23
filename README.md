@@ -2,7 +2,7 @@
 
 公開網站：https://fantasyorgcat.github.io/
 
-每日 08:17 UTC 排程（台灣 16:17）；排程設定不代表每次已成功更新，請核對頁面快照時間及 Actions 結果。daily workflow 先測試、產生真實報告、檢查並提交，再由同一次 workflow 的獨立 deploy job 發布该報告的確切 commit。產生工作維持 contents:write；發布工作限 contents:read、pages:write、id-token:write，使用既有僅允許 main 的 github-pages environment。沒有新增 token。來源失敗時停止產生與發布，保留上次有效網站。
+每日 07:00 UTC 排程（台灣 15:00）；GitHub 排程可能延遲，設定時間不代表實際啟動或完成時間，請核對頁面快照時間及 Actions 結果。daily workflow 先測試、產生真實報告、檢查並提交，再由同一次 workflow 的獨立 deploy job 發布该報告的確切 commit。產生工作維持 contents:write；發布工作限 contents:read、pages:write、id-token:write，使用既有僅允許 main 的 github-pages environment。沒有新增 token。來源失敗時停止產生與發布，保留上次有效網站。
 
 ## 操作與閱讀體驗
 
