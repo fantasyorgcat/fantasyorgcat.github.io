@@ -4,6 +4,7 @@ import base64
 import hashlib
 from html.parser import HTMLParser
 import json
+import math
 from pathlib import Path
 import re
 import shutil
@@ -39,6 +40,27 @@ def check_defense_provenance(meta):
     if defense.get('status')=='unavailable':
         if 'defense_source' not in meta or meta['defense_source'] is not None or defense.get('source') is not None or not defense.get('reason') or defense.get('eligible_teams')!=0 or defense.get('teams')!={} or defense.get('last_game') is not None:
             raise ValueError('Unavailable defense must have no source, ratings, or source date')
+    elif defense.get('source')=='ESPN':
+        from espn_defense import FORMULA,METRIC
+        if meta.get('defense_source')!='ESPN' or defense.get('estimated') is not True or defense.get('metric')!=METRIC or defense.get('formula')!=FORMULA:
+            raise ValueError('Estimated defense provenance is inconsistent')
+        teams=defense.get('teams',{});complete=[]
+        for abbr,row in teams.items():
+            n=row['Games'];selected=row['SelectedGameIds'];games=row['GameIds']
+            if row.get('Estimated') is not True or not 0<=n<=10 or len(games)!=n or len(set(games))!=n or len(selected)>10 or len(set(selected))!=len(selected) or not set(games).issubset(selected):
+                raise ValueError('Estimated defense sample is inconsistent')
+            if row['Complete']:
+                points=row['OpponentPoints'];possessions=row['EstimatedOpponentPossessions'];rating=row['DefRtg']
+                if n!=10 or len(selected)!=10 or row['MissingGames'] or row.get('Issue') or not all(isinstance(v,(int,float)) and math.isfinite(v) for v in [points,possessions,rating]) or possessions<=0 or abs(rating-100*points/possessions)>1e-9:
+                    raise ValueError('Estimated defense calculation is inconsistent')
+                complete.append(abbr)
+            elif row['Rank'] is not None or row['DefRtg'] is not None:
+                raise ValueError('Incomplete defense must not be ranked')
+        expected=sorted(complete,key=lambda abbr:(teams[abbr]['DefRtg'],abbr))
+        if defense.get('eligible_teams')!=len(expected) or defense.get('total_teams')!=30 or defense.get('status')!=('available' if len(expected)==len(teams)==30 else 'partial'):
+            raise ValueError('Estimated defense coverage is inconsistent')
+        if any(teams[abbr]['Rank']!=rank or teams[abbr]['Population']!=len(expected) for rank,abbr in enumerate(expected,1)):
+            raise ValueError('Estimated defense ranking is inconsistent')
     elif meta.get('defense_source')!='PBP Stats' or defense.get('source')!='PBP Stats':
         # Previously published snapshots retain their historical source attribution.
         raise ValueError('Defense provenance absent or inconsistent')
@@ -63,6 +85,8 @@ def check(report, snapshot):
     check_defense_provenance(meta)
     if meta.get('defense',{}).get('status')=='unavailable' and any(a.get('title')!='最近10場例行賽防守資料暫缺' or '#dedbd5' not in a.get('style','') for a in parser.matchups):
         raise ValueError('Unavailable defense cannot display ratings or difficulty colors')
+    if meta.get('defense',{}).get('estimated') and any('近10場估算防守效率' not in a.get('title','') for a in parser.matchups):
+        raise ValueError('Estimated defense must be visibly labeled')
     if not meta.get('roster_players') or not meta.get('schedule',{}).get('season'):raise ValueError('Roster/schedule provenance absent')
     if not any(k.startswith('players_') and v.get('population',0)>0 for k,v in meta.items() if isinstance(v,dict)):
         raise ValueError('Complete league statistics provenance absent')

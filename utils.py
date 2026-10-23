@@ -1,4 +1,4 @@
-"""Public ESPN player/schedule data; optional defense is explicitly unavailable.
+"""Public ESPN player/schedule data and labeled estimated last-ten defense.
 Source failures abort generation; fixtures are never fallback production data.
 """
 from concurrent.futures import ThreadPoolExecutor
@@ -316,11 +316,8 @@ def get_player_stats_multi_period():
 
 
 def get_team_defensive_ratings():
-    """ESPN boxscores do not supply the exact DefPoss used by the old metric."""
-    PROVENANCE['defense']=dict(status='unavailable',source=None,
-        reason='The fixed ESPN source does not provide exact DefPoss for the existing last-10-game defense metric; no estimate or previous rating is used.',
-        eligible_teams=0,last_game=None,teams={})
-    return {}
+    from espn_defense import defensive_ratings
+    return defensive_ratings()
 
 
 def get_color_for_rank(rank, population=30):

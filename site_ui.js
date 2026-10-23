@@ -51,6 +51,8 @@ const EN={
  "美東日期，含迄日；可依自己的聯盟設定輸入 1–31 天。": "Use New York dates, inclusive; enter 1–31 days to match your league.",
  "依目前快照與瀏覽時間計算球隊排程；未套用傷病、陣容、位置或 GP 上限，不代表可用上場場次。低比賽日指美東當日全聯盟 1–5 場。": "Schedule counts use this snapshot and the current time. Injuries, roster slots, positions and games limits are not applied. A light day has 1–5 NBA games on that New York date.",
  "近10場對手防守": "Opponent defense · last 10 games",
+ "近10場估算防守效率": "Estimated defense · last 10 games",
+ "近10場估算防守效率暫缺；球員統計與賽程正常更新。": "Estimated last-10 defense is unavailable; player statistics and schedules continue to update.",
  "對手防守資料暫缺": "Opponent defense unavailable",
  "不影響球員與賽程更新": "Player and schedule updates continue",
  "對手防守資料暫缺：目前固定來源未提供原防守指標所需的回合資料，暫不顯示防守排名；球員統計與賽程正常更新。": "Opponent defense is unavailable: the fixed source does not provide the possession data required for the original metric. Player statistics and schedules continue to update.",
@@ -304,6 +306,10 @@ function translate(source){
  let value=source;
  if(prefs.language==='en'){
   value=EN[source]||source;
+  if(value===source&&source.startsWith('近10場估算防守效率：')){
+   const coverage=source.match(/完整球隊 ([\d/]+)/)?.[1]||'—',latest=source.match(/最新比賽 ([\d-]+)/)?.[1]||'—';
+   value='ESPN estimated defense over the last 10 completed regular-season games, continuing into the prior season. Estimated possessions = opponent FGA + 0.4 × FTA − offensive rebounds + total turnovers. Lower points allowed per 100 estimated possessions ranks better. Complete teams '+coverage+', latest game '+latest+'. This is an estimate. Incomplete samples are marked n/10 and unranked; the 11th game is not substituted.';
+  }
   if(value===source&&source.startsWith('PBP Stats 各隊最近10場')){
    const coverage=source.match(/有效球隊 ([\d/]+)/)?.[1]||'—',latest=source.match(/最新比賽 ([\d-]+)/)?.[1]||'—';
    value='PBP Stats: each team’s last 10 completed regular-season games, continuing across seasons. Preseason and playoffs are excluded. Defense is opponent points / combined game DefPoss × 100; lower is stronger. Coverage '+coverage+', latest game '+latest+'. Samples under 10 games are marked n/10. Missing source data stops the update and preserves the last valid report. This is team defense, not positional DvP.';
@@ -314,6 +320,9 @@ function translate(source){
   }
   if(value===source){
    const rules=[
+    [/^完整 (\d+)\/30 隊$/,(_,n)=>'Complete '+n+'/30 teams'],
+    [/^近10場估算防守效率資料未完整：(\d+)\/10；暫不排名。$/,(_,n)=>'Estimated defense incomplete: '+n+'/10; unranked.'],
+    [/^ESPN 近10場估算防守效率 \(可跨季\): ([\d.]+)失分\/100估算回合; 排名 (\d+)\/(\d+); (\d+)\/10場; (.+)$/,(_,rating,rank,total,n,dates)=>'ESPN estimated defense: '+rating+' points allowed / 100 estimated possessions; rank #'+rank+' of '+total+'; '+n+'/10 games; '+dates],
     [/^球隊賽程 · (.+)$/,(_,label)=>'Team schedule · '+periodLabel(label)],
     [/^(.+) · 14天$/,(_,label)=>label+' · 14 days'],
     [/^(.+) · 預設季後賽$/,(_,label)=>label+' · Default playoffs'],

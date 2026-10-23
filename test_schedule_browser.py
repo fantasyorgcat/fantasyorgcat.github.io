@@ -15,7 +15,7 @@ from generate_report import generate_html_report
 
 ROOT=Path(__file__).resolve().parent
 
-def build_fixture(target):
+def build_fixture(target,defense=None):
     target=Path(target);target.mkdir(parents=True,exist_ok=True)
     for name in ['dashboard.css','player_tools.js','schedule_tools.js','team_tools.js','table_tools.js','site_ui.js']:shutil.copyfile(ROOT/name,target/name)
     shutil.copytree(ROOT/'assets',target/'assets',dirs_exist_ok=True)
@@ -40,7 +40,11 @@ def build_fixture(target):
     old_cwd=Path.cwd();old_provenance=dict(utils.PROVENANCE)
     try:
         os.chdir(target);utils.PROVENANCE.clear();utils.PROVENANCE.update(fixture=True,roster_players=605,schedule=dict(season='2026-27',published_events=12,undated_events=1),players_2026=dict(population=578,source_period_end='2026-04-13'))
-        with patch.object(utils,'today',return_value=date(2026,10,1)),patch.object(utils,'get_season_schedule',return_value=schedule),patch.object(utils,'get_player_stats_multi_period',return_value=stats):generate_html_report()
+        def fixture_defense():
+            ratings,meta=defense or ({},dict(status='unavailable',source=None,reason='UI TEST ONLY: no defense input',eligible_teams=0,last_game=None,teams={}))
+            utils.PROVENANCE['defense']=meta
+            return ratings
+        with patch.object(utils,'today',return_value=date(2026,10,1)),patch.object(utils,'get_season_schedule',return_value=schedule),patch.object(utils,'get_player_stats_multi_period',return_value=stats),patch.object(utils,'get_team_defensive_ratings',side_effect=fixture_defense):generate_html_report()
         path=target/'fantasy_nba_report_v2.html';html=path.read_text();html=html.replace('<title>','<title>UI TEST ONLY · ').replace('把下一場，排進你的陣容。','UI TEST ONLY · 合成資料驗證');path.write_text(html)
     finally:os.chdir(old_cwd);utils.PROVENANCE.clear();utils.PROVENANCE.update(old_provenance)
     return target/'fantasy_nba_report_v2.html'
