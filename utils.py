@@ -23,6 +23,9 @@ SCHEDULE_COLUMNS = ['TEAM_ID','TEAM_ABBREVIATION','GAME_DATE','MATCHUP','EVENT_I
 IDENTITY = COLUMNS[:4]
 PROVENANCE = {}
 
+class StatsSourceLagError(ValueError):
+    """League GP and player game logs do not yet form one consistent snapshot."""
+
 def parse_turnovers(value, total=False):
     if value is None or (isinstance(value,str) and value.strip() in ['', '-', '--', 'N/A']):return None
     if isinstance(value,bool):raise ValueError('Invalid turnover statistic')
@@ -239,9 +242,12 @@ def league_stats(year):
 
 
 def player_gamelog(player, year):
-    d=read_json(f"{WEB}/athletes/{int(player['PLAYER_ID'])}/gamelog?season={year}&seasontype=2")
+    source=f"{WEB}/athletes/{int(player['PLAYER_ID'])}/gamelog?season={year}&seasontype=2"
+    d=read_json(source)
     season_filter=next(f for f in d['filters'] if f['name']=='season')
     if str(season_filter['value']) != str(year):raise ValueError('Player log season mismatch')
+    if player.get('GP',0)>0 and not any(g['displayName']==season_label(year)+' Regular Season' for g in d.get('seasonTypes',[])):
+        raise StatsSourceLagError(f"Player regular-season log group missing; player={int(player['PLAYER_ID'])}; season={year}; GP={int(player['GP'])}; available groups={[g.get('displayName') for g in d.get('seasonTypes',[])]}; source={source}")
     rows={}
     for group in d.get('seasonTypes',[]):
         if group['displayName'] != season_label(year)+' Regular Season':continue
@@ -271,7 +277,9 @@ def player_gamelog(player, year):
 def recent_stats(season_df, year):
     cutoff=today();output={7:[],14:[]};latest=None
     for player,logs in parallel_map(lambda item:(item,player_gamelog(item,year)),season_df.to_dict('records')):
-        if len(logs)!=int(player['GP']):raise ValueError('Player game log not complete for league statistics; source lag')
+        if len(logs)!=int(player['GP']):
+            dates=sorted(str(x['date']) for x in logs)
+            raise StatsSourceLagError(f"Player game log not complete for league statistics; source lag; player={int(player['PLAYER_ID'])} ({player['PLAYER_NAME']}); season={year}; GP={int(player['GP'])}; logs={len(logs)}; dates={dates}; group={season_label(year)} Regular Season; source={WEB}/athletes/{int(player['PLAYER_ID'])}/gamelog?season={year}&seasontype=2")
         if logs:latest=max(latest or logs[0]['date'],max(x['date'] for x in logs))
         for days in [7,14]:
             selected=[x for x in logs if cutoff-timedelta(days=days)<=x['date']<cutoff]
@@ -296,9 +304,17 @@ def recent_stats(season_df, year):
 
 def get_player_stats_multi_period():
     year=season_year();last_label=get_last_complete_season_str();last_year=int(last_label[:4])+1
-    season=league_stats(year);last=season.copy() if last_year==year else league_stats(last_year)
-    if last.empty:raise ValueError('Last-season population missing')
-    l7,l14=recent_stats(season,year)
+    for attempt in range(3):
+        try:
+            season=league_stats(year);last=season.copy() if last_year==year else league_stats(last_year)
+            if last.empty:raise ValueError('Last-season population missing')
+            l7,l14=recent_stats(season,year)
+            break
+        except StatsSourceLagError as error:
+            if attempt==2:raise
+            print(f'{error}; refreshing statistics sources in 30s (attempt {attempt+2}/3)',flush=True)
+            read_json.cache_clear()
+            time.sleep(30)
     return dict(Season=season,L7=l7,L14=l14,LastSeason=last,Roster=get_roster().copy(),metadata={'season':season_label(year),'last_season':last_label})
 
 
