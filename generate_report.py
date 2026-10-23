@@ -95,7 +95,7 @@ def generate_html_report():
     print("Fetching Player Stats (Multi-Period)...")
     stats_dict = utils.get_player_stats_multi_period()
 
-    print("Fetching Defensive Ratings...")
+    print("Opponent defense unavailable in the fixed ESPN source.")
     def_ratings = utils.get_team_defensive_ratings()
 
     # Counting stats use exact source totals, not rounded averages multiplied by GP.
@@ -445,7 +445,7 @@ def generate_html_report():
     provenance = dict(utils.PROVENANCE)
     provenance['season_weeks']=[dict(number=w['number'],start=str(w['start']),end=str(w['end']),
         events=season_payload[i]['events']) for i,w in enumerate(all_weeks)]
-    provenance.update(generated_at=generated_at, stats_source='ESPN', defense_source='PBP Stats',
+    provenance.update(generated_at=generated_at, stats_source='ESPN', defense_source=provenance.get('defense',{}).get('source'),
                       period_populations={k:len(stats_dict[k]) for k in ['Season','L7','L14','LastSeason']})
     provenance['roto_references']={key:source_reference(stats_dict[key]) for key in ['Season','LastSeason']}
     provenance['schedule_events']=[{k:v for k,v in e.items() if not k.endswith('_html')} for e in events_payload]
@@ -463,14 +463,9 @@ def generate_html_report():
     )
     if stats_dict['Season'].empty:
         data_notice += " 當季例行賽尚無球員統計，預設顯示 Last Season；缺值不填造。"
-    data_notice += ' ESPN/NBA/PBP資料再散布授權仍未確認。'
+    data_notice += ' ESPN/NBA資料再散布授權仍未確認。'
     defense_meta = provenance.get('defense', {})
-    defense_notice = (
-        "PBP Stats 各隊最近10場已完成例行賽，可跨季接續上季；排除季前與季後賽。"
-        "以對手總得分 ÷ 逐場 DefPoss 合計 ×100 計算，越低防守越強，再對有資料球隊排名。"
-        f"有效球隊 {defense_meta.get('eligible_teams',len(def_ratings))}/30，最新比賽 {defense_meta.get('last_game') or '暫無資料'}。"
-        "不足10場標示 n/10；來源缺漏會停止更新並保留有效報告。這是球隊防守，並非位置別 DvP。"
-    )
+    defense_notice = "對手防守資料暫缺：目前固定來源未提供原防守指標所需的回合資料，暫不顯示防守排名；球員統計與賽程正常更新。"
     dashboard_css = Path('dashboard.css').read_text(encoding='utf-8-sig')
     roster_count = len(stats_dict.get('Roster', stats_dict['Season']))
     defense_count = defense_meta.get('eligible_teams', len(def_ratings))
@@ -674,7 +669,7 @@ def generate_html_report():
     </head>
     <body class="dashboard-page">
         <div class="container">
-            <header class="appbar"><div class="brand"><span class="brand-mark">FC</span><div>FANTASYORGCAT<small>NBA FANTASY 工具箱</small></div></div><div class="app-status">ESPN + PBP Stats<br>更新 {escape(generated_at)}</div><div class="site-preferences" data-site-preferences></div><nav class="site-nav" aria-label="網站導覽"><a href="index.html" aria-current="page">球員與賽程</a><a href="roto.html">九項配隊</a></nav></header>
+            <header class="appbar"><div class="brand"><span class="brand-mark">FC</span><div>FANTASYORGCAT<small>NBA FANTASY 工具箱</small></div></div><div class="app-status">ESPN<br>更新 {escape(generated_at)}</div><div class="site-preferences" data-site-preferences></div><nav class="site-nav" aria-label="網站導覽"><a href="index.html" aria-current="page">球員與賽程</a><a href="roto.html">九項配隊</a></nav></header>
             <section class="hero"><div><h1>把下一場排入你的賽程</h1><p>選擇週次、篩選球隊，再勾選球員一起比較。</p></div><div class="hero-meta"><strong>{escape(metadata['season'])} NBA</strong><span id="hero-period-range">{escape(str(w1_start))} — {escape(str(final_end))}</span></div></section>
             <details class="data-details"><summary>資料快照與來源 · {escape(fixture_caption)}</summary><div class="metric-grid">
                 <div class="metric-card"><span>現役球員</span><strong>{roster_count}</strong><small>人</small></div>
@@ -684,7 +679,7 @@ def generate_html_report():
             </div><p class="data-notice">{escape(data_notice)}</p><p class="defense-notice">{escape(defense_notice)}</p></details>
             <div class="workspace-bar"><nav class="platform-switch" aria-label="週次類型">{platform_buttons}</nav>{season_select}<div class="filter-tools"><span id="active-selection" class="selection-label" role="status">全體球員</span><button id="show-all-players" class="global-reset" onclick="resetActiveTeamFilter()" aria-pressed="true" title="清除球隊與搜尋，保留統計期間及AVG/TOT">全體球員</button><button id="jump-players" type="button" class="btn-stat">球員名單 ↓</button><a id="view-comparison" href="#comparison-panel" class="btn-stat" hidden>比較 0 人</a></div></div>
             <section class="period-tools" aria-label="賽程資訊"><details id="schedule-extras"><summary>自訂期間／近期快捷</summary><p id="platform-note" class="platform-note" role="status"></p><nav class="tab" aria-label="近期週次">{tab_buttons}</nav><p>美東日期，含迄日；可依自己的聯盟設定輸入 1–31 天。</p><div class="period-inputs"><label>起日（美東）<input id="period-start" type="date" value="{w1_start}"></label><label>迄日（含，美東）<input id="period-end" type="date" value="{w1_end}"></label><button id="apply-custom-period" class="btn-stat" type="button">套用自訂期間</button></div><p id="period-error" role="alert" hidden></p></details><p id="schedule-freshness" role="status"></p><details id="schedule-metrics"><summary>剩餘排程、背靠背與低比賽日</summary><p>依目前快照與瀏覽時間計算球隊排程；未套用傷病、陣容、位置或 GP 上限，不代表可用上場場次。低比賽日指美東當日全聯盟 1–5 場。</p><p id="schedule-period-context"></p><div id="schedule-insights" class="schedule-scroll"></div><div id="schedule-pending"></div></details></section>
-            <div class="legend"><b>近10場對手防守</b><span><i class="dot" style="background:{utils.get_color_for_rank(30)}"></i>較好打</span><span><i class="dot" style="background:{utils.get_color_for_rank(15)}"></i>中段</span><span><i class="dot" style="background:{utils.get_color_for_rank(1)}"></i>較難打</span><span><i class="dot" style="background:{utils.get_color_for_rank(None)}"></i>暫缺</span></div>
+            <div class="legend"><b>對手防守資料暫缺</b><span><i class="dot" style="background:{utils.get_color_for_rank(None)}"></i>不影響球員與賽程更新</span></div>
             <section id="comparison-panel" class="player-section" hidden><div class="player-heading"><h3>球員比較</h3><button id="clear-comparison" type="button" class="btn-stat">清空比較</button><a id="open-roto" href="roto.html" target="_blank" rel="noopener" class="btn-stat roto-link">用勾選配隊 ↗</a></div><div class="controls"><label>統計期間 <select id="comparison-period"><option value="season">本季</option><option value="l7">近7天</option><option value="l14">近14天</option><option value="ls">上季</option></select></label><label>顯示 <select id="comparison-mode"><option value="avg">平均 AVG</option><option value="tot">總量 TOT</option></select></label></div><p id="comparison-meta"></p><div class="comparison-scroll"><table id="comparison-table"><thead id="comparison-head"></thead><tbody id="comparison-body"></tbody></table></div></section>
             {week_panels}
             <footer class="footer">FANTASYORGCAT · 每日資料快照 · 球隊防守非位置別 DvP</footer>

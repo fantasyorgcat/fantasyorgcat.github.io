@@ -51,6 +51,9 @@ const EN={
  "美東日期，含迄日；可依自己的聯盟設定輸入 1–31 天。": "Use New York dates, inclusive; enter 1–31 days to match your league.",
  "依目前快照與瀏覽時間計算球隊排程；未套用傷病、陣容、位置或 GP 上限，不代表可用上場場次。低比賽日指美東當日全聯盟 1–5 場。": "Schedule counts use this snapshot and the current time. Injuries, roster slots, positions and games limits are not applied. A light day has 1–5 NBA games on that New York date.",
  "近10場對手防守": "Opponent defense · last 10 games",
+ "對手防守資料暫缺": "Opponent defense unavailable",
+ "不影響球員與賽程更新": "Player and schedule updates continue",
+ "對手防守資料暫缺：目前固定來源未提供原防守指標所需的回合資料，暫不顯示防守排名；球員統計與賽程正常更新。": "Opponent defense is unavailable: the fixed source does not provide the possession data required for the original metric. Player statistics and schedules continue to update.",
  "較好打": "Easier",
  "稍好打": "Slightly easier",
  "中段": "Average",
@@ -307,7 +310,7 @@ function translate(source){
   }
   if(value===source&&source.startsWith('選週只切換賽程')){
    const capture=r=>source.match(r)?.[1]||'—',stamp=capture(/報告產生時間：(.+?)。/),season=capture(/當季 ([\d-]+)/),archive=capture(/上季 ([\d-]+)/),through=capture(/來源期間至 ([\d-]+)/),window=capture(/近期窗口為美東日期 ([\d-]+)/),range=capture(/四週範圍 ([\d–-]+)/),counts=source.match(/各期 PR 母體：當季 (\d+)、近7天 (\d+)、近14天 (\d+)、上季 (\d+)/);
-   value='Week selection changes schedules only; stats and PRs use the report snapshot. NBA weeks run Monday–Sunday in New York, starting with the first regular-season game’s week. Yahoo uses the verified public default calendar; ESPN uses its verified season Weekly calendar and is disabled for unverified seasons. Custom matchup and playoff dates are supported. Quick week 1 runs from today through Sunday. Only published dates are shown; unannounced games are not invented, and empty weeks remain available. Generated: '+stamp+'. ESPN seasons: '+season+' and previous season '+archive+', source regular-season range through '+through+'. Recent windows cover the complete 7/14 days before '+window+' in New York. Rosters use this ESPN snapshot. Scoring weeks use New York dates; displayed game dates and times use your selected time zone. Quick range: '+range+'. PR populations (season / 7 days / 14 days / prior season): '+(counts?counts.slice(1).join(' / '):'—')+'. '+(source.includes('當季例行賽尚無')?'No current regular-season player stats yet; the previous season is shown by default. ':'')+'Missing values are not fabricated. Redistribution permissions for ESPN/NBA/PBP data remain unconfirmed.';
+   value='Week selection changes schedules only; stats and PRs use the report snapshot. NBA weeks run Monday–Sunday in New York, starting with the first regular-season game’s week. Yahoo uses the verified public default calendar; ESPN uses its verified season Weekly calendar and is disabled for unverified seasons. Custom matchup and playoff dates are supported. Quick week 1 runs from today through Sunday. Only published dates are shown; unannounced games are not invented, and empty weeks remain available. Generated: '+stamp+'. ESPN seasons: '+season+' and previous season '+archive+', source regular-season range through '+through+'. Recent windows cover the complete 7/14 days before '+window+' in New York. Rosters use this ESPN snapshot. Scoring weeks use New York dates; displayed game dates and times use your selected time zone. Quick range: '+range+'. PR populations (season / 7 days / 14 days / prior season): '+(counts?counts.slice(1).join(' / '):'—')+'. '+(source.includes('當季例行賽尚無')?'No current regular-season player stats yet; the previous season is shown by default. ':'')+'Missing values are not fabricated. Redistribution permissions for '+(source.includes('ESPN/NBA/PBP')?'ESPN/NBA/PBP':'ESPN/NBA')+' data remain unconfirmed.';
   }
   if(value===source){
    const rules=[
