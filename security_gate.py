@@ -17,9 +17,10 @@ SECRET_PATTERNS = [r'gh[pousr]_[A-Za-z0-9]{30,}', r'github_pat_[A-Za-z0-9_]{40,}
 
 class PublicHTML(HTMLParser):
     def __init__(self):
-        super().__init__(); self.errors=[]; self.external=[]; self.scripts=0; self.csp=None
+        super().__init__(); self.errors=[]; self.external=[]; self.scripts=0; self.csp=None; self.matchups=[]
     def handle_starttag(self,tag,attrs):
         attrs=dict(attrs)
+        if 'matchup' in attrs.get('class','').split():self.matchups.append(attrs)
         if tag in ['iframe','object','embed','base','form','img']:
             self.errors.append('Unexpected active content tag: '+tag)
         if tag=='meta' and attrs.get('http-equiv','').lower()=='content-security-policy':self.csp=attrs.get('content')
@@ -31,6 +32,16 @@ class PublicHTML(HTMLParser):
             if key in ['src','href'] and value and (value.startswith(('http:','https:','//','javascript:')) or '..' in value):
                 if not (tag=='a' and key=='href' and value in ATTRIBUTION_URLS and attrs.get('rel')=='noopener' and attrs.get('target')=='_blank'):
                     self.errors.append('Unexpected external/unsafe resource URL')
+
+
+def check_defense_provenance(meta):
+    defense=meta.get('defense',{})
+    if defense.get('status')=='unavailable':
+        if 'defense_source' not in meta or meta['defense_source'] is not None or defense.get('source') is not None or not defense.get('reason') or defense.get('eligible_teams')!=0 or defense.get('teams')!={} or defense.get('last_game') is not None:
+            raise ValueError('Unavailable defense must have no source, ratings, or source date')
+    elif meta.get('defense_source')!='PBP Stats' or defense.get('source')!='PBP Stats':
+        # Previously published snapshots retain their historical source attribution.
+        raise ValueError('Defense provenance absent or inconsistent')
 
 
 def check(report, snapshot):
@@ -47,8 +58,11 @@ def check(report, snapshot):
         raise ValueError('Official pinned jQuery digest mismatch')
     if 'Fixture Alpha' in data or 'Fixture Beta' in data or 'UI TEST ONLY' in data:raise ValueError('Test fixture cannot be published')
     meta=json.loads(snapshot.read_text(encoding='utf-8'))
-    if meta.get('stats_source')!='ESPN' or meta.get('defense_source')!='PBP Stats':raise ValueError('Source provenance absent')
-    if meta.get('fixture') or meta.get('defense',{}).get('source')!='PBP Stats':raise ValueError('Defense provenance absent or test fixture')
+    if meta.get('stats_source')!='ESPN':raise ValueError('Source provenance absent')
+    if meta.get('fixture'):raise ValueError('Test fixture cannot be published')
+    check_defense_provenance(meta)
+    if meta.get('defense',{}).get('status')=='unavailable' and any(a.get('title')!='最近10場例行賽防守資料暫缺' or '#dedbd5' not in a.get('style','') for a in parser.matchups):
+        raise ValueError('Unavailable defense cannot display ratings or difficulty colors')
     if not meta.get('roster_players') or not meta.get('schedule',{}).get('season'):raise ValueError('Roster/schedule provenance absent')
     if not any(k.startswith('players_') and v.get('population',0)>0 for k,v in meta.items() if isinstance(v,dict)):
         raise ValueError('Complete league statistics provenance absent')

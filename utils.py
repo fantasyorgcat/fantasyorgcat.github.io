@@ -1,4 +1,4 @@
-"""Public ESPN player/schedule data and PBP Stats last-10 defense.
+"""Public ESPN player/schedule data; optional defense is explicitly unavailable.
 Source failures abort generation; fixtures are never fallback production data.
 """
 from concurrent.futures import ThreadPoolExecutor
@@ -13,7 +13,6 @@ import requests
 
 SITE = 'https://site.api.espn.com/apis/site/v2/sports/basketball/nba'
 WEB = 'https://site.web.api.espn.com/apis/common/v3/sports/basketball/nba'
-PBP = 'https://api.pbpstats.com'
 ALIASES = {'GS':'GSW', 'NO':'NOP', 'NY':'NYK', 'SA':'SAS', 'UTAH':'UTA', 'WSH':'WAS'}
 COLUMNS = ['PLAYER_ID','PLAYER_NAME','TEAM_ID','TEAM_ABBREVIATION','GP','MIN','PTS','REB','AST','STL','BLK','FG_PCT','FT_PCT','FG3M','TO']
 TOTAL_FIELDS = {'PTS':'points','REB':'rebounds','AST':'assists','STL':'steals','BLK':'blocks','FG3M':'threePointFieldGoalsMade','TO':'turnovers'}
@@ -70,8 +69,7 @@ def abbreviation(value):
 def read_json(url):
     for attempt in range(3):
         try:
-            headers = {'User-Agent':'Fantasy-NBA-Streaming-Assistant/2.0 (public data report)'} if url.startswith(PBP+'/') else {}
-            r = requests.get(url, headers=headers, timeout=(10, 35))
+            r = requests.get(url, timeout=(10, 35))
             r.raise_for_status()
             return r.json()
         except (requests.Timeout, requests.ConnectionError):
@@ -318,94 +316,11 @@ def get_player_stats_multi_period():
 
 
 def get_team_defensive_ratings():
-    year = season_year()
-    cutoff = today()
-    seasons = {}
-    byid = {}
-
-    def load_games(end_year):
-        label = season_label(end_year)
-        data = read_json(f'{PBP}/get-games/nba?Season={label}&SeasonType=Regular%20Season')
-        if not isinstance(data.get('results'), list):raise ValueError('PBP completed game population missing')
-        prefix = '002'+str(end_year-1)[-2:]
-        accepted = {}
-        for game in data['results']:
-            gid = game['GameId']
-            if not re.fullmatch(r'002[0-9]{7}', gid):continue  # Exclude preseason/postseason.
-            if not gid.startswith(prefix):raise ValueError('PBP regular game belongs to wrong requested season')
-            day = datetime.fromisoformat(game['Date']).date()
-            if not datetime(end_year-1,7,1).date() <= day <= datetime(end_year,6,30).date():
-                raise ValueError('PBP regular game date outside requested season')
-            if day > cutoff:continue
-            scores = [game['HomePoints'],game['AwayPoints']]
-            if any(value is None for value in scores):continue  # API unfinished-game sentinel.
-            if any(isinstance(value,bool) or not isinstance(value,(int,float)) or not math.isfinite(value) or value<0 for value in scores):
-                raise ValueError('Invalid PBP scoreboard points')
-            if any(value == 0 for value in scores):continue
-            if game['HomeTeamId']==game['AwayTeamId']:raise ValueError('Invalid PBP competition')
-            if gid in accepted and accepted[gid] != game:raise ValueError('Conflicting duplicate PBP game')
-            accepted[gid] = game
-        seasons[label] = accepted
-        for gid,game in accepted.items():
-            if gid in byid and byid[gid]!=game:raise ValueError('Cross-season GameId conflict')
-            byid[gid] = game
-
-    load_games(year)
-    counts = {}
-    for game in byid.values():
-        for key in ['HomeTeamId','AwayTeamId']:counts[game[key]]=counts.get(game[key],0)+1
-    # Until every NBA team has 10 completed current-season games, carry in last season.
-    if len(counts)<30 or any(count<10 for count in counts.values()):load_games(year-1)
-    teamids={g[key] for g in byid.values() for key in ['HomeTeamId','AwayTeamId']}
-
-    def team_rating(tid):
-        selected = sorted([g for g in byid.values() if tid in [g['HomeTeamId'],g['AwayTeamId']]],
-                          key=lambda g:(g['Date'],g['GameId']),reverse=True)[:10]
-        points = 0;poss = 0
-        selected_seasons = []
-        for label,games in seasons.items():
-            needed = [g for g in selected if g['GameId'] in games]
-            if not needed:continue
-            selected_seasons.append(label)
-            try:
-                raw = read_json(f'{PBP}/get-game-logs/nba?Season={label}&SeasonType=Regular%20Season&EntityType=Team&EntityId={tid}')
-            except RuntimeError as error:
-                raise RuntimeError(f'PBP Stats public team {tid}, season {label}: {error}') from None
-            if not isinstance(raw.get('multi_row_table_data'),list):raise ValueError('PBP team log population missing')
-            logs = {}
-            prefix = '002'+label[:4][-2:]
-            for row in raw['multi_row_table_data']:
-                gid=row.get('GameId')
-                if not gid:continue
-                if not re.fullmatch(r'002[0-9]{7}',gid):continue
-                if not gid.startswith(prefix):raise ValueError('PBP team log season mismatch')
-                if gid in logs and logs[gid]!=row:raise ValueError('Conflicting duplicate PBP team log')
-                logs[gid]=row
-                if row['Date'] <= str(cutoff) and gid not in games:raise ValueError('PBP scoreboard lags completed team logs')
-            for game in needed:
-                row=logs.get(game['GameId'])
-                if row is None:raise ValueError('PBP defense possession log missing for selected game')
-                defense_poss=row.get('DefPoss')
-                if row['Date']!=game['Date'] or isinstance(defense_poss,bool) or not isinstance(defense_poss,(int,float)) or not math.isfinite(defense_poss) or defense_poss<=0:
-                    raise ValueError('Invalid PBP defense possession log')
-                points += game['AwayPoints'] if game['HomeTeamId']==tid else game['HomePoints']
-                poss += defense_poss
-        newest=selected[0]
-        abbr=newest['HomeTeamAbbreviation'] if newest['HomeTeamId']==tid else newest['AwayTeamAbbreviation']
-        return abbreviation(abbr),dict(DefRtg=100*points/poss,Games=len(selected),Start=selected[-1]['Date'],End=newest['Date'],
-            Seasons=selected_seasons,GameIds=[g['GameId'] for g in selected],OpponentPoints=points,DefPoss=poss)
-
-    # Keep this public endpoint sequential; parallel team logs intermittently return 503.
-    ratings=dict(team_rating(tid) for tid in sorted(teamids))
-    if len(ratings)!=len(teamids):raise ValueError('PBP team identity collision')
-    count=len(ratings)
-    for rank,(abbr,row) in enumerate(sorted(ratings.items(),key=lambda item:(item[1]['DefRtg'],item[0])),1):
-        row['Rank']=rank;row['Population']=count
-    PROVENANCE['defense']=dict(source='PBP Stats',season=season_label(year),
-        seasons_considered=list(seasons),window='last 10 completed team regular-season games; previous season carryover',
-        formula='100 * sum(opponent scoreboard points) / sum(team game-log DefPoss)',eligible_teams=count,
-        last_game=max((g['Date'] for g in byid.values()),default=None),teams=ratings)
-    return ratings
+    """ESPN boxscores do not supply the exact DefPoss used by the old metric."""
+    PROVENANCE['defense']=dict(status='unavailable',source=None,
+        reason='The fixed ESPN source does not provide exact DefPoss for the existing last-10-game defense metric; no estimate or previous rating is used.',
+        eligible_teams=0,last_game=None,teams={})
+    return {}
 
 
 def get_color_for_rank(rank, population=30):
