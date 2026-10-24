@@ -86,6 +86,39 @@ class ESPNBoxscores(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'Missing ESPN points'):self.run_source()
         player['stats']=[]
         with self.assertRaisesRegex(ValueError,'stats incomplete'):self.run_source()
+    def test_unknown_minutes_preserve_appearance_and_all_nine_category_values(self):
+        from player_catalog import build_catalog
+        for missing in ['--','-','N/A','',None]:
+            with self.subTest(minutes=missing):
+                self.summaries['g1']['boxscore']['players'][0]['statistics'][0]['athletes'][0]['stats'][0]=missing
+                frames=self.run_source()
+                for frame in frames:
+                    row=frame.set_index('PLAYER_ID').loc[1]
+                    self.assertEqual(row.GP,2);self.assertEqual(row.PTS_TOTAL,14);self.assertEqual(row.TO_TOTAL,2)
+                    self.assertTrue(pd.isna(row.MIN));self.assertAlmostEqual(row.FG_PCT,5/13)
+                catalog=build_catalog(frames[0])['1']['periods']['season']
+                self.assertIsNone(catalog['avg']['MIN']['value']);self.assertEqual(catalog['avg']['PTS']['value'],7)
+                self.assertEqual(utils.PROVENANCE['current_stats_source']['minutes_unknown_player_games'],[
+                    dict(event_id='g1',player_id=1,player_name='TEST ONLY 1',date='2026-10-20')])
+    def test_dnp_is_excluded_but_zero_and_subminute_appearances_are_retained(self):
+        self.games=self.games[:1]
+        athlete=self.summaries['g1']['boxscore']['players'][0]['statistics'][0]['athletes'][0]
+        for minutes,expected in [('0',0),('0:00',0),('0:30',.5),('20:59',20+59/60)]:
+            with self.subTest(minutes=minutes):
+                athlete['stats'][0]=minutes
+                season,_,_=self.run_source()
+                self.assertEqual(set(season.PLAYER_ID),{1,2});self.assertEqual(season.set_index('PLAYER_ID').loc[1].GP,1)
+                self.assertEqual(season.set_index('PLAYER_ID').loc[1].MIN,expected)
+                self.assertEqual(utils.PROVENANCE['current_stats_source']['minutes_unknown_player_games'],[])
+    def test_missing_minutes_field_is_unknown_but_invalid_minutes_fail_with_identity(self):
+        group=self.summaries['g1']['boxscore']['players'][0]['statistics'][0]
+        group['keys']=KEYS[1:];group['athletes'][0]['stats']=group['athletes'][0]['stats'][1:]
+        season,_,_=self.run_source();self.assertTrue(pd.isna(season.set_index('PLAYER_ID').loc[1].MIN))
+        group['keys']=KEYS;group['athletes'][0]['stats'].insert(0,'bad')
+        for invalid in ['bad','1:60','1:-1','1:2:3','nan','inf','-1']:
+            with self.subTest(minutes=invalid):
+                group['athletes'][0]['stats'][0]=invalid
+                with self.assertRaisesRegex(ValueError,r'Invalid ESPN minutes: event=g1; player=1'):self.run_source()
     def test_no_completed_games_has_no_fabricated_current_statistics(self):
         self.games=[];frames=self.run_source()
         self.assertTrue(all(f.empty for f in frames));self.assertIsNone(utils.PROVENANCE['current_stats_last_game'])
