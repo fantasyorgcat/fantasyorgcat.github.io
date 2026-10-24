@@ -56,10 +56,19 @@ def summary_rows(eid, day, year, teams):
                 if pid in seen:raise ValueError(f'Duplicate ESPN player appearance: {eid}/{pid}')
                 seen.add(pid);raw=dict(zip(keys,player['stats']))
                 row=dict(PLAYER_ID=pid,PLAYER_NAME=athlete['displayName'],TEAM_ID=tid,TEAM_ABBREVIATION=teams[tid],date=day,event_id=eid)
-                minutes=str(raw['minutes']).split(':')
-                if len(minutes) not in [1,2]:raise ValueError(f'Invalid ESPN minutes: {eid}/{pid}')
-                row['MIN']=float(minutes[0])+(float(minutes[1])/60 if len(minutes)==2 else 0)
-                if not math.isfinite(row['MIN']) or row['MIN']<0:raise ValueError(f'Invalid ESPN minutes: {eid}/{pid}')
+                value=raw.get('minutes')
+                if value is None or str(value).strip() in ['', '-', '--', 'N/A']:
+                    row['MIN']=None
+                else:
+                    try:
+                        minutes=str(value).strip().split(':')
+                        if len(minutes) not in [1,2]:raise ValueError()
+                        seconds=float(minutes[1]) if len(minutes)==2 else 0
+                        if not 0<=seconds<60:raise ValueError()
+                        row['MIN']=float(minutes[0])+seconds/60
+                        if not math.isfinite(row['MIN']) or row['MIN']<0:raise ValueError()
+                    except (ValueError,TypeError):
+                        raise ValueError(f'Invalid ESPN minutes: event={eid}; player={pid} ({athlete["displayName"]}); value={value!r}') from None
                 for key,name in [('PTS','points'),('REB','rebounds'),('AST','assists'),('STL','steals'),('BLK','blocks'),('TO','turnovers')]:
                     if name=='rebounds' and name not in raw:name='totalRebounds'
                     value=utils.parse_turnovers(raw[name],total=True)
@@ -91,5 +100,7 @@ def current_stats(year):
         shooting_complete=len(season),source='ESPN completed game boxscores')
     utils.PROVENANCE['current_stats_source']=dict(source='ESPN scoreboard + summary',season=utils.season_label(year),
         months=months,completed_events=[eid for eid,_ in ordered],player_game_rows=sum(len(g) for g in games),players=len(players),
+        minutes_unknown_player_games=[dict(event_id=row['event_id'],player_id=row['PLAYER_ID'],player_name=row['PLAYER_NAME'],date=str(row['date']))
+            for game in games for row in game if row['MIN'] is None],
         latest_completed_game=str(max(dates)) if dates else None)
     return season,*recent
