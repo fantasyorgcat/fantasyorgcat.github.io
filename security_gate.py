@@ -41,7 +41,7 @@ def check_defense_provenance(meta):
         if 'defense_source' not in meta or meta['defense_source'] is not None or defense.get('source') is not None or not defense.get('reason') or defense.get('eligible_teams')!=0 or defense.get('teams')!={} or defense.get('last_game') is not None:
             raise ValueError('Unavailable defense must have no source, ratings, or source date')
     elif defense.get('source')=='ESPN':
-        from espn_defense import FORMULA,METRIC
+        from defense_contract import FORMULA,METRIC
         if meta.get('defense_source')!='ESPN' or defense.get('estimated') is not True or defense.get('metric')!=METRIC or defense.get('formula')!=FORMULA:
             raise ValueError('Estimated defense provenance is inconsistent')
         teams=defense.get('teams',{});complete=[]
