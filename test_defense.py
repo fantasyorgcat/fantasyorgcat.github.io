@@ -1,6 +1,8 @@
 import copy
 import json
 from pathlib import Path
+import subprocess
+import sys
 import tempfile
 import unittest
 from unittest.mock import patch
@@ -102,6 +104,14 @@ class Defense(unittest.TestCase):
             with self.assertRaises(ValueError):check_defense_provenance(dict(defense_source='ESPN',defense=damaged))
         damaged=copy.deepcopy(meta);damaged['teams']['LAL']['DefRtg']+=1
         with self.assertRaises(ValueError):check_defense_provenance(dict(defense_source='ESPN',defense=damaged))
+    def test_estimated_defense_gate_runs_without_site_packages(self):
+        self.calculate(self.sources());meta=dict(defense_source='ESPN',defense=utils.PROVENANCE['defense'])
+        script="import json,sys; from security_gate import check_defense_provenance; check_defense_provenance(json.load(sys.stdin)); assert not {'pandas','requests','utils','espn_defense'} & sys.modules.keys()"
+        def run():
+            return subprocess.run([sys.executable,'-S','-c',script],input=json.dumps(meta),text=True,capture_output=True,cwd=Path(__file__).resolve().parent)
+        result=run();self.assertEqual(result.returncode,0,result.stderr)
+        meta['defense']['formula']='0.44'
+        result=run();self.assertNotEqual(result.returncode,0);self.assertIn('Estimated defense provenance is inconsistent',result.stderr)
     def test_full_generation_labels_estimates_and_never_publishes_fixture_as_real_data(self):
         from test_schedule_browser import build_fixture
         ratings=self.calculate(self.sources());meta=copy.deepcopy(utils.PROVENANCE['defense'])

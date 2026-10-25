@@ -2,9 +2,7 @@
 from datetime import datetime
 import utils
 from espn_boxscores import eastern_date
-
-FORMULA='100 * sum(opponent points) / sum(opponent FGA + 0.4 * FTA - ORB + totalTurnovers)'
-METRIC='estimated_defensive_rating'
+from defense_contract import FORMULA,METRIC
 
 
 def number(value):
