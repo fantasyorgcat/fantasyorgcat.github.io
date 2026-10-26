@@ -15,16 +15,6 @@
       "anomalous": 0,
       "usable": 1200
     },
-    "ESPN boxscore 401909090": {
-      "records": 27,
-      "anomalous": 0,
-      "usable": 27
-    },
-    "ESPN boxscore 401909089": {
-      "records": 19,
-      "anomalous": 0,
-      "usable": 19
-    },
     "ESPN boxscore 401909088": {
       "records": 22,
       "anomalous": 0,
@@ -35,50 +25,60 @@
       "anomalous": 0,
       "usable": 26
     },
+    "ESPN boxscore 401909089": {
+      "records": 19,
+      "anomalous": 0,
+      "usable": 19
+    },
+    "ESPN boxscore 401909090": {
+      "records": 27,
+      "anomalous": 0,
+      "usable": 27
+    },
     "ESPN boxscore 401909092": {
       "records": 25,
       "anomalous": 0,
       "usable": 25
-    },
-    "ESPN boxscore 401909834": {
-      "records": 19,
-      "anomalous": 0,
-      "usable": 19
     },
     "ESPN boxscore 401909835": {
       "records": 21,
       "anomalous": 0,
       "usable": 21
     },
+    "ESPN boxscore 401909834": {
+      "records": 19,
+      "anomalous": 0,
+      "usable": 19
+    },
     "ESPN boxscore 401909836": {
       "records": 20,
       "anomalous": 0,
       "usable": 20
-    },
-    "ESPN boxscore 401909838": {
-      "records": 21,
-      "anomalous": 0,
-      "usable": 21
-    },
-    "ESPN boxscore 401909839": {
-      "records": 20,
-      "anomalous": 0,
-      "usable": 20
-    },
-    "ESPN boxscore 401909840": {
-      "records": 24,
-      "anomalous": 0,
-      "usable": 24
     },
     "ESPN boxscore 401909837": {
       "records": 27,
       "anomalous": 0,
       "usable": 27
     },
+    "ESPN boxscore 401909839": {
+      "records": 20,
+      "anomalous": 0,
+      "usable": 20
+    },
     "ESPN boxscore 401909841": {
       "records": 27,
       "anomalous": 0,
       "usable": 27
+    },
+    "ESPN boxscore 401909840": {
+      "records": 24,
+      "anomalous": 0,
+      "usable": 24
+    },
+    "ESPN boxscore 401909838": {
+      "records": 21,
+      "anomalous": 0,
+      "usable": 21
     },
     "ESPN boxscore 401909842": {
       "records": 24,
@@ -100,11 +100,6 @@
       "anomalous": 0,
       "usable": 23
     },
-    "ESPN boxscore 401909096": {
-      "records": 19,
-      "anomalous": 0,
-      "usable": 19
-    },
     "ESPN boxscore 401909843": {
       "records": 26,
       "anomalous": 0,
@@ -125,50 +120,55 @@
       "anomalous": 0,
       "usable": 28
     },
-    "ESPN boxscore 401909847": {
-      "records": 26,
+    "ESPN boxscore 401909096": {
+      "records": 19,
       "anomalous": 0,
-      "usable": 26
-    },
-    "ESPN boxscore 401909848": {
-      "records": 20,
-      "anomalous": 0,
-      "usable": 20
+      "usable": 19
     },
     "ESPN boxscore 401909849": {
       "records": 21,
       "anomalous": 0,
       "usable": 21
     },
-    "ESPN boxscore 401909850": {
-      "records": 23,
+    "ESPN boxscore 401909848": {
+      "records": 20,
       "anomalous": 0,
-      "usable": 23
+      "usable": 20
+    },
+    "ESPN boxscore 401909847": {
+      "records": 26,
+      "anomalous": 0,
+      "usable": 26
     },
     "ESPN boxscore 401909851": {
       "records": 18,
       "anomalous": 0,
       "usable": 18
     },
-    "ESPN boxscore 401909852": {
-      "records": 20,
+    "ESPN boxscore 401909850": {
+      "records": 23,
       "anomalous": 0,
-      "usable": 20
-    },
-    "ESPN boxscore 401909853": {
-      "records": 20,
-      "anomalous": 0,
-      "usable": 20
+      "usable": 23
     },
     "ESPN boxscore 401909854": {
       "records": 21,
       "anomalous": 0,
       "usable": 21
     },
+    "ESPN boxscore 401909852": {
+      "records": 20,
+      "anomalous": 0,
+      "usable": 20
+    },
     "ESPN boxscore 401909855": {
       "records": 22,
       "anomalous": 0,
       "usable": 22
+    },
+    "ESPN boxscore 401909853": {
+      "records": 20,
+      "anomalous": 0,
+      "usable": 20
     },
     "ESPN boxscore 401909856": {
       "records": 20,
@@ -195,11 +195,6 @@
       "anomalous": 0,
       "usable": 21
     },
-    "ESPN boxscore 401909861": {
-      "records": 21,
-      "anomalous": 0,
-      "usable": 21
-    },
     "ESPN boxscore 401909863": {
       "records": 21,
       "anomalous": 0,
@@ -209,6 +204,11 @@
       "records": 26,
       "anomalous": 0,
       "usable": 26
+    },
+    "ESPN boxscore 401909861": {
+      "records": 21,
+      "anomalous": 0,
+      "usable": 21
     },
     "ESPN boxscore 401909864": {
       "records": 27,
@@ -250,7 +250,37 @@
       "anomalous": 0,
       "usable": 578
     },
+    "roster 1": {
+      "records": 18,
+      "anomalous": 0,
+      "usable": 18
+    },
     "roster 30": {
+      "records": 17,
+      "anomalous": 0,
+      "usable": 17
+    },
+    "roster 2": {
+      "records": 17,
+      "anomalous": 0,
+      "usable": 17
+    },
+    "roster 4": {
+      "records": 17,
+      "anomalous": 0,
+      "usable": 17
+    },
+    "roster 6": {
+      "records": 18,
+      "anomalous": 0,
+      "usable": 18
+    },
+    "roster 5": {
+      "records": 14,
+      "anomalous": 0,
+      "usable": 14
+    },
+    "roster 7": {
       "records": 17,
       "anomalous": 0,
       "usable": 17
@@ -260,37 +290,12 @@
       "anomalous": 0,
       "usable": 18
     },
-    "roster 2": {
-      "records": 17,
-      "anomalous": 0,
-      "usable": 17
-    },
-    "roster 1": {
-      "records": 18,
-      "anomalous": 0,
-      "usable": 18
-    },
-    "roster 4": {
-      "records": 17,
-      "anomalous": 0,
-      "usable": 17
-    },
-    "roster 5": {
-      "records": 14,
-      "anomalous": 0,
-      "usable": 14
-    },
-    "roster 6": {
-      "records": 18,
-      "anomalous": 0,
-      "usable": 18
-    },
-    "roster 7": {
-      "records": 17,
-      "anomalous": 0,
-      "usable": 17
-    },
     "roster 8": {
+      "records": 18,
+      "anomalous": 0,
+      "usable": 18
+    },
+    "roster 9": {
       "records": 18,
       "anomalous": 0,
       "usable": 18
@@ -300,7 +305,7 @@
       "anomalous": 0,
       "usable": 17
     },
-    "roster 9": {
+    "roster 13": {
       "records": 18,
       "anomalous": 0,
       "usable": 18
@@ -315,27 +320,12 @@
       "anomalous": 0,
       "usable": 18
     },
-    "roster 13": {
-      "records": 18,
-      "anomalous": 0,
-      "usable": 18
-    },
     "roster 29": {
       "records": 18,
       "anomalous": 0,
       "usable": 18
     },
     "roster 14": {
-      "records": 17,
-      "anomalous": 0,
-      "usable": 17
-    },
-    "roster 15": {
-      "records": 18,
-      "anomalous": 0,
-      "usable": 18
-    },
-    "roster 18": {
       "records": 17,
       "anomalous": 0,
       "usable": 17
@@ -350,6 +340,11 @@
       "anomalous": 0,
       "usable": 18
     },
+    "roster 15": {
+      "records": 18,
+      "anomalous": 0,
+      "usable": 18
+    },
     "roster 25": {
       "records": 18,
       "anomalous": 0,
@@ -360,12 +355,17 @@
       "anomalous": 0,
       "usable": 17
     },
-    "roster 21": {
+    "roster 20": {
       "records": 17,
       "anomalous": 0,
       "usable": 17
     },
-    "roster 20": {
+    "roster 18": {
+      "records": 17,
+      "anomalous": 0,
+      "usable": 17
+    },
+    "roster 21": {
       "records": 17,
       "anomalous": 0,
       "usable": 17
@@ -375,12 +375,12 @@
       "anomalous": 0,
       "usable": 17
     },
-    "roster 22": {
+    "roster 24": {
       "records": 17,
       "anomalous": 0,
       "usable": 17
     },
-    "roster 24": {
+    "roster 22": {
       "records": 17,
       "anomalous": 0,
       "usable": 17
@@ -390,12 +390,12 @@
       "anomalous": 0,
       "usable": 16
     },
-    "roster 26": {
+    "roster 27": {
       "records": 18,
       "anomalous": 0,
       "usable": 18
     },
-    "roster 27": {
+    "roster 26": {
       "records": 18,
       "anomalous": 0,
       "usable": 18
@@ -1994,7 +1994,7 @@
       "events": 57
     }
   ],
-  "generated_at": "2026-10-26 12:15 UTC",
+  "generated_at": "2026-10-26 13:53 UTC",
   "stats_source": "ESPN",
   "defense_source": "ESPN",
   "period_populations": {
