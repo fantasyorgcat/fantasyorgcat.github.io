@@ -9,6 +9,41 @@ class Sources(unittest.TestCase):
         with patch.object(utils,'get_teams',return_value=[{'abbreviation':'LAL'}]):
             self.assertEqual(utils.abbreviation('LAL'),'LAL')
             with self.assertRaises(ValueError):utils.abbreviation("<script>")
+
+    def test_single_malformed_team_record_and_global_team_corruption(self):
+        teams=[dict(team=dict(id=str(i),abbreviation='A'+chr(65+i//26)+chr(65+i%26))) for i in range(30)]
+        response=dict(sports=[dict(leagues=[dict(season={'year':2027},teams=teams)])])
+        utils.get_teams.cache_clear()
+        try:
+            with patch.object(utils,'season_year',return_value=2027),patch.object(utils,'read_json',return_value=response):
+                teams[0]={}
+                self.assertEqual(len(utils.get_teams()),29)
+                self.assertTrue(utils.PROVENANCE['source_warnings'])
+                utils.get_teams.cache_clear();teams[1:5]=[{}]*4
+                with self.assertRaisesRegex(ValueError,'globally broken'):utils.get_teams()
+        finally:utils.get_teams.cache_clear()
+
+    def test_roster_missing_fields_and_single_team_failure_are_bounded(self):
+        utils.get_roster.cache_clear()
+        teams=[dict(id=i,abbreviation='AAA') for i in [1,2,3]]
+        def read(url):
+            tid=int(url.split('/teams/')[1].split('/')[0])
+            return dict(status='success',season={'year':2027},athletes=[dict(id=tid*10,displayName='Player'),{} if tid==1 else dict(id=tid*10+1,displayName='Another')])
+        try:
+            with patch.object(utils,'season_year',return_value=2027),patch.object(utils,'get_teams',return_value=teams),patch.object(utils,'read_json',side_effect=read):
+                frame=utils.get_roster();self.assertEqual(set(frame.PLAYER_ID),{10,20,21,30,31})
+                self.assertEqual(len([w for w in utils.PROVENANCE['source_warnings'] if w['source']=='roster']),1)
+            utils.get_roster.cache_clear()
+            with patch.object(utils,'season_year',return_value=2027),patch.object(utils,'get_teams',return_value=teams),patch.object(utils,'read_json',return_value={}):
+                with self.assertRaisesRegex(ValueError,'globally broken'):utils.get_roster()
+        finally:utils.get_roster.cache_clear()
+
+    def test_external_numbers_are_unknown_with_diagnostics_and_never_zero(self):
+        for v in ['DNP','weird',None,'',float('nan'),True,{},'1:60']:
+            with self.subTest(value=v):
+                self.assertIsNone(utils.parse_minutes(v,'test','player-1'))
+                self.assertIsNone(utils.optional_number(v,'test','player-1',total=True))
+        self.assertTrue(all(w['record']=='player-1' for w in utils.PROVENANCE['source_warnings']))
     def test_recent_calendar_window_weighted_rates_and_exact_totals(self):
         import pandas as pd
         player=dict(PLAYER_ID=1,PLAYER_NAME='Test',TEAM_ID=1,TEAM_ABBREVIATION='LAL',GP=3)
@@ -36,8 +71,10 @@ class Sources(unittest.TestCase):
         self.assertEqual(len(df),2);self.assertEqual(df.iloc[0]['PTS_TOTAL'],2117);self.assertEqual(df.iloc[0]['STL_TOTAL'],95)
         self.assertEqual(df.iloc[0]['TO'],1.492537);self.assertEqual(df.iloc[0]['TO_TOTAL'],100)
         other['athletes']=[athlete(1)]
-        with patch.object(utils,'read_json',side_effect=[page,other]):
-            with self.assertRaises(ValueError):utils.league_stats(2026)
+        with patch.object(utils,'read_json',side_effect=[page,other]),patch.object(utils,'get_teams',return_value=[{'id':1,'abbreviation':'LAL'}]),patch.object(utils,'abbreviation',return_value='LAL'):
+            deduplicated=utils.league_stats(2026)
+        self.assertEqual(len(deduplicated),1);self.assertEqual(deduplicated.iloc[0]['PTS_TOTAL'],2117)
+        self.assertIn('Duplicate league',utils.PROVENANCE['source_warnings'][-1]['reason'])
     def test_color_missing_is_neutral(self):
         self.assertEqual(utils.get_color_for_rank(None,0),'#dedbd5')
         self.assertEqual(utils.get_color_for_rank(1,30),'#dfc5c8')

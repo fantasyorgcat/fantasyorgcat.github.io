@@ -1,0 +1,156 @@
+{
+  "method": "localhost same snapshot; cold=new context, warm=same-context navigation; 390px CPU4x is simulation; no production network measurements",
+  "base_sha": "7dbd0dad8a4d64e1eac0326d737267cb1202ab28",
+  "snapshot": "2026-10-25 12:16 UTC",
+  "sampling": "5 cold + 5 warm per version/width; 30 samples per interaction; unchanged baseline groups reused after cell callback fix",
+  "results": [
+    {
+      "version": "before",
+      "width": 1440,
+      "cpu": 1,
+      "index_sha256": "6b5fa32959f11232d7cd5877b80ad7d9c60b6a50811fde06749e1d78daf70294",
+      "errors": [],
+      "cold": {
+        "fcp": 176,
+        "load": 706.4,
+        "longTasks": 1691,
+        "maxTask": 951,
+        "lastTaskEnd": 2185.9,
+        "elements": 7585
+      },
+      "warm": {
+        "fcp": 80,
+        "load": 725.3,
+        "longTasks": 1721,
+        "maxTask": 1061,
+        "lastTaskEnd": 2349.1,
+        "elements": 7585
+      },
+      "interaction_p95_ms": {
+        "mode": 77,
+        "period": 146.4,
+        "page": 28.9,
+        "search": 36,
+        "week": 639.4
+      },
+      "interaction_first_ms": {
+        "mode": 158.8,
+        "period": 146.4,
+        "page": 20,
+        "search": 25.6,
+        "week": 540
+      }
+    },
+    {
+      "version": "before",
+      "width": 390,
+      "cpu": 4,
+      "index_sha256": "6b5fa32959f11232d7cd5877b80ad7d9c60b6a50811fde06749e1d78daf70294",
+      "errors": [],
+      "cold": {
+        "fcp": 692,
+        "load": 3351,
+        "longTasks": 12926,
+        "maxTask": 6571,
+        "lastTaskEnd": 13879.7,
+        "elements": 7573
+      },
+      "warm": {
+        "fcp": 296,
+        "load": 3818.3,
+        "longTasks": 13126,
+        "maxTask": 6323,
+        "lastTaskEnd": 13921.8,
+        "elements": 7573
+      },
+      "interaction_p95_ms": {
+        "mode": 553.6,
+        "period": 1066.2,
+        "page": 163.9,
+        "search": 206.2,
+        "week": 4041.1
+      },
+      "interaction_first_ms": {
+        "mode": 1006,
+        "period": 1066.2,
+        "page": 188,
+        "search": 132.6,
+        "week": 3957.8
+      }
+    },
+    {
+      "version": "after",
+      "width": 1440,
+      "cpu": 1,
+      "index_sha256": "3abed69d45e930ac9456a208a80ea32e0fea6748df2a2bf7d91e1d31d9541967",
+      "errors": [],
+      "cold": {
+        "fcp": 120,
+        "load": 116.6,
+        "longTasks": 264,
+        "maxTask": 264,
+        "lastTaskEnd": 379.5,
+        "elements": 2614
+      },
+      "warm": {
+        "fcp": 268,
+        "load": 39.6,
+        "longTasks": 215,
+        "maxTask": 215,
+        "lastTaskEnd": 253.8,
+        "elements": 2614
+      },
+      "interaction_p95_ms": {
+        "mode": 85,
+        "period": 112.7,
+        "page": 29.2,
+        "search": 31.5,
+        "week": 304.7
+      },
+      "interaction_first_ms": {
+        "mode": 149.8,
+        "period": 112.7,
+        "page": 30.2,
+        "search": 14.5,
+        "week": 255.5
+      }
+    },
+    {
+      "version": "after",
+      "width": 390,
+      "cpu": 4,
+      "index_sha256": "3abed69d45e930ac9456a208a80ea32e0fea6748df2a2bf7d91e1d31d9541967",
+      "errors": [],
+      "cold": {
+        "fcp": 664,
+        "load": 692.3,
+        "longTasks": 1651,
+        "maxTask": 1452,
+        "lastTaskEnd": 2357.4,
+        "elements": 2608
+      },
+      "warm": {
+        "fcp": 180,
+        "load": 179.1,
+        "longTasks": 1773,
+        "maxTask": 1474,
+        "lastTaskEnd": 1890.2,
+        "elements": 2608
+      },
+      "interaction_p95_ms": {
+        "mode": 456,
+        "period": 824.7,
+        "page": 147.1,
+        "search": 153.2,
+        "week": 1644.7
+      },
+      "interaction_first_ms": {
+        "mode": 881.9,
+        "period": 824.7,
+        "page": 226,
+        "search": 107.4,
+        "week": 1640.3
+      }
+    }
+  ]
+}

@@ -1,0 +1,3 @@
+Public HTML/resource integrity, provenance, fixture exclusion, and bounded tracked-file secret scan passed
+ROTO static assets/CSP/provenance passed; applicable source coverage and declared unknowns passed
+Publish allowlist: .nojekyll, assets/datatables-2.3.7.min.css, assets/datatables-2.3.7.min.js, assets/jquery-3.7.1.min.js, dashboard.css, data_codec.js, data_snapshot.json, index.html, player_tools.js, report.js, report_data.js, roto.css, roto.html, roto.js, roto_core.js, roto_data.js, schedule_tools.js, site_ui.js, table_tools.js, team_tools.js

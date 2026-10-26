@@ -69,26 +69,41 @@ class ESPNBoxscores(unittest.TestCase):
         self.games.extend([event('pre','2026-10-10T23:00:00Z',kind=1),event('live','2026-10-23T05:00:00Z',completed=False)])
         season,_,_=self.run_source();self.assertTrue((season.GP==2).all())
         self.assertFalse(any('event=pre' in u or 'event=live' in u for u in self.calls))
-    def test_duplicate_events_or_appearances_are_rejected(self):
+    def test_duplicate_events_or_appearances_warn_without_double_counting(self):
         self.games.append(copy.deepcopy(self.games[0]))
-        with self.assertRaisesRegex(ValueError,'Duplicate completed'):self.run_source()
+        season,_,_=self.run_source()
+        self.assertTrue((season.GP==2).all())
+        self.assertIn('Duplicate completed',utils.PROVENANCE['source_warnings'][-1]['reason'])
         self.games.pop();players=self.summaries['g1']['boxscore']['players'][0]['statistics'][0]['athletes']
         players.append(copy.deepcopy(players[0]))
-        with self.assertRaisesRegex(ValueError,'Duplicate ESPN player'):self.run_source()
+        season,_,_=self.run_source()
+        self.assertTrue((season.GP==2).all())
+        self.assertIn('Duplicate ESPN player',utils.PROVENANCE['source_warnings'][-1]['reason'])
     def test_wrong_summary_season_and_nonfinal_summary_are_rejected(self):
         self.summaries['g1']['header']['season']={'year':2026,'type':2}
-        with self.assertRaisesRegex(ValueError,'season/type mismatch'):self.run_source()
+        season,_,_=self.run_source()
+        self.assertTrue((season.GP==1).all())
+        self.assertEqual(utils.PROVENANCE['current_stats_source']['skipped_events'],['g1'])
+        self.assertIn('season/type mismatch',utils.PROVENANCE['source_warnings'][-1]['reason'])
         self.summaries['g1']=summary(self.games[0]);self.summaries['g1']['header']['competitions'][0]['status']={'type':{'completed':False}}
-        with self.assertRaisesRegex(ValueError,'expected completed game'):self.run_source()
+        season,_,_=self.run_source()
+        self.assertTrue((season.GP==1).all())
+        self.assertIn('expected completed game',utils.PROVENANCE['source_warnings'][-1]['reason'])
+        self.summaries['g2']['header']['season']={'year':2026,'type':2}
+        with self.assertRaisesRegex(ValueError,'globally broken'):self.run_source()
     def test_missing_played_player_stats_are_not_zero_filled(self):
         player=self.summaries['g1']['boxscore']['players'][0]['statistics'][0]['athletes'][0]
         player['stats'][1]='--'
-        with self.assertRaisesRegex(ValueError,'Missing ESPN points'):self.run_source()
+        season,_,_=self.run_source();row=season.set_index('PLAYER_ID').loc[1]
+        self.assertTrue(pd.isna(row.PTS));self.assertTrue(pd.isna(row.PTS_TOTAL));self.assertEqual(row.GP,2)
+        self.assertEqual(season.set_index('PLAYER_ID').loc[2].PTS_TOTAL,14)
         player['stats']=[]
-        with self.assertRaisesRegex(ValueError,'stats incomplete'):self.run_source()
+        season,_,_=self.run_source();row=season.set_index('PLAYER_ID').loc[1]
+        self.assertTrue(pd.isna(row.PTS));self.assertEqual(row.GP,2)
+        self.assertTrue(any('stats incomplete' in w['reason'] for w in utils.PROVENANCE['source_warnings']))
     def test_unknown_minutes_preserve_appearance_and_all_nine_category_values(self):
         from player_catalog import build_catalog
-        for missing in ['--','-','N/A','',None]:
+        for missing in ['--','-','N/A','',None,'DNP','weird string']:
             with self.subTest(minutes=missing):
                 self.summaries['g1']['boxscore']['players'][0]['statistics'][0]['athletes'][0]['stats'][0]=missing
                 frames=self.run_source()
@@ -110,7 +125,7 @@ class ESPNBoxscores(unittest.TestCase):
                 self.assertEqual(set(season.PLAYER_ID),{1,2});self.assertEqual(season.set_index('PLAYER_ID').loc[1].GP,1)
                 self.assertEqual(season.set_index('PLAYER_ID').loc[1].MIN,expected)
                 self.assertEqual(utils.PROVENANCE['current_stats_source']['minutes_unknown_player_games'],[])
-    def test_missing_minutes_field_is_unknown_but_invalid_minutes_fail_with_identity(self):
+    def test_missing_and_invalid_minutes_are_unknown_with_warning_identity(self):
         group=self.summaries['g1']['boxscore']['players'][0]['statistics'][0]
         group['keys']=KEYS[1:];group['athletes'][0]['stats']=group['athletes'][0]['stats'][1:]
         season,_,_=self.run_source();self.assertTrue(pd.isna(season.set_index('PLAYER_ID').loc[1].MIN))
@@ -118,7 +133,42 @@ class ESPNBoxscores(unittest.TestCase):
         for invalid in ['bad','1:60','1:-1','1:2:3','nan','inf','-1']:
             with self.subTest(minutes=invalid):
                 group['athletes'][0]['stats'][0]=invalid
-                with self.assertRaisesRegex(ValueError,r'Invalid ESPN minutes: event=g1; player=1'):self.run_source()
+                season,_,_=self.run_source();row=season.set_index('PLAYER_ID').loc[1]
+                self.assertTrue(pd.isna(row.MIN));self.assertEqual(row.GP,2);self.assertEqual(row.PTS_TOTAL,14)
+                issue=utils.PROVENANCE['source_warnings'][-1]
+                self.assertEqual(issue['record'],'g1/1');self.assertIn(repr(invalid),issue['reason'])
+
+    def test_missing_identity_and_appearance_flag_skip_only_bad_record(self):
+        for field in ['athlete','didNotPlay']:
+            with self.subTest(field=field):
+                self.summaries['g1']=summary(self.games[0])
+                del self.summaries['g1']['boxscore']['players'][0]['statistics'][0]['athletes'][0][field]
+                season,_,_=self.run_source()
+                self.assertEqual(season.set_index('PLAYER_ID').loc[1].GP,1)
+                self.assertEqual(season.set_index('PLAYER_ID').loc[2].GP,2)
+                self.assertTrue(utils.PROVENANCE['source_warnings'])
+
+    def test_malformed_shooting_pair_is_unknown_and_global_corruption_fails(self):
+        for value in ['bad','1-2-3','4-2',None,'NaN-5']:
+            with self.subTest(pair=value):
+                self.summaries['g1']['boxscore']['players'][0]['statistics'][0]['athletes'][0]['stats'][7]=value
+                season,_,_=self.run_source();row=season.set_index('PLAYER_ID').loc[1]
+                self.assertTrue(pd.isna(row.FGA));self.assertTrue(pd.isna(row.FG_PCT));self.assertEqual(row.GP,2)
+        for data in self.summaries.values():
+            for side in data['boxscore']['players']:side['statistics'][0]['athletes'][0]['stats']=[]
+        with self.assertRaisesRegex(ValueError,'globally broken'):self.run_source()
+
+    def test_broad_failure_threshold_and_all_unavailable_summaries(self):
+        with self.assertRaisesRegex(ValueError,'globally broken'):utils.check_coverage('test',10,2,8)
+        utils.check_coverage('test',20,2,18)
+        with patch.object(utils,'read_json',side_effect=RuntimeError('offline')):
+            with self.assertRaises(RuntimeError):current_stats(2027)
+        self.summaries={'g1':{},'g2':{}}
+        with self.assertRaisesRegex(ValueError,'globally broken'):self.run_source()
+
+    def test_empty_scoreboard_after_known_completed_schedule_fails(self):
+        self.games=[];utils.PROVENANCE['schedule']={'completed_events':1}
+        with self.assertRaisesRegex(ValueError,'no completed'):self.run_source()
     def test_no_completed_games_has_no_fabricated_current_statistics(self):
         self.games=[];frames=self.run_source()
         self.assertTrue(all(f.empty for f in frames));self.assertIsNone(utils.PROVENANCE['current_stats_last_game'])

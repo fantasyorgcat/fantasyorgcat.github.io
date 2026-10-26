@@ -17,7 +17,7 @@ ROOT=Path(__file__).resolve().parent
 
 def build_fixture(target,defense=None):
     target=Path(target);target.mkdir(parents=True,exist_ok=True)
-    for name in ['dashboard.css','player_tools.js','schedule_tools.js','team_tools.js','table_tools.js','site_ui.js']:shutil.copyfile(ROOT/name,target/name)
+    for name in ['dashboard.css','player_tools.js','schedule_tools.js','team_tools.js','table_tools.js','site_ui.js','report.js','data_codec.js']:shutil.copyfile(ROOT/name,target/name)
     shutil.copytree(ROOT/'assets',target/'assets',dirs_exist_ok=True)
     records=[]
     # 25 calendar weeks, four-day opening shortcut, cross-year and DST events.
@@ -61,7 +61,7 @@ def run(url,output):
             page.clock.install(time='2026-10-25T12:00:00Z')
             page.on('pageerror',lambda e:errors.append(str(e)));page.on('requestfailed',lambda r:failed.append(r.url))
             assert page.goto(url,wait_until='load').status==200
-            page.wait_for_function('Object.keys(tables).length===5')
+            page.wait_for_function('!!tables[activeWeek]')
             page.locator('[data-platform="NBA"]').click()
             assert page.locator('[data-platform]').count()==3
             assert page.locator('[data-platform="NBA"]').get_attribute('aria-pressed')=='true'

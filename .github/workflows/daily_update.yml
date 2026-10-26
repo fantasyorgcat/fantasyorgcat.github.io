@@ -18,17 +18,18 @@ jobs:
       report_sha: ${{ steps.report.outputs.report_sha }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+          cache: pip
       - name: Install dependencies
         run: |
           pip install -r requirements.txt
       - name: Generate Report
         run: |
-          python -m unittest test_sources test_espn_boxscores test_defense test_schedule test_player_catalog test_roto_data test_roto_boxscore test_roto_package
+          python -m unittest test_sources test_espn_boxscores test_defense test_schedule test_player_catalog test_roto_data test_roto_boxscore test_roto_package test_report_data
           node test_team_tools.cjs
           node test_roto_core.cjs
           python generate_report.py
@@ -45,7 +46,7 @@ jobs:
           git config --global user.email "action@github.com"
           
           # Commit and Push
-          git add index.html data_snapshot.json roto_data.js
+          git add index.html data_snapshot.json roto_data.js report_data.js
           if ! git diff --cached --quiet; then
             git commit -m "Daily Update: $(date +'%Y-%m-%d')"
           fi
@@ -57,7 +58,7 @@ jobs:
             echo "Run: $GITHUB_RUN_ID / attempt $GITHUB_RUN_ATTEMPT"
             echo "Report commit: $(git rev-parse HEAD)"
             echo '```'
-            sha256sum index.html data_snapshot.json
+            sha256sum index.html data_snapshot.json roto_data.js report_data.js
             python -c "import json; d=json.load(open('data_snapshot.json')); print(json.dumps({k:d.get(k) for k in ['generated_at','schedule','period_populations','roster_players','current_stats_last_game']}, indent=2))"
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
@@ -87,7 +88,7 @@ jobs:
         run: |
           python security_gate.py --stage _site
           git rev-parse HEAD
-          sha256sum _site/index.html _site/roto.html _site/roto_data.js
+          sha256sum _site/index.html _site/data_snapshot.json _site/roto.html _site/roto_data.js _site/report_data.js
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

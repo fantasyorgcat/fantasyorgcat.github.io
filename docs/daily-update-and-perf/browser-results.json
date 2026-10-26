@@ -1,0 +1,67 @@
+[
+  {
+    "test": "test_phase1_performance_browser",
+    "exit": 0,
+    "seconds": 24.0
+  },
+  {
+    "test": "test_dashboard_browser",
+    "exit": 0,
+    "seconds": 13.9
+  },
+  {
+    "test": "test_table_preferences_browser",
+    "exit": 0,
+    "seconds": 37.4
+  },
+  {
+    "test": "test_player_tools_browser",
+    "exit": 0,
+    "seconds": 75.5
+  },
+  {
+    "test": "test_schedule_browser",
+    "exit": 0,
+    "seconds": 79.0
+  },
+  {
+    "test": "test_schedule_locale_browser",
+    "exit": 0,
+    "seconds": 17.5
+  },
+  {
+    "test": "test_season_browser",
+    "exit": 0,
+    "seconds": 188.1
+  },
+  {
+    "test": "test_sticky_headers_browser",
+    "exit": 0,
+    "seconds": 12.1
+  },
+  {
+    "test": "test_team_sort_browser",
+    "exit": 0,
+    "seconds": 16.7
+  },
+  {
+    "test": "test_roto_browser",
+    "exit": 0,
+    "seconds": 30.8
+  },
+  {
+    "test": "test_site_ux_browser",
+    "exit": 0,
+    "seconds": 8.7
+  },
+  {
+    "test": "test_roto_tooltip",
+    "exit": 0,
+    "seconds": 8.1
+  },
+  {
+    "test": "test_site_ux_edges",
+    "exit": 0,
+    "seconds": 8.6
+  }
+]

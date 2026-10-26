@@ -13,6 +13,7 @@ from player_catalog import build_catalog, add_pr_ranks, metric_pr
 from fantasy_periods import build_platform_periods
 from roto_data import build_data, source_reference, write_data
 from roto_package import build_package
+from report_data import pack_catalog, pack_events, write_script, script_tags
 
 IDENTITY_COLUMNS = ['PLAYER_ID','PLAYER_NAME','TEAM_ID','TEAM_ABBREVIATION']
 
@@ -38,7 +39,8 @@ def scheduled_matchup(row, ratings):
     if 'STATUS' not in row:return badge
     labels={'scheduled':'未開賽','in_progress':'進行中','final':'已完賽','postponed':'延賽','cancelled':'取消','suspended':'暫停','delayed':'延遲','unknown':'狀態待確認'}
     stamp=row.get('TIPOFF_UTC')
-    if stamp:
+    if not isinstance(stamp,str):stamp=None
+    if isinstance(stamp,str) and stamp:
         from zoneinfo import ZoneInfo
         instant=datetime.fromisoformat(stamp.replace('Z','+00:00'))
         clock=instant.astimezone(ZoneInfo('Asia/Taipei')).strftime('%m/%d %H:%M')
@@ -51,8 +53,8 @@ def schedule_event_payload(schedule, ratings):
     for row in schedule.to_dict('records'):
         eid=row.get('EVENT_ID')
         if not eid:continue
-        event=events.setdefault(eid,dict(id=eid,date_et=str(row['GAME_DATE']) if row['GAME_DATE'] is not None else None,
-            tipoff_utc=row['TIPOFF_UTC'],status=row['STATUS'],season_type=int(row['SEASON_TYPE']),time_confirmed=bool(row['TIME_CONFIRMED'])))
+        event=events.setdefault(eid,dict(id=eid,date_et=str(row['GAME_DATE']) if pd.notna(row['GAME_DATE']) else None,
+            tipoff_utc=row['TIPOFF_UTC'] if pd.notna(row['TIPOFF_UTC']) else None,status=row['STATUS'],season_type=int(row['SEASON_TYPE']),time_confirmed=bool(row['TIME_CONFIRMED'])))
         side='home' if 'vs.' in row['MATCHUP'] else 'away'
         event[side]=row['TEAM_ABBREVIATION'];event[side+'_html']=scheduled_matchup(row,ratings)
     return list(events.values())
@@ -236,30 +238,6 @@ def generate_html_report():
     def generate_html(team_df, player_df, day_cols, table_id_suffix):
         if player_df.empty: return "<p>No data.</p>"
 
-        # --- Team Table HTML ---
-        team_html = ""
-        if not team_df.empty:
-            team_html = f"""
-            <div class="team-section">
-                <h3>球隊賽程 <small>點選球隊篩選球員</small></h3><div class="schedule-scroll">
-                <table id="teamTable{table_id_suffix}" class="display compact" style="width:100%">
-                    <thead>
-                        <tr>
-                            <th>Team</th>
-                            <th data-dt-order="disable">Games</th>
-                            {''.join([f'<th>{d}</th>' for d in day_cols])}
-                        </tr>
-                    </thead>
-                    <tbody>
-            """
-            for _, row in team_df.iterrows():
-                team_html += f"<tr class='team-row' data-team='{row['Team']}' onclick='filterTeam(this, \"{row['Team']}\", \"{table_id_suffix}\")'>"
-                team_html += f"<td><b>{row['Team']}</b></td><td>{row['Games']}</td>"
-                for d in day_cols:
-                    team_html += f"<td>{row[d]}</td>"
-                team_html += "</tr>"
-            team_html += "</tbody></table></div></div>"
-
         # --- Player Table HTML ---
         # Columns: Player, Games, [Days], [Stats Season], [Stats L7], [Stats L14], [Stats Last Season]
 
@@ -303,97 +281,9 @@ def generate_html_report():
                 <tbody>
         """
 
-        for _, row in player_df.iterrows():
-            player_html += f"<tr>"
-            pid=str(int(row['PLAYER_ID']))
-            accessible=escape(str(row['PLAYER_NAME']),quote=True)
-            picks=f"<div class='pick-controls'><label><input type='checkbox' data-pick='compare' data-player-id='{pid}' aria-label='比較 {accessible}'>比較</label></div>"
-            player_html += f"<td>{row['Player']}{picks}</td>"
-            player_html += f"<td>{escape(str(row['TEAM_ABBREVIATION']))}</td>" # Hidden Team
-            player_html += f"<td>{row.get('Games', 0)}</td>"
-            for d in day_cols:
-                player_html += f"<td>{row.get(d, '')}</td>"
-
-            # Helper to create stat cell with data-order
-            def create_stat_cell(row, metric, suffix, css_class, mode='avg', visible=True):
-                if metric == 'Rank':
-                    ending=('_TOT' if mode=='tot' else '')+('_'+suffix if suffix else '')
-                    rank=row.get('PR_RANK'+ending)
-                    present=rank is not None and pd.notna(rank)
-                    total=row.get('PR_SUM'+ending)
-                    title='九項PR加總（含TO、不含MIN）；全體排名，同分並列1,2,2,4' if present else '九項PR不完整，無排名（不含MIN）'
-                    if present:title+=f'; PR合計 {float(total):.6f}'
-                    style='' if visible else 'display:none'
-                    return f"<td class='{css_class} rank-{suffix.lower() or 'season'}-{mode}' style='{style}' data-order='{int(rank) if present else 1000000000}' title='{escape(title,quote=True)}'>{int(rank) if present else '—'}</td>"
-                # TOT mode swaps in the derived *_TOT columns for counting stats only;
-                # MIN / FG% / FT% show the same value in both modes (old-page behavior).
-                use_tot = (mode == 'tot' and metric in tot_metrics)
-                base_key = f"{metric}_TOT" if use_tot else metric
-                key = f"{base_key}_{suffix}" if suffix else base_key
-                val = row.get(key)
-                if val is None or pd.isna(val):
-                    style = '' if visible else 'display:none'
-                    return f"<td class='{css_class}' style='{style}' data-order='-1'>—</td>"
-
-                # Determine sort value (raw number)
-                # Each AVG/TOT cell is its own DataTables column carrying its own raw
-                # value here, so sorting stays exact in both display modes.
-                sort_val = val
-                if metric in ['FG%', 'FT%']:
-                    raw_key = {'FG%':'FG_PCT', 'FT%':'FT_PCT'}[metric]
-                    raw_key = f'{raw_key}_{suffix}' if suffix else raw_key
-                    sort_val = float(row[raw_key]) * 100
-
-                # Determine display value
-                display_val = val
-                if isinstance(val, float):
-                    display_val = f"{val:.1f}"
-
-                # --- PR (Percentile Rank) sub-label ---
-                # Looked up from the *_PR / *_TOT_PR [_L7/_L14/_LS] column computed in
-                # process_week_grid (raw-value based, before formatting). AVG and TOT
-                # have independent PRs: the totals ranking reflects volume/durability.
-                # Skipped when the player has no data for this stat/period (NaN) so no
-                # "PR nan" ever renders.
-                pr_base = f"{metric}_TOT_PR" if use_tot else f"{metric}_PR"
-                pr_key = f"{pr_base}_{suffix}" if suffix else pr_base
-                pr_val = row.get(pr_key)
-                pr_html = ""
-                if pr_val is not None and not pd.isna(pr_val):
-                    pr_html = f"<br><span class='stat-pr'>PR {int(round(pr_val))}</span>"
-
-                style = "" if visible else "display:none"
-                return f"<td class='{css_class}' style='{style}' data-order='{sort_val}'>{display_val}{pr_html}</td>"
-
-            # Season Stats (AVG then TOT)
-            for m in stat_metrics:
-                player_html += create_stat_cell(row, m, "", "stat-season stat-avg", 'avg', True)
-            for m in stat_metrics:
-                player_html += create_stat_cell(row, m, "", "stat-season stat-tot", 'tot', False)
-
-            # L7 Stats (AVG then TOT)
-            for m in stat_metrics:
-                player_html += create_stat_cell(row, m, "L7", "stat-l7 stat-avg", 'avg', False)
-            for m in stat_metrics:
-                player_html += create_stat_cell(row, m, "L7", "stat-l7 stat-tot", 'tot', False)
-
-            # L14 Stats (AVG then TOT)
-            for m in stat_metrics:
-                player_html += create_stat_cell(row, m, "L14", "stat-l14 stat-avg", 'avg', False)
-            for m in stat_metrics:
-                player_html += create_stat_cell(row, m, "L14", "stat-l14 stat-tot", 'tot', False)
-
-            # Last Season Stats (AVG then TOT)
-            for m in stat_metrics:
-                player_html += create_stat_cell(row, m, "LS", "stat-ls stat-avg", 'avg', False)
-            for m in stat_metrics:
-                player_html += create_stat_cell(row, m, "LS", "stat-ls stat-tot", 'tot', False)
-
-            player_html += "</tr>"
-
         player_html += "</tbody></table></div>"
 
-        return team_html + "<hr>" + player_html
+        return "<hr>" + player_html
 
     # Generate 4 Weeks
     weeks_data = []
@@ -421,8 +311,6 @@ def generate_html_report():
     events_payload=schedule_event_payload(season_schedule,def_ratings)
     platform_periods=build_platform_periods(stats_dict['metadata']['season'],all_weeks,events_payload)
     season_payload=platform_periods['NBA']['periods']
-    season_json=json.dumps(season_payload,ensure_ascii=False).replace('<','\\u003c')
-    platforms_json=json.dumps(platform_periods,ensure_ascii=False).replace('<','\\u003c')
     platform_buttons=''.join(
         f'<button type="button" class="platform-button" data-platform="{key}" aria-pressed="false" '
         f'aria-describedby="platform-note" {"disabled" if not platform_periods[key]["available"] else ""}>'
@@ -439,11 +327,6 @@ def generate_html_report():
         for w in weeks_data
     )
     week_panels += '<div id="WeekCustom" class="tabcontent"><h3 id="custom-period-heading"></h3><div id="custom-period-content"></div></div>'
-    table_initializers = ''.join(
-        f"tables['W{i+1}'] = $('#playerTableW{i+1}').DataTable({{...playerTableOptions(document.getElementById('playerTableW{i+1}'),'W{i+1}'),language:{{search:'搜尋',lengthMenu:'每頁 _MENU_ 人',info:'_START_–_END_ / _TOTAL_ 人',infoFiltered:'（全體 _MAX_ 人）',zeroRecords:'沒有符合球員，按全體球員清除篩選',infoEmpty:'0 人'}}}});"
-        f"if ($('#teamTableW{i+1}').length) {{ $('#teamTableW{i+1}').DataTable({{paging:false,info:false,searching:false,order:[],columnDefs:[{{targets:1,type:'team-games',orderable:false,render:function(data,type,row,meta){{return type==='sort'?window.teamGamesSortValue(data,meta.row):data;}}}}]}}); window.setupTeamGamesSort(document.getElementById('teamTableW{i+1}')); }}"
-        for i in range(4)
-    )
     metadata = stats_dict['metadata']
     generated_at = datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')
     provenance = dict(utils.PROVENANCE)
@@ -491,16 +374,10 @@ def generate_html_report():
     datatables_sri = integrity('datatables-2.3.7.min.js')
     css_sri = integrity('datatables-2.3.7.min.css')
     default_period = 'Season' if not stats_dict['Season'].empty else 'LS'
-    catalog_json=json.dumps(comparison_catalog,ensure_ascii=False,allow_nan=False).replace('<','\\u003c')
-    tools_meta_json=json.dumps(dict(season=metadata['season'],lastSeason=metadata['last_season'],
-        defaultPeriod=default_period.lower()),ensure_ascii=False).replace('<','\\u003c')
-    team_js=Path('team_tools.js').read_text(encoding='utf-8')
-    tools_js=Path('player_tools.js').read_text(encoding='utf-8')
-    schedule_js=Path('schedule_tools.js').read_text(encoding='utf-8')
-    table_js=Path('table_tools.js').read_text(encoding='utf-8')
-    site_ui_js=Path('site_ui.js').read_text(encoding='utf-8')
-    events_json=json.dumps(events_payload,ensure_ascii=False,allow_nan=False).replace('<','\\u003c')
-    periods_json=json.dumps(quick_periods,ensure_ascii=False).replace('<','\\u003c')
+    write_script('report_data.js', 'REPORT_DATA', dict(version=1, generated_at=generated_at,
+        catalog=pack_catalog(comparison_catalog), events=pack_events(events_payload), weeks=season_payload,
+        platforms=platform_periods, quick=quick_periods,
+        meta=dict(season=metadata['season'],lastSeason=metadata['last_season'],defaultPeriod=default_period.lower())))
 
     html_template = f"""
     <!DOCTYPE html>
@@ -514,173 +391,7 @@ def generate_html_report():
         <style>{dashboard_css}</style>
         <script type="text/javascript" charset="utf8" src="assets/jquery-3.7.1.min.js" integrity="{jquery_sri}"></script>
         <script type="text/javascript" charset="utf8" src="assets/datatables-2.3.7.min.js" integrity="{datatables_sri}"></script>
-        <script>
-            var tables = {{}};
-            var activeWeek = "W1";
-            var teamSelection = {{}};
-            var seasonWeeks = {season_json};
-            var platformPeriods = {platforms_json};
-            var appliedSeasonWeek = null;
-            var playerCatalog = {catalog_json};
-            var playerToolsMeta = {tools_meta_json};
-            var scheduleEvents = {events_json};
-            var quickPeriods = {periods_json};
-            var scheduleGeneratedAt = '{generated_at}';
-            var customPlayerTemplate;
-            {site_ui_js}
-
-            $(document).ready( function () {{
-                // Shared labels also apply to dynamically built season/custom tables.
-                $.extend(true, $.fn.dataTable.defaults, {{language:{{search:'搜尋球員',searchPlaceholder:'姓名或球隊',lengthMenu:'每頁 _MENU_ 人',info:'_START_–_END_ / _TOTAL_ 人',infoFiltered:'（全體 _MAX_ 人）',zeroRecords:'沒有符合球員，按全體球員清除篩選',infoEmpty:'0 人',paginate:{{first:'第一頁',previous:'上一頁',next:'下一頁',last:'最後頁'}}}}}});
-                // Initialize DataTables for all weeks
-                customPlayerTemplate=document.querySelector('#Week1 .player-section').cloneNode(true);
-                {table_initializers}
-
-                Object.keys(tables).forEach(function(suffix) {{ tables[suffix].column(1).visible(false,false); switchStats('{default_period}',suffix); }});
-                Object.keys(tables).forEach(function(suffix) {{ tables[suffix].on('draw',function() {{ updateSelection(suffix); }}); }});
-                // Open default tab
-                document.getElementById("defaultOpen").click();
-            }});
-
-            function openWeek(evt, weekName, notify = true) {{
-                var i, tabcontent, tablinks;
-                tabcontent = document.getElementsByClassName("tabcontent");
-                for (i = 0; i < tabcontent.length; i++) {{
-                    tabcontent[i].style.display = "none";
-                }}
-                tablinks = document.getElementsByClassName("tablinks");
-                for (i = 0; i < tablinks.length; i++) {{
-                    tablinks[i].className = tablinks[i].className.replace(" active", "");
-                }}
-                document.getElementById(weekName).style.display = "block";
-                document.getElementById('season-week').classList.remove('active');
-                document.getElementById('apply-custom-period').classList.remove('active');
-                evt.currentTarget.className += " active";
-                activeWeek = weekName.replace('Week','W');
-                if (activeWeek !== 'WCustom' && window.clearPlatformSelection) window.clearPlatformSelection();
-                updateSelection(activeWeek);
-                if (notify) document.dispatchEvent(new Event('active-week-changed'));
-            }}
-
-            function selectSeasonWeek(value) {{
-                if (window.selectPlatformWeek) window.selectPlatformWeek(value);
-            }}
-
-            // --- Feature: Switch Stats (period x display mode) ---
-            // The visible stat columns are the intersection of the active period
-            // (Season/L7/L14/LS) and the active display mode (AVG/TOT); both toggles
-            // funnel through applyStatView so they stay orthogonal.
-            var viewState = {{}};
-            function playerTableOptions(node, suffix, pageLength = 25) {{
-                var state = viewState[suffix] || {{period:playerToolsMeta.defaultPeriod,mode:'avg'}};
-                var hidden = [];
-                Array.from(node.tHead.rows[0].cells).forEach(function(header,index) {{
-                    var stat = header.className.indexOf('stat-') !== -1;
-                    if (index === 1 || (header.hasAttribute('data-schedule-day') && !window.playerScheduleVisible()) ||
-                        (stat && !(header.classList.contains('stat-' + state.period) && header.classList.contains('stat-' + state.mode)))) hidden.push(index);
-                }});
-                return {{order:[[2,'desc']],pageLength:pageLength,scrollX:true,columnDefs:[{{targets:hidden,visible:false}}]}};
-            }}
-
-            function applyStatView(suffix) {{
-                var state = viewState[suffix] || {{period:'season',mode:'avg'}};
-                var table = tables[suffix];
-                // Hidden views keep their state; synchronize when shown, not on every setting change.
-                if (!table || !table.table().container().offsetWidth) return;
-                table.columns().every(function () {{
-                    var header = this.header();
-                    if (header.classList.contains('stat-season') || header.classList.contains('stat-l7') ||
-                        header.classList.contains('stat-l14') || header.classList.contains('stat-ls')) {{
-                        var visible = header.classList.contains('stat-' + state.period) &&
-                                      header.classList.contains('stat-' + state.mode);
-                        // Clear the generated inline hiding only on the first use of these cells.
-                        if (visible && header.style.display === 'none') {{
-                            header.style.display = '';
-                            this.nodes().to$().css('display', '');
-                        }}
-                        if (this.visible() !== visible) this.visible(visible, false);
-                    }}
-                }});
-                if (window.preparePlayerTable) window.preparePlayerTable(suffix);
-                table.columns.adjust().draw(false);
-            }}
-
-            function switchStats(period, suffix, refresh = true) {{
-                viewState[suffix] = viewState[suffix] || {{period:'season',mode:'avg'}};
-                viewState[suffix].period = period.toLowerCase();
-                // Update Buttons
-                // NOTE: matched via the button's data-period attribute (exact match), not
-                // innerText substring matching -- the old innerText-substring check broke
-                // once a "Last Season" button was added, since its label also contains the
-                // literal word "Season" and would falsely light up alongside "Season Avg".
-                // Scoped to [data-period] so the AVG/TOT buttons are left alone.
-                var container = document.querySelector('#Week' + suffix.replace('W','') + ' .controls');
-                var btns = container.querySelectorAll('.btn-stat[data-period]');
-                for (var i = 0; i < btns.length; i++) {{
-                    btns[i].classList.remove('active');
-                    btns[i].setAttribute('aria-pressed','false');
-                    if (btns[i].getAttribute('data-period') === period) {{
-                        btns[i].classList.add('active');
-                        btns[i].setAttribute('aria-pressed','true');
-                    }}
-                }}
-                if (refresh) applyStatView(suffix);
-            }}
-
-            // --- Feature: Switch Display Mode (AVG / TOT) ---
-            function switchDisplayMode(mode, suffix, refresh = true) {{
-                viewState[suffix] = viewState[suffix] || {{period:'season',mode:'avg'}};
-                viewState[suffix].mode = mode.toLowerCase();
-                // Scoped to [data-mode] so the period buttons are left alone.
-                var container = document.querySelector('#Week' + suffix.replace('W','') + ' .controls');
-                var btns = container.querySelectorAll('.btn-stat[data-mode]');
-                for (var i = 0; i < btns.length; i++) {{
-                    btns[i].classList.remove('active');
-                    btns[i].setAttribute('aria-pressed','false');
-                    if (btns[i].getAttribute('data-mode') === mode) {{
-                        btns[i].classList.add('active');
-                        btns[i].setAttribute('aria-pressed','true');
-                    }}
-                }}
-                if (refresh) applyStatView(suffix);
-            }}
-
-            function updateSelection(suffix) {{
-                var table = tables[suffix];
-                if (!table) return;
-                var team = teamSelection[suffix];
-                var count = table.rows({{search:'applied'}}).count();
-                var text = (team ? team + ' 球員' : '全體球員') + ' · ' + count + ' 人';
-                $('#selection'+suffix).text(text);
-                if (suffix === activeWeek) {{
-                    $('#active-selection').text(text);
-                    $('#show-all-players').attr('aria-pressed', !team && !table.search() ? 'true' : 'false');
-                }}
-            }}
-            function filterTeam(row, teamAbbr, suffix) {{
-                $('#teamTable' + suffix + ' .team-row').removeClass('selected');
-                $(row).addClass('selected');
-                teamSelection[suffix] = teamAbbr;
-                tables[suffix].column(1).search('^' + $.fn.dataTable.util.escapeRegex(teamAbbr) + '$', true, false).draw();
-                updateSelection(suffix);
-                document.dispatchEvent(new Event('team-filter-changed'));
-            }}
-            function resetTeamFilter(suffix) {{
-                var table = tables[suffix];
-                if (!table) return;
-                $('#teamTable' + suffix + ' .team-row').removeClass('selected');
-                delete teamSelection[suffix];
-                table.search('').columns().search('').draw();
-                $(table.table().container()).find('input[type="search"]').val('');
-                updateSelection(suffix);
-                document.dispatchEvent(new Event('team-filter-changed'));
-            }}
-            function resetActiveTeamFilter() {{ resetTeamFilter(activeWeek); }}
-            {team_js}
-            {tools_js}
-            {schedule_js}
-            {table_js}
-        </script>
+        {script_tags()}
     </head>
     <body class="dashboard-page">
         <div class="container">
@@ -722,4 +433,8 @@ if __name__ == "__main__":
         sys.stderr.reconfigure(encoding='utf-8')
     except AttributeError:
         pass
-    generate_html_report()
+    if '--offline' in sys.argv:
+        from offline_report import regenerate
+        regenerate()
+    else:
+        generate_html_report()

@@ -19,10 +19,11 @@ def run(url, output):
             page.on('pageerror', lambda error: errors.append(str(error)))
             page.on('requestfailed', lambda request: failed.append(request.url))
             assert page.goto(url, wait_until='load', timeout=60000).status == 200
-            page.wait_for_function('Object.keys(tables).length===5')
+            page.wait_for_function('!!tables[activeWeek]')
             signature = page.evaluate('JSON.stringify([playerCatalog,scheduleEvents,platformPeriods,scheduleGeneratedAt])')
             page.locator('[data-platform="NBA"]').click()
             page.locator('#season-week').select_option('0')
+            page.locator('#WeekCustom [data-period="LS"]').click()
             page.locator('#WeekCustom [data-display-setting="schedule"]').check()
             body = page.locator('#playerTableWCustom_wrapper .dt-scroll-body')
             head = page.locator('#playerTableWCustom_wrapper .dt-scroll-head')
@@ -95,7 +96,7 @@ def run(url, output):
             page.locator('#season-week').select_option('6')
             page.locator('#WeekCustom [data-mode="TOT"]').click()
             page.locator('#WeekCustom [data-period="L7"]').click()
-            assert page.locator('#playerTableWCustom td.stat-l7.stat-tot').first.inner_text() == '—'
+            assert page.evaluate('''()=>{const t=tables.WCustom,i=t.rows({page:'current'}).indexes()[0],col=t.column('.stat-l7.stat-tot').index(),expected=playerCatalog[t.row(i).data()[0]].periods.l7.tot.MIN.value;return t.cell(i,col).render('sort')===(expected===null?-1:expected)&&Number(t.cell(i,col).node().dataset.order)===(expected===null?-1:expected);}''')
             page.locator('#WeekCustom [data-period="LS"]').click()
             page.locator('#WeekCustom [data-mode="AVG"]').click()
             page.evaluate('''()=>{const e=document.querySelector('#playerTableWCustom_wrapper .dt-scroll-body');

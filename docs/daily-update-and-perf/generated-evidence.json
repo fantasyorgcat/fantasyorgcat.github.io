@@ -1,0 +1,452 @@
+{
+  "generated_at": "2026-10-26 12:15 UTC",
+  "current_stats_last_game": "2026-10-25",
+  "period_populations": {
+    "Season": 401,
+    "L7": 401,
+    "L14": 401,
+    "LastSeason": 578
+  },
+  "warnings": [
+    {
+      "source": "boxscore",
+      "record": "401909095/5211983",
+      "reason": "unknown minutes '--'"
+    }
+  ],
+  "quality": {
+    "NBA team population": {
+      "records": 30,
+      "anomalous": 0,
+      "usable": 30
+    },
+    "schedule teams": {
+      "records": 30,
+      "anomalous": 0,
+      "usable": 30
+    },
+    "season schedule": {
+      "records": 1200,
+      "anomalous": 0,
+      "usable": 1200
+    },
+    "ESPN boxscore 401909090": {
+      "records": 27,
+      "anomalous": 0,
+      "usable": 27
+    },
+    "ESPN boxscore 401909089": {
+      "records": 19,
+      "anomalous": 0,
+      "usable": 19
+    },
+    "ESPN boxscore 401909088": {
+      "records": 22,
+      "anomalous": 0,
+      "usable": 22
+    },
+    "ESPN boxscore 401909091": {
+      "records": 26,
+      "anomalous": 0,
+      "usable": 26
+    },
+    "ESPN boxscore 401909092": {
+      "records": 25,
+      "anomalous": 0,
+      "usable": 25
+    },
+    "ESPN boxscore 401909834": {
+      "records": 19,
+      "anomalous": 0,
+      "usable": 19
+    },
+    "ESPN boxscore 401909835": {
+      "records": 21,
+      "anomalous": 0,
+      "usable": 21
+    },
+    "ESPN boxscore 401909836": {
+      "records": 20,
+      "anomalous": 0,
+      "usable": 20
+    },
+    "ESPN boxscore 401909838": {
+      "records": 21,
+      "anomalous": 0,
+      "usable": 21
+    },
+    "ESPN boxscore 401909839": {
+      "records": 20,
+      "anomalous": 0,
+      "usable": 20
+    },
+    "ESPN boxscore 401909840": {
+      "records": 24,
+      "anomalous": 0,
+      "usable": 24
+    },
+    "ESPN boxscore 401909837": {
+      "records": 27,
+      "anomalous": 0,
+      "usable": 27
+    },
+    "ESPN boxscore 401909841": {
+      "records": 27,
+      "anomalous": 0,
+      "usable": 27
+    },
+    "ESPN boxscore 401909842": {
+      "records": 24,
+      "anomalous": 0,
+      "usable": 24
+    },
+    "ESPN boxscore 401909093": {
+      "records": 19,
+      "anomalous": 0,
+      "usable": 19
+    },
+    "ESPN boxscore 401909094": {
+      "records": 26,
+      "anomalous": 0,
+      "usable": 26
+    },
+    "ESPN boxscore 401909095": {
+      "records": 23,
+      "anomalous": 0,
+      "usable": 23
+    },
+    "ESPN boxscore 401909096": {
+      "records": 19,
+      "anomalous": 0,
+      "usable": 19
+    },
+    "ESPN boxscore 401909843": {
+      "records": 26,
+      "anomalous": 0,
+      "usable": 26
+    },
+    "ESPN boxscore 401909844": {
+      "records": 26,
+      "anomalous": 0,
+      "usable": 26
+    },
+    "ESPN boxscore 401909845": {
+      "records": 26,
+      "anomalous": 0,
+      "usable": 26
+    },
+    "ESPN boxscore 401909846": {
+      "records": 28,
+      "anomalous": 0,
+      "usable": 28
+    },
+    "ESPN boxscore 401909847": {
+      "records": 26,
+      "anomalous": 0,
+      "usable": 26
+    },
+    "ESPN boxscore 401909848": {
+      "records": 20,
+      "anomalous": 0,
+      "usable": 20
+    },
+    "ESPN boxscore 401909849": {
+      "records": 21,
+      "anomalous": 0,
+      "usable": 21
+    },
+    "ESPN boxscore 401909850": {
+      "records": 23,
+      "anomalous": 0,
+      "usable": 23
+    },
+    "ESPN boxscore 401909851": {
+      "records": 18,
+      "anomalous": 0,
+      "usable": 18
+    },
+    "ESPN boxscore 401909852": {
+      "records": 20,
+      "anomalous": 0,
+      "usable": 20
+    },
+    "ESPN boxscore 401909853": {
+      "records": 20,
+      "anomalous": 0,
+      "usable": 20
+    },
+    "ESPN boxscore 401909854": {
+      "records": 21,
+      "anomalous": 0,
+      "usable": 21
+    },
+    "ESPN boxscore 401909855": {
+      "records": 22,
+      "anomalous": 0,
+      "usable": 22
+    },
+    "ESPN boxscore 401909856": {
+      "records": 20,
+      "anomalous": 0,
+      "usable": 20
+    },
+    "ESPN boxscore 401909857": {
+      "records": 20,
+      "anomalous": 0,
+      "usable": 20
+    },
+    "ESPN boxscore 401909858": {
+      "records": 25,
+      "anomalous": 0,
+      "usable": 25
+    },
+    "ESPN boxscore 401909859": {
+      "records": 21,
+      "anomalous": 0,
+      "usable": 21
+    },
+    "ESPN boxscore 401909860": {
+      "records": 21,
+      "anomalous": 0,
+      "usable": 21
+    },
+    "ESPN boxscore 401909861": {
+      "records": 21,
+      "anomalous": 0,
+      "usable": 21
+    },
+    "ESPN boxscore 401909863": {
+      "records": 21,
+      "anomalous": 0,
+      "usable": 21
+    },
+    "ESPN boxscore 401909862": {
+      "records": 26,
+      "anomalous": 0,
+      "usable": 26
+    },
+    "ESPN boxscore 401909864": {
+      "records": 27,
+      "anomalous": 0,
+      "usable": 27
+    },
+    "ESPN boxscore 401909866": {
+      "records": 19,
+      "anomalous": 0,
+      "usable": 19
+    },
+    "ESPN boxscore 401909865": {
+      "records": 22,
+      "anomalous": 0,
+      "usable": 22
+    },
+    "ESPN boxscore 401909867": {
+      "records": 21,
+      "anomalous": 0,
+      "usable": 21
+    },
+    "ESPN summaries": {
+      "records": 43,
+      "anomalous": 0,
+      "usable": 43
+    },
+    "ESPN player appearances": {
+      "records": 970,
+      "anomalous": 0,
+      "usable": 970
+    },
+    "recent player logs": {
+      "records": 401,
+      "anomalous": 0,
+      "usable": 401
+    },
+    "league statistics": {
+      "records": 578,
+      "anomalous": 0,
+      "usable": 578
+    },
+    "roster 30": {
+      "records": 17,
+      "anomalous": 0,
+      "usable": 17
+    },
+    "roster 17": {
+      "records": 18,
+      "anomalous": 0,
+      "usable": 18
+    },
+    "roster 2": {
+      "records": 17,
+      "anomalous": 0,
+      "usable": 17
+    },
+    "roster 1": {
+      "records": 18,
+      "anomalous": 0,
+      "usable": 18
+    },
+    "roster 4": {
+      "records": 17,
+      "anomalous": 0,
+      "usable": 17
+    },
+    "roster 5": {
+      "records": 14,
+      "anomalous": 0,
+      "usable": 14
+    },
+    "roster 6": {
+      "records": 18,
+      "anomalous": 0,
+      "usable": 18
+    },
+    "roster 7": {
+      "records": 17,
+      "anomalous": 0,
+      "usable": 17
+    },
+    "roster 8": {
+      "records": 18,
+      "anomalous": 0,
+      "usable": 18
+    },
+    "roster 10": {
+      "records": 17,
+      "anomalous": 0,
+      "usable": 17
+    },
+    "roster 9": {
+      "records": 18,
+      "anomalous": 0,
+      "usable": 18
+    },
+    "roster 11": {
+      "records": 17,
+      "anomalous": 0,
+      "usable": 17
+    },
+    "roster 12": {
+      "records": 18,
+      "anomalous": 0,
+      "usable": 18
+    },
+    "roster 13": {
+      "records": 18,
+      "anomalous": 0,
+      "usable": 18
+    },
+    "roster 29": {
+      "records": 18,
+      "anomalous": 0,
+      "usable": 18
+    },
+    "roster 14": {
+      "records": 17,
+      "anomalous": 0,
+      "usable": 17
+    },
+    "roster 15": {
+      "records": 18,
+      "anomalous": 0,
+      "usable": 18
+    },
+    "roster 18": {
+      "records": 17,
+      "anomalous": 0,
+      "usable": 17
+    },
+    "roster 16": {
+      "records": 16,
+      "anomalous": 0,
+      "usable": 16
+    },
+    "roster 3": {
+      "records": 18,
+      "anomalous": 0,
+      "usable": 18
+    },
+    "roster 25": {
+      "records": 18,
+      "anomalous": 0,
+      "usable": 18
+    },
+    "roster 19": {
+      "records": 17,
+      "anomalous": 0,
+      "usable": 17
+    },
+    "roster 21": {
+      "records": 17,
+      "anomalous": 0,
+      "usable": 17
+    },
+    "roster 20": {
+      "records": 17,
+      "anomalous": 0,
+      "usable": 17
+    },
+    "roster 23": {
+      "records": 17,
+      "anomalous": 0,
+      "usable": 17
+    },
+    "roster 22": {
+      "records": 17,
+      "anomalous": 0,
+      "usable": 17
+    },
+    "roster 24": {
+      "records": 17,
+      "anomalous": 0,
+      "usable": 17
+    },
+    "roster 28": {
+      "records": 16,
+      "anomalous": 0,
+      "usable": 16
+    },
+    "roster 26": {
+      "records": 18,
+      "anomalous": 0,
+      "usable": 18
+    },
+    "roster 27": {
+      "records": 18,
+      "anomalous": 0,
+      "usable": 18
+    },
+    "roster teams": {
+      "records": 30,
+      "anomalous": 0,
+      "usable": 30
+    },
+    "roster records": {
+      "records": 518,
+      "anomalous": 0,
+      "usable": 518
+    }
+  },
+  "sha256": {
+    "index.html": "f715eb56497aaafb8dc6dca5d3dd18a01fba5559916e4d0aa2da4302148d0605",
+    "data_snapshot.json": "7910a7654f832c5a66a78951f7ca717222520ab636cb0c8b8babbd2ff1955ba4",
+    "roto_data.js": "ba99aaa413abad097ad3e4858d2bee79d28c389ab27188cdb5ec398b5f7921c8",
+    "report_data.js": "85e7075b7525962a4b98e5a747e58f96156302dae1924e19f991a3d5e7b7a2b7",
+    "report.js": "dd5950a6065453e48cefe233f60bd8c0e21050570ad88f1b08357ed6f39cf33b",
+    "data_codec.js": "c941d5bc5c6ddea17ab5bad39a5752a88809e0d23af1d3145f3695fc109ec779"
+  },
+  "generation_note": "Single live generation completed and printed Report generated. PowerShell wrapper exited 1 after a stderr warning (NativeCommandError); Python exit code was not separately preserved. Fresh artifacts passed both generated and clean-venv stage checks. No second live generation.",
+  "pinned_assets": {
+    "assets/jquery-3.7.1.min.js": {
+      "sha256": "fc9a93dd241f6b045cbff0481cf4e1901becd0e12fb45166a8f17f95823f0b1a",
+      "identical_to_HEAD_blob": true
+    },
+    "assets/datatables-2.3.7.min.js": {
+      "sha256": "8c91cf73783a1cb046e0760a7d1df93b5113ca4015385d1751468315b8c9aa19",
+      "identical_to_HEAD_blob": true
+    },
+    "assets/datatables-2.3.7.min.css": {
+      "sha256": "f64f07b501d8f3388e58225e5f6546b2c853a706fd8d0bbd5701e7042b3d2026",
+      "identical_to_HEAD_blob": true
+    }
+  }
+}

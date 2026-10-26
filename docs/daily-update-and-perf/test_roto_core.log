@@ -1,0 +1,3 @@
+Weighted FG/FT, per-player GP units, reverse TO, unknowns/coverage, duplicates, immutable replacements/reset, fixed baseline and local save/load passed.
+1200 named opponents, separate legacy storage, empty roster restoration, invalid IDs and storage quota failures passed.
+Known subtotal remains usable with unknown members; weighted known denominators and incomplete deltas are explicit.

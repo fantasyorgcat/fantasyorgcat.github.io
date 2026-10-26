@@ -9,8 +9,9 @@ from pathlib import Path
 import re
 import shutil
 import subprocess
+from report_data import PUBLIC_SCRIPTS, read_script, unpack_catalog, unpack_events
 
-ROTO_FILES = ['roto.html','roto_data.js','roto_core.js','roto.js','roto.css','dashboard.css','site_ui.js']
+ROTO_FILES = ['roto.html','roto_data.js','data_codec.js','roto_core.js','roto.js','roto.css','dashboard.css','site_ui.js']
 ASSETS = ['jquery-3.7.1.min.js','datatables-2.3.7.min.js','datatables-2.3.7.min.css']
 ATTRIBUTION_URLS={'https://www.boxscorelab.com/downloads/2025-26-player-season-totals.csv','https://creativecommons.org/licenses/by/4.0/'}
 SECRET_PATTERNS = [r'gh[pousr]_[A-Za-z0-9]{30,}', r'github_pat_[A-Za-z0-9_]{40,}', r'AKIA[0-9A-Z]{16}', r'-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----']
@@ -70,7 +71,9 @@ def check(report, snapshot):
     data=report.read_text(encoding='utf-8'); parser=PublicHTML();parser.feed(data)
     if parser.errors:raise ValueError('; '.join(parser.errors))
     if parser.csp != "default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src data:; connect-src 'none'; base-uri 'none'; form-action 'none'":raise ValueError('Expected CSP missing or changed')
-    if parser.scripts!=3 or len(parser.external)!=3:raise ValueError('Unexpected script/resource count')
+    expected_resources={'assets/'+a for a in ASSETS}|set(PUBLIC_SCRIPTS)
+    if parser.scripts!=2+len(PUBLIC_SCRIPTS) or len(parser.external)!=len(expected_resources) or {a.get('src',a.get('href')) for a in parser.external}!=expected_resources:
+        raise ValueError('Unexpected script/resource allowlist')
     for asset in ASSETS:
         path=Path('assets',asset)
         expected='sha384-'+base64.b64encode(hashlib.sha384(path.read_bytes()).digest()).decode()
@@ -80,6 +83,22 @@ def check(report, snapshot):
         raise ValueError('Official pinned jQuery digest mismatch')
     if 'Fixture Alpha' in data or 'Fixture Beta' in data or 'UI TEST ONLY' in data:raise ValueError('Test fixture cannot be published')
     meta=json.loads(snapshot.read_text(encoding='utf-8'))
+    payload=read_script(report.with_name('report_data.js'),'REPORT_DATA')
+    if payload.get('version')!=1 or payload.get('generated_at')!=meta.get('generated_at'):
+        raise ValueError('Report data snapshot mismatch')
+    catalog=unpack_catalog(payload['catalog'])
+    if not catalog or any(str(p['id'])!=pid for pid,p in catalog.items()):raise ValueError('Report catalog identity mismatch')
+    events=unpack_events(payload['events'])
+    if [{k:v for k,v in e.items() if not k.endswith('_html')} for e in events]!=meta['schedule_events']:
+        raise ValueError('Report event provenance mismatch')
+    if payload['platforms']!=meta['fantasy_periods']['platforms'] or payload['quick']!=meta['fantasy_periods']['quick_periods']:
+        raise ValueError('Report period provenance mismatch')
+    for event in events:
+        for side in ['home','away']:
+            badge=PublicHTML();badge.feed(event[side+'_html'])
+            if badge.errors or badge.external or badge.scripts or re.search(r'\son\w+\s*=',event[side+'_html'],re.I):
+                raise ValueError('Unsafe report schedule markup')
+            parser.matchups.extend(badge.matchups)
     if meta.get('stats_source')!='ESPN':raise ValueError('Source provenance absent')
     if meta.get('fixture'):raise ValueError('Test fixture cannot be published')
     check_defense_provenance(meta)
@@ -92,7 +111,7 @@ def check(report, snapshot):
         raise ValueError('Complete league statistics provenance absent')
     # Scan only tracked project files and explicitly public/generated files; print no matching values.
     paths=[Path(x) for x in subprocess.check_output(['git','ls-files'],text=True).splitlines()]
-    paths += [report,snapshot]+[Path('assets',a) for a in ASSETS]
+    paths += [report,snapshot]+[Path('assets',a) for a in ASSETS]+[Path(a) for a in PUBLIC_SCRIPTS]
     for path in set(paths):
         if not path.is_file():continue
         if path.suffix.lower() in ['.pem','.key','.p12','.pfx'] or path.name=='.env':raise ValueError('Credential file tracked')
@@ -108,7 +127,7 @@ def check_roto(require_ready=True,report=None):
     if parser.errors or parser.csp!=csp:raise ValueError('ROTO public content/CSP check failed')
     expected=(set(ROTO_FILES)-{'roto.html'})|{'assets/'+name for name in ASSETS}
     actual={a.get('src',a.get('href')) for a in parser.external}
-    if actual!=expected or parser.scripts!=6:raise ValueError('ROTO asset allowlist mismatch')
+    if actual!=expected or parser.scripts!=7:raise ValueError('ROTO asset allowlist mismatch')
     for asset in ASSETS:
         expected_integrity='sha384-'+base64.b64encode(hashlib.sha384(Path('assets',asset).read_bytes()).digest()).decode()
         attrs=next(a for a in parser.external if a.get('src',a.get('href'))=='assets/'+asset)
@@ -122,6 +141,7 @@ def check_roto(require_ready=True,report=None):
     match=re.fullmatch(r'window\.ROTO_DATA = (.*);\s*',raw)
     if not match:raise ValueError('ROTO data format invalid')
     data=json.loads(match[1]);snapshot=json.loads(Path('data_snapshot.json').read_text())
+    if 'catalog' in data:data['catalog']=unpack_catalog(data['catalog'])
     if data.get('version')!=1 or data.get('generated_at')!=snapshot['generated_at'] or data.get('source') not in ['ESPN','BoxScore Lab']:raise ValueError('ROTO snapshot provenance mismatch')
     if data.get('fixture'):raise ValueError('ROTO test fixture cannot be published')
     if require_ready:
@@ -169,9 +189,9 @@ def main():
         stage.mkdir();shutil.copyfile(report,stage/'index.html');shutil.copyfile(snapshot,stage/'data_snapshot.json')
         (stage/'assets').mkdir()
         for name in ASSETS:shutil.copyfile(Path('assets',name),stage/'assets'/name)
-        for name in ROTO_FILES:shutil.copyfile(Path(name),stage/name)
+        for name in set(ROTO_FILES)|set(PUBLIC_SCRIPTS):shutil.copyfile(Path(name),stage/name)
         (stage/'.nojekyll').touch()
-        expected={'index.html','data_snapshot.json','.nojekyll'}|{'assets/'+x for x in ASSETS}|set(ROTO_FILES)
+        expected={'index.html','data_snapshot.json','.nojekyll'}|{'assets/'+x for x in ASSETS}|set(ROTO_FILES)|set(PUBLIC_SCRIPTS)
         actual={str(x.relative_to(stage)).replace('\\','/') for x in stage.rglob('*') if x.is_file()}
         if actual!=expected:raise ValueError('Unexpected publish artifact files')
         print('Publish allowlist: '+', '.join(sorted(actual)))

@@ -11,8 +11,10 @@ def run(url):
         page=browser.new_page(viewport={'width':1500,'height':1000});errors=[];failed=[]
         page.on('pageerror',lambda e:errors.append(str(e)));page.on('requestfailed',lambda r:failed.append(r.url))
         assert page.goto(url,wait_until='load',timeout=60000).status==200
-        page.wait_for_function('Object.keys(tables).length===5',timeout=30000)
+        page.wait_for_function('!!tables[activeWeek]',timeout=30000)
         assert page.locator('.tablinks').count()==4
+        page.locator('#schedule-extras summary').click();page.locator('#defaultOpen').click()
+        page.locator('[data-timezone]').select_option('America/New_York')
         select=page.locator('#season-week')
         events=page.evaluate('scheduleEvents');groups=page.evaluate('platformPeriods')
         signature=page.evaluate("JSON.stringify(Object.values(playerCatalog).map(p=>p.periods))")
@@ -27,9 +29,13 @@ def run(url):
                 assert page.locator('#custom-period-heading').inner_text()==week['label']
                 start,end=date.fromisoformat(week['start']),date.fromisoformat(week['end'])
                 dates=[str(start+timedelta(days=i)) for i in range((end-start).days+1)]
-                headers=page.evaluate("tables.WCustom.columns('[data-schedule-day]').indexes().toArray().map(i=>tables.WCustom.column(i).header().textContent)")
-                assert headers==[d+' ET' for d in dates]
-                rows=page.evaluate("tables.WCustom.rows().data().toArray().map(r=>({team:r[1],games:Number(r[2]),days:r.slice(3,3+tables.WCustom.columns('[data-schedule-day]').count())}))")
+                headers=page.evaluate("tables.WCustom.columns('[data-schedule-day]').header().toArray().map(h=>(h.dataset.fullDate||h.textContent).slice(0,10))")
+                assert headers==dates
+                rows=page.evaluate('''()=>{const t=tables.WCustom,n=t.columns('[data-schedule-day]').count(),teams=new Map();
+                    if(t.rows().count()!==Object.keys(playerCatalog).length)throw Error('Missing player rows');
+                    for(const r of t.rows().data().toArray()){const data={team:r[1],games:Number(r[2]),days:r.slice(3,3+n)},previous=teams.get(r[1]);
+                        if(previous&&JSON.stringify(previous)!==JSON.stringify(data))throw Error('Players have inconsistent team schedules');teams.set(r[1],data);}
+                    return [...teams.values()].map(r=>({...r,days:r.days.map(s=>{const node=document.createElement('template');node.innerHTML=s;return node.innerHTML;})}));}''')
                 expected={}
                 for team in {row['team'] for row in rows}:
                     selected=[e for e in events if e['date_et'] in dates and team in [e.get('home'),e.get('away')]]

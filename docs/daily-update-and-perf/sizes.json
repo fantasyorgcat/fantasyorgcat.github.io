@@ -1,0 +1,55 @@
+{
+  "bytes": {
+    "index.html": {
+      "before": 27234161,
+      "after": 72592
+    },
+    "roto_data.js": {
+      "before": 3093335,
+      "after": 983482
+    },
+    "report_data.js": {
+      "before": 0,
+      "after": 686558
+    },
+    "report.js": {
+      "before": 0,
+      "after": 10334
+    },
+    "data_codec.js": {
+      "before": 0,
+      "after": 1626
+    },
+    "data_snapshot.json": {
+      "before": 733589,
+      "after": 747872
+    }
+  },
+  "first_load_resources": {
+    "before": {
+      "index.html": 27234161,
+      "assets/datatables-2.3.7.min.css": 30981,
+      "assets/jquery-3.7.1.min.js": 87533,
+      "assets/datatables-2.3.7.min.js": 98613
+    },
+    "after": {
+      "index.html": 72592,
+      "assets/datatables-2.3.7.min.css": 30981,
+      "assets/jquery-3.7.1.min.js": 87533,
+      "assets/datatables-2.3.7.min.js": 98613,
+      "report_data.js": 686558,
+      "data_codec.js": 1626,
+      "report.js": 10334,
+      "site_ui.js": 47638,
+      "team_tools.js": 3016,
+      "player_tools.js": 6626,
+      "schedule_tools.js": 15155,
+      "table_tools.js": 13502
+    }
+  },
+  "first_load_total_bytes": {
+    "before": 27451288,
+    "after": 1074174
+  },
+  "units": "Uncompressed file bytes; not production transfer/compression or network timing"
+}

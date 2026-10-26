@@ -63,13 +63,10 @@
   const values=ranks(state.period,state.mode);
   header.title=selected.length===9?'九項 PR 加總的全體排名；數字越小越前面':'所選 PR 加總的網站名單排名；數字越小越前面';
   table.rows().every(function(){
-   const row=this.node(),id=row.querySelector('[data-player-id]')?.dataset.playerId,c=values[id];if(!c)return;
-   const td=table.cell(this.index(),index).node(),order=String(c.value??1000000000);
-   td.dataset.order=order;td.dataset.rankValue=c.value===null?'':String(c.value);td.dataset.rankSum=c.sum===null?'':String(c.sum);
-   td.replaceChildren(node('span',c.value===null?'—':String(c.value),'rank-value'));
-   if(c.sum!==null)td.appendChild(node('small','Σ PR '+c.sum.toFixed(1),'rank-sum'));
-   td.title=c.sum===null?'所選項目 PR 不完整，無排名':'PR 合計 '+String(c.sum)+'；'+selectionLabel();
-   table.cell(this.index(),index).invalidate('dom');
+   const id=this.data()[0],c=values[id];if(!c)return;
+   table.cell(this.index(),index).data({...c,pr:null});
+   const td=table.cell(this.index(),index).node();
+   if(td){td.dataset.order=String(c.value??1000000000);decorateRank(td,c);}
   });
   updatedRanks.set(header,signature);
  }

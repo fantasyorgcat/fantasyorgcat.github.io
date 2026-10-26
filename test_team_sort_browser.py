@@ -19,10 +19,10 @@ def run(url, output):
             page.on('pageerror', lambda e: errors.append(str(e)))
             page.on('requestfailed', lambda r: failed.append(r.url))
             assert page.goto(url, wait_until='load', timeout=60000).status == 200
-            page.wait_for_function('Object.keys(tables).length===5')
+            page.wait_for_function('!!tables[activeWeek]')
             signature = page.evaluate('JSON.stringify([playerCatalog,scheduleEvents,platformPeriods,scheduleGeneratedAt])')
             assert page.evaluate('scheduleEvents.length') == 1200
-            assert page.evaluate('Object.keys(playerCatalog).length') == 610
+            assert page.evaluate('Object.keys(playerCatalog).length === tables[activeWeek].rows().count()')
             assert page.locator('#rank-settings').count() == 0
 
             def rows(selector='#teamTableWCustom'):
@@ -59,11 +59,9 @@ def run(url, output):
                         return out;}''', [platform, index])
                     assert dict(rows()) == expected
                     verify_sort()
-                    assert page.evaluate('''()=>{for(const node of tables.WCustom.rows({search:'none'}).nodes().toArray()){
-                        const id=node.querySelector('[data-player-id]').dataset.playerId;
-                        const actual=node.querySelector('.rank-ls-avg').textContent;
-                        const expected=playerCatalog[id].periods.ls.avg.Rank.value;
-                        if(actual!==(expected===null?'—':String(expected)))return false;}return true;}''')
+                    assert page.evaluate('''()=>{const t=tables.WCustom,col=t.column('.rank-ls-avg').index();for(const i of t.rows().indexes().toArray()){
+                        const id=t.row(i).data()[0],cell=t.cell(i,col),expected=playerCatalog[id].periods.ls.avg.Rank.value;
+                        if(cell.data().value!==expected||cell.node()&&cell.node().dataset.rankValue!==(expected===null?'':String(expected)))return false;}return true;}''')
                 tested[platform] = indices
 
             page.locator('[data-platform="NBA"]').click()
@@ -91,6 +89,10 @@ def run(url, output):
             page.locator('#schedule-extras summary').click()
             page.locator('.tablinks').nth(3).click()
             verify_sort('#teamTableW4')
+            # Exercise the helper's DataTables adapter on an explicit fresh table;
+            # lazy quick schedules otherwise use the existing DOM sort adapter.
+            page.evaluate('''()=>{const old=document.querySelector('#teamTableW4'),node=old.cloneNode(true);old.replaceWith(node);
+                $(node).DataTable({paging:false,info:false,searching:false,order:[],columnDefs:[{targets:1,type:'team-games',orderable:false,render:(data,type,row,meta)=>type==='sort'?teamGamesSortValue(data,meta.row):data}]});setupTeamGamesSort(node);}''')
             page.evaluate("$('#teamTableW4').DataTable().order([[0,'asc']]).draw(false)")
             assert page.locator('#teamTableW4 [data-games-sort-arrow]').inner_text() == '↕'
             assert signature == page.evaluate('JSON.stringify([playerCatalog,scheduleEvents,platformPeriods,scheduleGeneratedAt])')

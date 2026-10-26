@@ -320,6 +320,7 @@ function translate(source){
   }
   if(value===source){
    const rules=[
+    [/^資料快照與來源 · 本季 ([\d-]+) 球員統計$/,(_,season)=>'Snapshot & sources · This season '+season+' player statistics'],
     [/^完整 (\d+)\/30 隊$/,(_,n)=>'Complete '+n+'/30 teams'],
     [/^近10場估算防守效率資料未完整：(\d+)\/10；暫不排名。$/,(_,n)=>'Estimated defense incomplete: '+n+'/10; unranked.'],
     [/^ESPN 近10場估算防守效率 \(可跨季\): ([\d.]+)失分\/100估算回合; 排名 (\d+)\/(\d+); (\d+)\/10場; (.+)$/,(_,rating,rank,total,n,dates)=>'ESPN estimated defense: '+rating+' points allowed / 100 estimated possessions; rank #'+rank+' of '+total+'; '+n+'/10 games; '+dates],
