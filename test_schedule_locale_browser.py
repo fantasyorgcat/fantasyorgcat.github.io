@@ -18,7 +18,7 @@ with sync_playwright() as p:
  for width in [1440,390]:
   ctx=browser.new_context(viewport={'width':width,'height':1000 if width>600 else 844},reduced_motion='reduce');page=ctx.new_page();errors=[];external=[]
   page.on('pageerror',lambda e:errors.append(str(e)));page.on('request',lambda r:external.append(r.url) if not r.url.startswith(ORIGIN+'/') else None)
-  page.goto(ORIGIN+'/');page.wait_for_function('()=>window.SiteUI&&Object.keys(tables).length===5');page.wait_for_timeout(200)
+  page.goto(ORIGIN+'/');page.wait_for_function('()=>window.SiteUI&&!!tables[activeWeek]');page.wait_for_timeout(200)
   assert page.locator('[data-platform="YAHOO"]').get_attribute('aria-pressed')=='true'
   assert page.locator('[data-timezone]').input_value()=='Asia/Taipei'
   assert page.locator('.hero h1').inner_text()=='把下一場排入你的賽程'
@@ -58,7 +58,7 @@ with sync_playwright() as p:
   page.locator('[data-language]').click();page.wait_for_function('()=>document.documentElement.lang==="zh-Hant"');page.wait_for_timeout(200)
   assert page.locator('#base-roster-name').input_value()=='測試聯盟 / League'
   assert saved==page.evaluate('localStorage.getItem(RotoCore.storageKey)')
-  page.locator('.site-nav a[href="index.html"]').click();page.wait_for_function('()=>window.SiteUI&&Object.keys(tables).length===5')
+  page.locator('.site-nav a[href="index.html"]').click();page.wait_for_function('()=>window.SiteUI&&!!tables[activeWeek]')
   assert page.locator('[data-timezone]').input_value()=='UTC';assert page.locator('.hero h1').inner_text()=='把下一場排入你的賽程'
   page.locator('#schedule-extras summary').click();page.locator('#defaultOpen').click()
   assert page.locator('#Week1').is_visible();assert original==page.evaluate('JSON.stringify(playerCatalog)')
@@ -66,8 +66,8 @@ with sync_playwright() as p:
   assert not errors,errors;assert not external,external
   results.append(dict(width=width,default_yahoo=True,default_taipei=True,six_complete_rows=True,full_width_schedule=True,compact_cards=True,localized_dates_and_times=True,language_roundtrip=True,roto_and_dynamic_ui=True,roster_and_stats_preserved=True,js_errors=errors,external_requests=external));ctx.close()
  # Default week must use the current Yahoo scoring date, including its merged Cup week.
- ctx=browser.new_context();page=ctx.new_page();page.clock.install(time=datetime(2026,12,2,15,tzinfo=timezone.utc));page.goto(ORIGIN+'/');page.wait_for_function('()=>Object.keys(tables).length===5')
+ ctx=browser.new_context();page=ctx.new_page();page.clock.install(time=datetime(2026,12,2,15,tzinfo=timezone.utc));page.goto(ORIGIN+'/');page.wait_for_function('()=>!!tables[activeWeek]')
  assert page.locator('[data-platform="YAHOO"]').get_attribute('aria-pressed')=='true';assert page.locator('#season-week').input_value()=='6';ctx.close()
  # Preference write failures leave the selected language/timezone usable.
- ctx=browser.new_context();ctx.add_init_script("Storage.prototype.getItem=function(){throw Error('blocked')};Storage.prototype.setItem=function(){throw Error('quota')}");page=ctx.new_page();page.goto(ORIGIN+'/');page.wait_for_function('()=>Object.keys(tables).length===5');page.locator('[data-language]').click();page.wait_for_timeout(200);assert page.locator('html').get_attribute('lang')=='en';assert page.locator('[data-site-preferences] [role="status"]').count()==1;ctx.close();browser.close()
+ ctx=browser.new_context();ctx.add_init_script("Storage.prototype.getItem=function(){throw Error('blocked')};Storage.prototype.setItem=function(){throw Error('quota')}");page=ctx.new_page();page.goto(ORIGIN+'/');page.wait_for_function('()=>!!tables[activeWeek]');page.locator('[data-language]').click();page.wait_for_timeout(200);assert page.locator('html').get_attribute('lang')=='en';assert page.locator('[data-site-preferences] [role="status"]').count()==1;ctx.close();browser.close()
 (OUT/'browser-results.json').write_text(json.dumps({'results':results,'yahoo_current_date_verified':True,'storage_failure_verified':True},ensure_ascii=False,indent=2));print(json.dumps(results))

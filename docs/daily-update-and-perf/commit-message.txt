@@ -1,0 +1,9 @@
+Make daily ESPN updates tolerant and defer homepage tables
+
+Isolate malformed source records with diagnostics and bounded coverage guards.
+Move lossless table data to same-origin scripts, render only active weeks and
+visible rows, and compress the ROTO catalog without changing ranking precision.
+Verify stdlib-only deployment staging, update Actions and artifact lists, and
+retain unit, browser, source, size and same-snapshot performance evidence.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>

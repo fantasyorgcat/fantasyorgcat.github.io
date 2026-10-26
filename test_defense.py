@@ -120,6 +120,9 @@ class Defense(unittest.TestCase):
                 report=build_fixture(tmp,(ratings,meta))
             snapshot=Path(tmp)/'data_snapshot.json';saved=json.loads(snapshot.read_text());html=report.read_text()
             check_defense_provenance(saved);parser=PublicHTML();parser.feed(html)
+            from report_data import read_script,unpack_events
+            for event in unpack_events(read_script(Path(tmp)/'report_data.js','REPORT_DATA')['events']):
+                parser.feed(event['home_html']);parser.feed(event['away_html'])
             self.assertTrue(parser.matchups);self.assertTrue(all('近10場估算防守效率' in a['title'] for a in parser.matchups))
             self.assertIn('完整 30/30 隊',html)
             with self.assertRaisesRegex(ValueError,'Test fixture cannot be published'):check(report,snapshot)

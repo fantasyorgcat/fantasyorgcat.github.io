@@ -13,7 +13,7 @@ with sync_playwright() as p:
  for width in [1327,1500,390,320]:
   context=browser.new_context(viewport={'width':width,'height':1000 if width>600 else 844})
   page=context.new_page();errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
-  page.goto(URL,wait_until='load');page.wait_for_function('document.querySelectorAll(".table-toolbar").length===5')
+  page.goto(URL,wait_until='load');page.wait_for_function('document.querySelectorAll(".table-toolbar").length>=1')
   section=page.locator('#WeekCustom .player-section')
   def geometry():
    return page.evaluate('''()=>{const c=tables[activeWeek].table().container(),head=c.querySelector('.dt-scroll-head'),body=c.querySelector('.dt-scroll-body');const hs=[...head.querySelectorAll('th')].map(e=>e.getBoundingClientRect()),ds=[...body.querySelector('tbody tr').cells].map(e=>e.getBoundingClientRect());return {available:body.clientWidth,width:body.scrollWidth,aligned:hs.length===ds.length&&hs.every((r,i)=>Math.abs(r.width-ds[i].width)<2&&Math.abs(r.x-ds[i].x)<2),documentFits:document.documentElement.scrollWidth<=innerWidth+1,cols:hs.map(r=>r.width),rankVisible:hs.at(-1).right<=body.getBoundingClientRect().right+1};}''')
@@ -32,13 +32,13 @@ with sync_playwright() as p:
   rank=section.locator('.table-options').nth(0);rank.locator('summary').click();rank.get_by_role('button',name='籃板 + FG%').click()
   assert section.locator('[data-rank-category]:checked').count()==2
   def validate():
-   return page.evaluate('''()=>{const t=tables[activeWeek],s=viewState[activeWeek],all=Object.values(playerCatalog),valid=all.map(p=>{const d=p.periods[s.period][s.mode];return {id:p.id,sum:d.REB.pr===null||d['FG%'].pr===null?null:d.REB.pr+d['FG%'].pr};}),col=t.column('.rank-'+s.period+'-'+s.mode).index();for(const row of t.rows({search:'none'}).indexes().toArray()){const id=t.row(row).node().querySelector('[data-player-id]').dataset.playerId,expected=valid.find(p=>p.id===id),cell=t.cell(row,col).node(),v=expected.sum===null?null:1+valid.filter(p=>p.sum!==null&&p.sum>expected.sum).length;if(cell.dataset.rankValue!==(v===null?'':String(v))||cell.dataset.rankSum!==(expected.sum===null?'':String(expected.sum)))throw Error('PR sum/rank mismatch '+id);}if(t.order()[0][0]!==col)throw Error('Rank ordering did not follow stat period/mode');const ordered=t.column(col,{order:'applied'}).nodes().toArray().map(c=>Number(c.dataset.order));if(!ordered.every((n,i)=>!i||ordered[i-1]<=n))throw Error('Rank sort stale');return t.rows({search:'applied'}).count();}''')
+   return page.evaluate('''()=>{const t=tables[activeWeek],s=viewState[activeWeek],all=Object.values(playerCatalog),valid=all.map(p=>{const d=p.periods[s.period][s.mode];return {id:p.id,sum:d.REB.pr===null||d['FG%'].pr===null?null:d.REB.pr+d['FG%'].pr};}),col=t.column('.rank-'+s.period+'-'+s.mode).index();for(const row of t.rows({search:'none'}).indexes().toArray()){const id=t.row(row).data()[0],expected=valid.find(p=>p.id===id),cell=t.cell(row,col).node(),v=expected.sum===null?null:1+valid.filter(p=>p.sum!==null&&p.sum>expected.sum).length;if(t.cell(row,col).data().value!==v||t.cell(row,col).data().sum!==expected.sum||cell&&(cell.dataset.rankValue!==(v===null?'':String(v))||cell.dataset.rankSum!==(expected.sum===null?'':String(expected.sum))))throw Error('PR sum/rank mismatch '+id);}if(t.order()[0][0]!==col)throw Error('Rank ordering did not follow stat period/mode');const ordered=t.column(col,{order:'applied'}).data().toArray().map(c=>c.value??1000000000);if(!ordered.every((n,i)=>!i||ordered[i-1]<=n))throw Error('Rank sort stale');return t.rows({search:'applied'}).count();}''')
   assert validate()==page.evaluate("Object.keys(playerCatalog).length")
   page.evaluate("tables[activeWeek].search('Trae Young').draw()");assert validate()==1
   page.evaluate("tables[activeWeek].search('').draw()")
   section.locator('[data-mode="TOT"]').click();validate();assert geometry()['aligned']
   section.locator('[data-period="L7"]').click();validate()
-  assert page.evaluate("tables[activeWeek].column('.rank-l7-tot').nodes().toArray().every(td=>td.dataset.rankValue==='')")
+  assert page.evaluate("tables[activeWeek].rows().data().toArray().every(row=>row[tables[activeWeek].column('.rank-l7-tot').index()].value===playerRank(playerCatalog[row[0]],'l7','tot').value)")
   section.locator('[data-period="LS"]').click();section.locator('[data-mode="AVG"]').click()
   page.locator('#season-week').select_option('1');validate()
   assert section.locator('[data-rank-category]:checked').count()==2
@@ -46,7 +46,7 @@ with sync_playwright() as p:
   for key in ['REB','FG%']:rank.locator('[data-rank-category="'+key+'"]').uncheck()
   assert page.evaluate("tables[activeWeek].column('.rank-ls-avg').nodes().toArray().every(td=>td.dataset.rankValue==='')")
   rank.get_by_role('button',name='恢復 9CAT').click()
-  assert page.evaluate('''()=>{const t=tables[activeWeek];return t.rows().indexes().toArray().every(i=>{const id=t.row(i).node().querySelector('[data-player-id]').dataset.playerId,expected=playerCatalog[id].periods.ls.avg.Rank.value,cell=t.cell(i,t.column('.rank-ls-avg').index()).node();return cell.dataset.rankValue===(expected===null?'':String(expected));});}''')
+  assert page.evaluate('''()=>{const t=tables[activeWeek];return t.rows().indexes().toArray().every(i=>{const id=t.row(i).data()[0],expected=playerCatalog[id].periods.ls.avg.Rank.value,cell=t.cell(i,t.column('.rank-ls-avg').index()).node();return t.cell(i,t.column('.rank-ls-avg').index()).data().value===expected&&(!cell||cell.dataset.rankValue===(expected===null?'':String(expected)));});}''')
   rank.get_by_role('button',name='籃板 + FG%').click();rank.locator('summary').click()
   page.locator('#jump-players').click();page.wait_for_timeout(200);page.screenshot(path=str(OUT/f'custom-rank-{width}.png'))
   # Use full schedule with exact fixed-width columns, accessible end and top scroll sync.
@@ -67,7 +67,7 @@ with sync_playwright() as p:
   stored=page.evaluate('(k)=>JSON.parse(localStorage.getItem(k))',KEY)
   assert stored=={'font':16,'padding':4,'dayWidth':72,'schedule':True},stored
   assert page.evaluate("localStorage.getItem('fantasyorgcat:preserve-roster-test')")=='unchanged'
-  page.reload(wait_until='load');page.wait_for_function('document.querySelectorAll(".table-toolbar").length===5')
+  page.reload(wait_until='load');page.wait_for_function('document.querySelectorAll(".table-toolbar").length>=1')
   assert section.locator('[data-display-setting="schedule"]').is_checked()
   assert section.locator('[data-display-setting="font"]').input_value()=='16'
   assert page.evaluate("getComputedStyle(document.querySelector('#playerTableWCustom tbody td')).fontSize")=='16px'
@@ -79,7 +79,7 @@ with sync_playwright() as p:
   context.close()
  # Restricted storage: preferences work for this visit; no roster writes/clears or crash.
  context=browser.new_context();context.add_init_script("Storage.prototype.getItem=function(){throw Error('blocked')};Storage.prototype.setItem=function(){throw Error('quota')};")
- page=context.new_page();errors=[];page.on('pageerror',lambda e:errors.append(str(e)));page.goto(URL);page.wait_for_function('document.querySelectorAll(".table-toolbar").length===5')
+ page=context.new_page();errors=[];page.on('pageerror',lambda e:errors.append(str(e)));page.goto(URL);page.wait_for_function('document.querySelectorAll(".table-toolbar").length>=1')
  display=page.locator('#WeekCustom .table-options').nth(1);display.locator('summary').click();display.locator('[data-display-setting="font"]').evaluate('(e)=>{e.value=16;e.dispatchEvent(new Event("input",{bubbles:true}));}')
  assert '無法儲存' in display.locator('[data-display-status]').inner_text();assert not errors,errors
  context.close();browser.close()

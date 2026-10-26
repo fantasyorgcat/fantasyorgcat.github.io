@@ -126,11 +126,9 @@
   const playerTable=section.querySelector('table'),headers=playerTable.tHead.rows[0];
   for(let i=0;i<sourceDays;i++)headers.deleteCell(3);
   dayList.forEach((date,i)=>{const th=document.createElement('th');th.dataset.scheduleDay=String(i);th.textContent=date;headers.insertBefore(th,headers.cells[3+i]);});
-  for(const tr of playerTable.tBodies[0].rows){
-   const data=byTeam.get(tr.cells[1].textContent)||{games:0,days:dayList.map(()=> '')};tr.cells[2].textContent=String(data.games);
-   for(let i=0;i<sourceDays;i++)tr.deleteCell(3);
-   data.days.forEach((html,i)=>{tr.insertCell(3+i).innerHTML=html;});
-  }
+  const fixtures=new Map(Array.from(byTeam,([team,data])=>[team,[data.games,...data.days]]));
+  for(const p of Object.values(playerCatalog))if(!fixtures.has(p.team))fixtures.set(p.team,[0,...dayList.map(()=> '')]);
+  playerTable._fixtures=fixtures;tableSchedules.set(playerTable,fixtures);
   const content=targetKey==='WCustom'?byId('custom-period-content'):byId('Week'+targetKey.slice(1));content.replaceChildren();
   const teamSection=document.createElement('section');teamSection.className='team-section';const title=document.createElement('h3');title.textContent='球隊賽程 · '+period.label;teamSection.appendChild(title);
   const scroll=document.createElement('div');scroll.className='schedule-scroll';const teamTable=document.createElement('table');teamTable.id='teamTable'+targetKey;const head=teamTable.createTHead().insertRow();
@@ -146,7 +144,7 @@
   const zoneNote=document.createElement('p');zoneNote.className='schedule-zone-note';zoneNote.textContent=window.SiteUI?SiteUI.zoneNote():'美東時間';title.after(zoneNote);
   // Show the panel before DataTables measures its scroll columns.
   openWeek({currentTarget:targetKey==='WCustom'?byId('apply-custom-period'):document.querySelector('[onclick*="Week'+targetKey.slice(1)+'"]')},targetKey==='WCustom'?'WeekCustom':'Week'+targetKey.slice(1),false);
-  const table=$(playerTable).DataTable(playerTableOptions(playerTable,targetKey,pageLength));tables[targetKey]=table;table.column(1).visible(false,false);const fixtures=new Map(Array.from(byTeam,([team,data])=>[team,[data.games,...data.days]]));for(const p of Object.values(playerCatalog))if(!fixtures.has(p.team))fixtures.set(p.team,[0,...dayList.map(()=> '')]);tableSchedules.set(playerTable,fixtures);table.on('draw',()=>updateSelection(targetKey));
+  const table=$(playerTable).DataTable(playerTableOptions(playerTable,targetKey,pageLength));tables[targetKey]=table;table.column(1).visible(false,false);table.on('draw',()=>updateSelection(targetKey));
   switchStats(state.period==='ls'?'LS':state.period==='season'?'Season':state.period.toUpperCase(),targetKey,false);switchDisplayMode(state.mode.toUpperCase(),targetKey,false);
   if(chosen)table.column(1).search('^'+$.fn.dataTable.util.escapeRegex(chosen)+'$',true,false);
   table.search(search);
@@ -159,7 +157,7 @@
   for(const button of document.querySelectorAll('[data-platform]'))button.addEventListener('click',()=>selectPlatform(button.dataset.platform));
   fillWeekOptions();
   if(platformPeriods.YAHOO.available){platformAnchor=easternToday();appliedSeasonWeek=indexForDate(platformPeriods.YAHOO.periods,platformAnchor);renderPeriod(platformPeriods.YAHOO.periods[appliedSeasonWeek]);}
-  else updatePeriodControls();
+  else renderPeriod(quickPeriods.W1,'W1');
   let rebuilding=false;
   document.addEventListener('active-week-changed',()=>{if(activeWeek!=='WCustom'&&!rebuilding){rebuilding=true;try{renderPeriod(quickPeriods[activeWeek],activeWeek);}finally{rebuilding=false;}}});
   document.addEventListener('site-preferences-changed',e=>{document.querySelectorAll('.schedule-zone-note').forEach(n=>n.textContent=SiteUI.zoneNote());if(e.detail?.timezoneChanged){rebuilding=true;try{renderPeriod(selectedPeriod(),activeWeek);}finally{rebuilding=false;}}renderInsights();});

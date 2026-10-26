@@ -113,6 +113,17 @@ class Schedule(unittest.TestCase):
     def test_naive_timestamp_rejected(self):
         with self.assertRaisesRegex(ValueError,'timezone'):self.normalized(self.event('bad','2026-10-20T19:00:00'))
 
+    def test_one_malformed_event_does_not_lose_good_schedule_or_create_half_game(self):
+        valid=self.event('good','2026-10-21T01:00Z')
+        bad=self.event('bad','2026-10-22T01:00Z')
+        del bad['competitions'][0]['competitors'][1]['team']
+        a,b,c,d=self.patches(lambda url:self.source([valid,bad]))
+        with a,b,c,d:
+            frame=utils.get_season_schedule()
+        self.assertEqual(frame.EVENT_ID.tolist(),['good','good'])
+        self.assertEqual(set(frame.TEAM_ABBREVIATION),{'LAL','BOS'})
+        self.assertTrue(utils.PROVENANCE['source_warnings'])
+
     def test_platform_calendars_use_verified_distinct_boundaries(self):
         weeks=utils.season_weeks(self.frame([date(2026,10,20),date(2027,4,11)]))
         groups=build_platform_periods('2026-27',weeks,[])

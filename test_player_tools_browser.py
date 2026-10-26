@@ -13,7 +13,7 @@ def run(url):
    page.on('pageerror',lambda e:errors.append(str(e)));page.on('requestfailed',lambda r:failed.append(r.url))
    page.on('request',lambda r:external.append(r.url) if not r.url.startswith(url.split('/fantasy_')[0].rstrip('/')+'/') else None)
    assert page.goto(url,wait_until='load',timeout=60000).status==200
-   page.wait_for_function('Object.keys(tables).length===5')
+   page.wait_for_function('!!tables[activeWeek]')
    page.locator('#schedule-extras summary').click();page.locator('#defaultOpen').click()
    page.evaluate('''()=>{const keys=['PTS','REB','AST','3PM','STL','BLK','FG%','FT%','TO'];for(const p of Object.values(playerCatalog))for(const period of Object.values(p.periods))for(const mode of ['avg','tot']){const pr=keys.map(k=>period[mode][k].pr),actual=period[mode].Rank.sum;if(pr.some(v=>v===null)){if(actual!==null)throw Error('Incomplete nine PRs excluding minutes ranked');}else{const expected=pr.reduce((a,b)=>a+b,0);if(actual===null||Math.abs(actual-expected)>1e-9)throw Error('Rank sum includes minutes or wrong metrics');}}}''')
    page.evaluate('''()=>{for(const period of ['season','l7','l14','ls'])for(const mode of ['avg','tot']){const cells=Object.values(playerCatalog).map(p=>p.periods[period][mode].TO).filter(c=>c.value!==null&&c.pr!==null).sort((a,b)=>a.value-b.value);for(let i=1;i<cells.length;i++){if(cells[i].pr>cells[i-1].pr||cells[i].value===cells[i-1].value&&cells[i].pr!==cells[i-1].pr)throw Error('TO PR direction/ties wrong');}}}''')
@@ -26,7 +26,7 @@ def run(url):
    assert page.evaluate('!!(document.querySelector("#comparison-panel").compareDocumentPosition(document.querySelector("#Week1"))&Node.DOCUMENT_POSITION_FOLLOWING)')
    def exact():
     value=page.evaluate('''()=>{const t=tables[activeWeek],columns=t.columns('[data-schedule-day]').indexes().toArray(),headers=Array.from(document.querySelectorAll('#comparison-head th')).slice(2,2+columns.length).map(n=>n.textContent);const expected=columns.map(i=>t.column(i).header().textContent);if(JSON.stringify(headers)!==JSON.stringify(expected))throw Error('Date mismatch');for(const tr of document.querySelectorAll('#comparison-body tr')){const team=playerCatalog[tr.dataset.playerId].team,r=t.rows({search:'none'}).data().toArray().find(row=>row[1]===team);if(r){if(tr.cells[1].textContent!==String(r[2]))throw Error('Game count mismatch');for(let i=0;i<columns.length;i++){const tmp=document.createElement('template');tmp.innerHTML=r[columns[i]];if(tr.cells[i+2].innerHTML!==tmp.innerHTML)throw Error('Opponent/home-away/defense mismatch');}}}return activeWeek;}''');return value
-   exact();assert page.locator('#comparison-body tr td:nth-child(2)').first.inner_text()=='0'
+   exact();assert page.locator('#comparison-body tr td:nth-child(2)').first.inner_text()==str(page.evaluate('(id)=>scheduleForTable(tables[activeWeek].table().node()).get(playerCatalog[id].team)[0]',pair[0]))
    page.locator('#show-all-players').click();exact();assert page.locator('#comparison-body tr').count()==2
    for i in range(4):
     page.locator('.tablinks').nth(i).click();assert exact()=='W'+str(i+1)
@@ -34,7 +34,7 @@ def run(url):
     if teamrow.count():teamrow.first.click();exact();assert page.locator('#comparison-body tr').count()==2
     page.locator('#show-all-players').click();exact()
    def ranks():
-    return page.evaluate("""()=>{const out={};for(const node of tables[activeWeek].rows({search:'none'}).nodes().toArray()){const id=node.querySelector('[data-player-id]').dataset.playerId,cell=node.querySelector('.rank-ls-avg');out[id]=cell.dataset.rankValue===undefined?cell.textContent:(cell.dataset.rankValue||'—');if(playerCatalog[id].periods.ls.avg.Rank.value!==null&&Number(cell.dataset.rankValue??cell.textContent)!==playerCatalog[id].periods.ls.avg.Rank.value)throw Error('Global/catalog Rank mismatch');}return out;}""")
+    return page.evaluate("""()=>{const out={},t=tables[activeWeek],col=t.column('.rank-ls-avg').index();for(const i of t.rows().indexes().toArray()){const id=t.row(i).data()[0],c=t.cell(i,col),v=c.data().value,node=c.node();out[id]=v===null?'—':String(v);if(v!==playerCatalog[id].periods.ls.avg.Rank.value||node&&node.dataset.rankValue!==(v===null?'':String(v)))throw Error('Global/catalog Rank mismatch');}return out;}""")
    before=ranks();assert min(int(v) for v in before.values() if v!='—')==1
    page.evaluate("tables[activeWeek].order([tables[activeWeek].column('.rank-ls-avg').index(),'asc']).draw()")
    values=page.evaluate("Array.from(tables[activeWeek].column('.rank-ls-avg',{order:'applied'}).nodes()).map(n=>Number(n.dataset.order))");assert values==sorted(values)
@@ -52,7 +52,7 @@ def run(url):
    assert page.evaluate('seasonWeeks[0].start') if 'start' in weeks[0] else weeks[0]['number']==1
    page.locator('#comparison-mode').select_option('tot');page.locator('#comparison-head button[data-sort="PTS"]').click()
    vals=page.locator('#comparison-body tr td').evaluate_all('(nodes)=>nodes.filter(n=>n.dataset.metric==="PTS").map(n=>Number(n.dataset.value))');assert vals==sorted(vals,reverse=True)
-   page.locator('#comparison-period').select_option('l7');assert page.locator('#comparison-body tr td').evaluate_all('(nodes)=>nodes.filter(n=>["PTS","TO","Rank"].includes(n.dataset.metric)).every(n=>n.textContent==="—")')
+   page.locator('#comparison-period').select_option('l7');assert page.locator('#comparison-body tr').evaluate_all('(rows)=>rows.every(r=>[...r.querySelectorAll("td[data-metric]")].filter(n=>["PTS","TO","Rank"].includes(n.dataset.metric)).every(n=>n.dataset.value===String(playerCatalog[r.dataset.playerId].periods.l7.tot[n.dataset.metric].value??"")))')
    page.locator('#comparison-period').select_option('ls');page.locator('#comparison-mode').select_option('avg')
    page.locator('#comparison-head button[data-sort="TO"]').click()
    to=page.locator('#comparison-body tr td').evaluate_all('(nodes)=>nodes.filter(n=>n.dataset.metric==="TO").map(n=>Number(n.dataset.value))');assert to==sorted(to)
@@ -68,7 +68,7 @@ def run(url):
    page.locator('#comparison-body button').first.click();assert page.locator('#comparison-body tr').count()==1
    page.locator('#clear-comparison').click();assert not page.locator('#comparison-panel').is_visible()
    assert page.evaluate('storageCalls')==['getItem','getItem'];assert page.evaluate('savedRoster()')=='existing-user-data'
-   page.reload(wait_until='load');page.wait_for_function('Object.keys(tables).length===5');assert not page.locator('#comparison-panel').is_visible();assert page.evaluate('storageCalls')==['getItem','getItem']
+   page.reload(wait_until='load');page.wait_for_function('!!tables[activeWeek]');assert not page.locator('#comparison-panel').is_visible();assert page.evaluate('storageCalls')==['getItem','getItem']
    assert not errors,errors;assert not failed,failed;assert not external,external
    results.append(dict(width=width,season_weeks=len(weeks),tested_platforms=tested_platforms,cross_team_ids=pair,exact_schedule_all_weeks=True,display_preferences_blocked_read=True,existing_storage_preserved=True,zero_games_and_missing=True,rank_global_and_week_invariant=True,rank_numeric_sort=True,rank_missing_is_unranked=True,js_errors=errors,failed_requests=failed,external_requests=external));ctx.close()
   browser.close()

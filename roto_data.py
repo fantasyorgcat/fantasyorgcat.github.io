@@ -92,11 +92,17 @@ def build_data(catalog,snapshot,reference=None,season=None):
 
 
 def write_data(data,path='roto_data.js'):
-    Path(path).write_text('window.ROTO_DATA = '+json.dumps(data,ensure_ascii=False,allow_nan=False).replace('<','\\u003c')+';\n')
+    from report_data import pack_catalog, write_script
+    payload=dict(data)
+    if 'catalog' in payload:payload['catalog']=pack_catalog(payload['catalog'])
+    write_script(path,'ROTO_DATA',payload)
 
 
 def read_report(path):
-    html=Path(path).read_text()
+    html=Path(path).read_text(encoding='utf-8')
+    if 'src="report_data.js"' in html:
+        from report_data import read_script,unpack_catalog
+        return unpack_catalog(read_script(Path(path).with_name('report_data.js'),'REPORT_DATA')['catalog'])
     match=re.search(r'var playerCatalog = (.*?);\s*\n',html)
     if not match:raise ValueError('Report player catalog absent')
     return json.loads(match[1])

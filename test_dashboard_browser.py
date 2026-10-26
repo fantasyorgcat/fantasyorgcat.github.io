@@ -9,17 +9,17 @@ def run(url):
   page=browser.new_page(viewport={'width':1500,'height':1000});errors=[];failed=[]
   page.on('pageerror',lambda e:errors.append(str(e)));page.on('requestfailed',lambda r:failed.append(r.url))
   response=page.goto(url,wait_until='load',timeout=90000);assert response.status==200
-  page.wait_for_function('Object.keys(tables).length>=4',timeout=30000)
+  page.wait_for_function('!!tables[activeWeek]',timeout=30000)
   page.locator('#schedule-extras summary').click()
   assert not page.locator('.data-notice').is_visible() and not page.locator('.defense-notice').is_visible()
   page.locator('.data-details summary').click();assert page.locator('.data-notice').is_visible();page.locator('.data-details summary').click()
-  total=page.evaluate('tables.W4.rows().count()');assert total>500
+  total=page.evaluate('Object.keys(playerCatalog).length');assert total>500
   for i in range(1,5):
    page.locator('.tablinks').nth(i-1).click();assert page.locator(f'#Week{i}').is_visible()
    page.locator(f'#Week{i} [data-period="LS"]').click();page.locator(f'#Week{i} [data-mode="TOT"]').click()
    assert page.evaluate(f'tables.W{i}.columns(":visible").count()')>=11
    page.locator(f'#Week{i} [data-period="L7"]').click()
-   assert page.locator(f'#Week{i} td.stat-l7.stat-tot').first.inner_text()=='—'
+   assert page.evaluate('''()=>{const t=tables[activeWeek],i=t.rows({page:'current'}).indexes()[0],col=t.column('.stat-l7.stat-tot').index(),v=playerCatalog[t.row(i).data()[0]].periods.l7.tot.MIN.value;return t.cell(i,col).render('sort')===(v===null?-1:v)&&t.cell(i,col).node().textContent===(v===null?'—':v.toFixed(1)+(t.cell(i,col).data().pr===null?'':'PR '+Math.round(t.cell(i,col).data().pr)));}''')
    page.locator(f'#Week{i} [data-period="LS"]').click();page.locator(f'#Week{i} [data-mode="AVG"]').click()
   page.locator('.tablinks').nth(3).click();rows=page.locator('#teamTableW4 .team-row');assert rows.count()>=2
   team_a=rows.nth(0).get_attribute('data-team');team_b=rows.nth(1).get_attribute('data-team')

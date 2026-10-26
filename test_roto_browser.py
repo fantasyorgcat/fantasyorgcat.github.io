@@ -6,6 +6,17 @@ import sys
 from playwright.sync_api import sync_playwright
 
 
+def load_archive(page,url=None):
+    response=page.goto(url,wait_until='load') if url else page.reload(wait_until='load')
+    # Production now has current-season games. Check the automatic default first,
+    # then select the archived source used by these fixed historical math cases.
+    if response is not None:
+        assert page.locator('#data-period').input_value()==page.evaluate("ROTO_DATA.default_period||ROTO_DATA.period_key||'ls'")
+    assert page.evaluate('Object.values(ROTO_DATA.catalog).every(p=>p.id&&p.periods.season&&p.periods.ls)'), 'Packed catalog must be decoded before the ROTO UI runs'
+    page.locator('#data-period').select_option(page.evaluate("ROTO_DATA.period_key||'ls'"))
+    return response
+
+
 def run(origin,output):
     output.mkdir(parents=True,exist_ok=True)
     results=[]
@@ -18,7 +29,7 @@ def run(origin,output):
             page.on('requestfailed',lambda r:failed.append(r.url))
             page.on('request',lambda r:external.append(r.url) if not r.url.startswith(origin+'/') else None)
             page.on('console',lambda m:console_errors.append(m.text) if m.type=='error' else None)
-            assert page.goto(origin+'/roto.html#players=1966,3195',wait_until='load').status==200
+            assert load_archive(page,origin+'/roto.html#players=1966,3195').status==200
             assert page.locator('#mode').input_value()=='totals'
             assert page.locator('#table-mode').input_value()=='totals'
             assert page.title()=='九項配隊分析 · FantasyOrgCat'
@@ -112,7 +123,7 @@ def run(origin,output):
             assert page.locator('#radar [data-series]').count()==2
             assert page.locator('#metrics-head th').count()==4
             page.locator('#show-opponent').check()
-            page.reload(wait_until='load')
+            load_archive(page)
             assert page.locator('#active-opponent option').count()==3
             assert page.locator('#saved-rosters option').count()==3
             assert page.evaluate('JSON.parse(localStorage.getItem(RotoCore.opponentsKey))')==opponent_storage
@@ -156,6 +167,10 @@ def run(origin,output):
             # Anchor to the non-sticky section: an already pinned header has no fixed document position.
             page.evaluate('scrollTo({top:document.querySelector(".search-panel").getBoundingClientRect().top+scrollY+400,behavior:"instant"})')
             page.mouse.move(width/2,height/2);page.mouse.wheel(0,350);page.wait_for_timeout(300)
+            # Reach the actual sticky boundary across font/platform metrics, rather
+            # than assuming a fixed wheel distance always crosses it.
+            page.evaluate('''()=>{const head=document.querySelector('#roto-player-table_wrapper .dt-scroll-head'),gap=head.getBoundingClientRect().top-parseFloat(getComputedStyle(head).top);if(gap>0)scrollBy({top:gap+100,behavior:'instant'});}''')
+            page.wait_for_timeout(100)
             controls=page.locator('.picker-controls').bounding_box();box=head.bounding_box()
             assert abs(box['y']-(controls['y']+controls['height']))<2, dict(width=width,header=box,controls=controls,scroll=page.evaluate('scrollY'),page=page.evaluate('jQuery("#roto-player-table").DataTable().page.info()'),query=page.locator('#player-search').input_value(),checked=page.locator('#selected-only').get_attribute('aria-pressed'))
             nav=page.locator('.section-nav').bounding_box()
@@ -179,10 +194,15 @@ def run(origin,output):
             assert page.locator('#radar [data-series="base"] polygon[fill-opacity]').count()==0
             assert page.locator('td[data-delta="PTS"]').get_attribute('data-value')==''
             missing_pick.uncheck();assert page.locator('#base-count').inner_text()=='2 人'
-            # Available choices can change while keeping selection; preseason stays unknown.
+            # Switching seasons preserves selection and uses that period's actual values.
             page.locator('#data-period').select_option('season');assert '2026-27' in page.locator('#period-label').inner_text()
             assert page.locator('#base-count').inner_text()=='2 人'
-            assert page.locator('tr[data-metric="PTS"] td[data-team="base"]').get_attribute('data-value')==''
+            current=page.evaluate('''()=>{const ids=[...document.querySelectorAll('#base-list .roster-item')].map(n=>n.dataset.playerId),data=ROTO_DATA.extra_periods.season,mode=document.querySelector('#table-mode').value;
+                const known=ids.map(id=>data.players[id]).filter(p=>p?.gp>0&&p.totals.PTS!==null);
+                if(known.length<ids.length&&known.length&&!document.querySelector('tr[data-metric="PTS"] td[data-team="base"]').textContent.includes('已知小計'))throw Error('Partial values must be labeled');return known.length?known.reduce((sum,p)=>sum+p.totals.PTS/(mode==='perGame'?p.gp:1),0):null;}''')
+            actual=page.locator('tr[data-metric="PTS"] td[data-team="base"]').get_attribute('data-value')
+            actual_value=float(actual) if actual else None
+            assert actual_value==current,(actual,current)
             page.locator('#data-period').select_option('ls');assert page.locator('tr[data-metric="PTS"] td[data-team="base"]').get_attribute('data-value')
             zero=page.evaluate('Object.values(ROTO_DATA.players).find(p=>p.gp&&p.shots.FTA===0)')
             page.locator('#player-search').fill(zero['name'])
@@ -191,7 +211,7 @@ def run(origin,output):
             page.locator('#player-search').fill('Shaq');page.locator('#add-target').select_option('base')
             # Missing-season player remains unknown, not fabricated zero.
             missing=page.evaluate('Object.values(ROTO_DATA.players).find(p=>p.gp===null).id')
-            page.goto(origin+'/roto.html#players='+missing,wait_until='load');page.reload(wait_until='load')
+            load_archive(page,origin+'/roto.html#players='+missing);load_archive(page)
             assert page.locator('tr[data-metric="PTS"] td[data-team="base"]').get_attribute('data-value')==''
             assert '0/1 覆蓋' in page.locator('tr[data-metric="PTS"] td[data-team="base"]').inner_text()
             assert page.locator('#saved-rosters option').count()==3
@@ -207,7 +227,7 @@ def run(origin,output):
                 page.screenshot(path=str(output/'roto-real-table-390.png'))
                 page.evaluate('scrollTo({top:0,behavior:"instant"})');page.screenshot(path=str(output/'roto-real-top-390.png'))
             # A declared conflict remains unknown even though the dataset is publishable.
-            page.goto(origin+'/roto.html#players=4432639',wait_until='load');page.reload(wait_until='load')
+            load_archive(page,origin+'/roto.html#players=4432639');load_archive(page)
             cell=page.locator('tr[data-metric="FG%"] td[data-team="base"]')
             assert cell.get_attribute('data-value')=='' and '975／974' in cell.inner_text()
             assert page.locator('#radar [data-series="base"] circle').count()==8
@@ -224,13 +244,13 @@ def run(origin,output):
         # Storage-denied mode is usable and does not touch legacy roster data.
         ctx=browser.new_context(viewport={'width':390,'height':844})
         ctx.add_init_script("for(const method of ['getItem','setItem'])Storage.prototype[method]=function(){throw Error('Storage blocked');};")
-        page=ctx.new_page();page.goto(origin+'/roto.html#players=1966',wait_until='load')
+        page=ctx.new_page();load_archive(page,origin+'/roto.html#players=1966')
         assert page.locator('#storage-warning').is_visible();page.locator('#roster-name').fill('Blocked');page.locator('#save-roster').click()
         assert page.locator('#base-count').inner_text()=='1 人';ctx.close()
         # Malformed/versioned storage is retained rather than silently overwritten.
         ctx=browser.new_context(viewport={'width':390,'height':844})
         ctx.add_init_script("localStorage.setItem('fantasyorgcat:roto:rosters:v1','{bad');")
-        page=ctx.new_page();page.goto(origin+'/roto.html#players=1966',wait_until='load')
+        page=ctx.new_page();load_archive(page,origin+'/roto.html#players=1966')
         assert page.locator('#save-roster').is_disabled()
         assert page.locator('#save-base-roster').is_disabled()
         page.locator('#base-editor summary').click()
@@ -240,23 +260,23 @@ def run(origin,output):
         # Corrupt opponent storage is not overwritten; edits stay in memory.
         ctx=browser.new_context(viewport={'width':390,'height':844})
         ctx.add_init_script("localStorage.setItem('fantasyorgcat:roto:opponents:v1','{bad');")
-        page=ctx.new_page();page.goto(origin+'/roto.html#players=1966',wait_until='load')
+        page=ctx.new_page();load_archive(page,origin+'/roto.html#players=1966')
         page.locator('#opponent-editor summary').click();page.locator('#add-opponent').click()
         assert page.locator('#active-opponent option').count()==2
         assert page.evaluate('localStorage.getItem(RotoCore.opponentsKey)')=='{bad'
         assert '不會覆寫' in page.locator('#opponents-status').inner_text();ctx.close()
         # Removing every opponent restores an empty set, then can add again.
         ctx=browser.new_context(viewport={'width':390,'height':844})
-        page=ctx.new_page();page.goto(origin+'/roto.html#players=1966',wait_until='load')
+        page=ctx.new_page();load_archive(page,origin+'/roto.html#players=1966')
         page.locator('#opponent-editor summary').click();page.locator('#delete-opponent').click()
         assert page.locator('#active-opponent option').count()==0
-        page.reload(wait_until='load');assert page.locator('#active-opponent option').count()==0
+        load_archive(page);assert page.locator('#active-opponent option').count()==0
         page.locator('#opponent-editor summary').click();page.locator('#add-opponent').click()
         assert page.locator('#active-opponent option').count()==1;ctx.close()
         # A quota failure preserves previously stored opponents and all legacy saves.
         ctx=browser.new_context(viewport={'width':390,'height':844})
         ctx.add_init_script("localStorage.setItem('fantasyorgcat:roto:opponents:v1',JSON.stringify({version:1,rosters:[{id:'opponent',name:'原保存',players:['1966'],savedAt:''}]}));localStorage.setItem('fantasyorgcat:roto:rosters:v1',JSON.stringify({version:1,rosters:[{id:'old',name:'舊陣容',players:['3195'],savedAt:''}]}));Storage.prototype.setItem=function(){throw new DOMException('Storage full','QuotaExceededError');};")
-        page=ctx.new_page();page.goto(origin+'/roto.html#players=1966',wait_until='load')
+        page=ctx.new_page();load_archive(page,origin+'/roto.html#players=1966')
         before=page.evaluate('[localStorage.getItem(RotoCore.opponentsKey),localStorage.getItem(RotoCore.storageKey)]')
         page.locator('#opponent-editor summary').click();page.locator('#add-opponent').click()
         assert '自動保存失敗' in page.locator('#opponents-status').inner_text()
@@ -272,11 +292,11 @@ def run(origin,output):
             ctx=browser.new_context(viewport={'width':width,'height':height})
             ctx.add_init_script("if(!localStorage.getItem('fantasyorgcat:roto:rosters:v1'))localStorage.setItem('fantasyorgcat:roto:rosters:v1',JSON.stringify({version:1,rosters:[{id:'old',name:'舊盟',players:['3195'],savedAt:''}]}));")
             page=ctx.new_page();errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
-            page.goto(origin+'/roto.html',wait_until='load')
+            load_archive(page,origin+'/roto.html')
             zero=page.evaluate('Object.values(ROTO_DATA.players).filter(p=>p.gp>0&&p.totals.TO===0).sort((a,b)=>b.gp-a.gp)[0]')
             high=page.evaluate('Object.values(ROTO_DATA.players).filter(p=>p.gp>0&&p.totals.TO>0).sort((a,b)=>b.totals.TO/b.gp-a.totals.TO/a.gp)[0]')
-            page.goto(origin+'/roto.html#players='+zero['id'],wait_until='load')
-            page.reload(wait_until='load')
+            load_archive(page,origin+'/roto.html#players='+zero['id'])
+            load_archive(page)
             def radius():
                 circle=page.locator('#radar [data-series="base"] circle[data-metric="TO"]')
                 return ((float(circle.get_attribute('cx'))-230)**2+(float(circle.get_attribute('cy'))-184)**2)**.5
@@ -318,7 +338,7 @@ def run(origin,output):
             assert len(updated['rosters'])==3
             assert next(r for r in updated['rosters'] if r['id']==a)['players']==[zero['id'],high['id']]
             assert next(r for r in updated['rosters'] if r['id']==b)['players']==[high['id']]
-            page.reload(wait_until='load')
+            load_archive(page)
             page.locator('#base-roster-select').select_option(b)
             assert page.locator('#base-roster-select-inline').input_value()==b
             assert page.locator('#base-list .roster-item').get_attribute('data-player-id')==high['id']
@@ -336,7 +356,7 @@ def run(origin,output):
             ctx.close();results.append(dict(width=width,zero_TO_outer_ring=True,positive_TO_inside=True,base_save_near_editor=True,named_base_switch_after_reload=True,legacy_save_unchanged=True,same_name_updates_same_id=True,switch_resets_simulation=True,unsaved_edits_do_not_overwrite_saved=True,no_js_errors=True))
         # Existing checkbox entry opens a new same-origin ROTO page with canonical ESPN IDs.
         ctx=browser.new_context(viewport={'width':390,'height':844});page=ctx.new_page()
-        page.goto(origin+'/index.html',wait_until='load',timeout=60000);page.wait_for_function('Object.keys(tables).length===5')
+        page.goto(origin+'/index.html',wait_until='load',timeout=60000);page.wait_for_function('!!tables[activeWeek]')
         for pid in ['1966','3195']:
             page.evaluate('(id)=>tables[activeWeek].column(0).search(playerCatalog[id].name).draw()',pid)
             page.locator('.tabcontent:visible input[data-player-id="'+pid+'"]').check()

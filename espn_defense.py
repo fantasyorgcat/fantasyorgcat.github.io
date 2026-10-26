@@ -53,7 +53,8 @@ def selected_games(team, year):
             previous=completed_team_games(team['id'],year-1)
             if games.keys() & previous.keys():raise ValueError('ESPN event ID reused across seasons')
             games.update(previous)
-    except (RuntimeError,ValueError,KeyError,TypeError,IndexError) as error:issue=str(error)
+    except (RuntimeError,*utils.RECORD_ERRORS) as error:
+        issue=str(error);utils.source_warning('defense schedule',team['id'],error)
     return team,sorted(games.values(),key=lambda g:(g['stamp'],g['id']),reverse=True)[:10],issue
 
 
@@ -88,7 +89,8 @@ def defensive_ratings():
                 if error:raise ValueError(error)
                 points,possessions=game_defense(data,team['id'],game)
                 valid.append((game,points,possessions))
-            except (ValueError,KeyError,TypeError,IndexError,StopIteration) as error:
+            except utils.RECORD_ERRORS as error:
+                utils.source_warning('defense summary',game['id'],error)
                 missing.append(dict(id=game['id'],reason=str(error)))
         n=len(valid);valid_count+=n;complete=n==10 and len(games)==10 and not issue
         points=sum(v[1] for v in valid) if n else None;possessions=sum(v[2] for v in valid) if n else None

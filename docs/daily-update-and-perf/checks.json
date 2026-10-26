@@ -1,0 +1,108 @@
+[
+  {
+    "check": "required-unit",
+    "command": [
+      "python",
+      "-m",
+      "unittest",
+      "test_sources",
+      "test_espn_boxscores",
+      "test_defense",
+      "test_schedule",
+      "test_player_catalog",
+      "test_roto_data",
+      "test_roto_boxscore",
+      "test_roto_package"
+    ],
+    "exit": 0,
+    "seconds": 6.06
+  },
+  {
+    "check": "transport-unit",
+    "command": [
+      "python",
+      "-m",
+      "unittest",
+      "test_report_data"
+    ],
+    "exit": 0,
+    "seconds": 0.64
+  },
+  {
+    "check": "test_team_tools",
+    "command": [
+      "node",
+      "test_team_tools.cjs"
+    ],
+    "exit": 0,
+    "seconds": 0.05
+  },
+  {
+    "check": "test_roto_core",
+    "command": [
+      "node",
+      "test_roto_core.cjs"
+    ],
+    "exit": 0,
+    "seconds": 0.05
+  },
+  {
+    "check": "test_site_ui",
+    "command": [
+      "node",
+      "test_site_ui.cjs"
+    ],
+    "exit": 0,
+    "seconds": 0.05
+  },
+  {
+    "check": "test_table_tools",
+    "command": [
+      "node",
+      "test_table_tools.cjs"
+    ],
+    "exit": 0,
+    "seconds": 0.05
+  },
+  {
+    "check": "security-generated",
+    "command": [
+      "python",
+      "security_gate.py",
+      "--generated"
+    ],
+    "exit": 0,
+    "seconds": 0.55
+  },
+  {
+    "check": "stdlib-only",
+    "command": [
+      "python",
+      "-c",
+      "import importlib.util; print('pandas:', importlib.util.find_spec('pandas')); print('numpy:', importlib.util.find_spec('numpy')); assert importlib.util.find_spec('pandas') is None; assert importlib.util.find_spec('numpy') is None"
+    ],
+    "exit": 0,
+    "seconds": 0.11
+  },
+  {
+    "check": "security-stage",
+    "command": [
+      "python",
+      "security_gate.py",
+      "--stage",
+      "_site"
+    ],
+    "exit": 0,
+    "seconds": 0.55
+  },
+  {
+    "check": "diff-check",
+    "command": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "exit": 0,
+    "seconds": 0.17
+  }
+]

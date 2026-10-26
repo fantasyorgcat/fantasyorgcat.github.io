@@ -1,0 +1,210 @@
+.test record=player-1: unknown minutes 'DNP'
+test record=player-1: unknown numeric value 'DNP'
+test record=player-1: unknown minutes 'weird'
+test record=player-1: unknown numeric value 'weird'
+test record=player-1: unknown minutes 'None'
+test record=player-1: unknown numeric value 'None'
+test record=player-1: unknown minutes ''
+test record=player-1: unknown numeric value ''
+test record=player-1: unknown minutes 'nan'
+test record=player-1: unknown numeric value 'nan'
+test record=player-1: unknown minutes 'True'
+test record=player-1: unknown numeric value 'True'
+test record=player-1: unknown minutes '{}'
+test record=player-1: unknown numeric value '{}'
+test record=player-1: unknown minutes '1:60'
+test record=player-1: unknown numeric value '1:60'
+.league record=1: Missing fields remain unknown: fieldGoalsAttempted, fieldGoalsMade, freeThrowsAttempted, freeThrowsMade
+league record=2: Missing fields remain unknown: fieldGoalsAttempted, fieldGoalsMade, freeThrowsAttempted, freeThrowsMade
+league record=1: Missing fields remain unknown: fieldGoalsAttempted, fieldGoalsMade, freeThrowsAttempted, freeThrowsMade
+league record=2026: Duplicate league athlete; ignored repeat
+.gamelog record=game/turnovers: unknown numeric value 'None'
+.gamelog record=1: Player game log not complete for league statistics; source lag; player=1 (Test); season=2027; GP=3; logs=2; dates=['2026-10-22', '2026-10-28']; group=2026-27 Regular Season; source=https://site.web.api.espn.com/apis/common/v3/sports/basketball/nba/athletes/1/gamelog?season=2027&seasontype=2
+..roster record=1: 'id'
+roster team record=1: Incomplete current ESPN roster
+roster team record=2: Incomplete current ESPN roster
+roster team record=3: Incomplete current ESPN roster
+..teams record=identity: 'team'
+teams record=population: Expected 30 teams; usable=29
+teams record=identity: 'team'
+teams record=identity: 'team'
+teams record=identity: 'team'
+teams record=identity: 'team'
+teams record=identity: 'team'
+teams record=population: Expected 30 teams; usable=25
+...summary record=g1: 'header'
+summary record=g2: 'header'
+...scoreboard record=g1: Duplicate completed ESPN game
+boxscore record=g1: Duplicate ESPN player appearance
+..boxscore record=g1/1/fieldGoalsMade-fieldGoalsAttempted: unknown shooting pair 'bad'
+boxscore record=g1/1/fieldGoalsMade-fieldGoalsAttempted: unknown shooting pair '1-2-3'
+boxscore record=g1/1/fieldGoalsMade-fieldGoalsAttempted: unknown shooting pair '4-2'
+boxscore record=g1/1/fieldGoalsMade-fieldGoalsAttempted: unknown shooting pair 'None'
+boxscore record=g1/1/fieldGoalsMade-fieldGoalsAttempted: unknown shooting pair 'NaN-5'
+boxscore record=g1/1: ESPN player stats incomplete; absent values unknown
+boxscore record=g1/1: unknown minutes 'None'
+boxscore record=g1/1/points: unknown numeric value 'None'
+boxscore record=g2/1: ESPN player stats incomplete; absent values unknown
+boxscore record=g1/1/totalRebounds: unknown numeric value 'None'
+boxscore record=g2/1: unknown minutes 'None'
+boxscore record=g1/1/assists: unknown numeric value 'None'
+boxscore record=g1/1/steals: unknown numeric value 'None'
+boxscore record=g2/1/points: unknown numeric value 'None'
+boxscore record=g2/1/totalRebounds: unknown numeric value 'None'
+boxscore record=g1/1/blocks: unknown numeric value 'None'
+boxscore record=g1/1/turnovers: unknown numeric value 'None'
+boxscore record=g2/1/assists: unknown numeric value 'None'
+boxscore record=g1/1/fieldGoalsMade-fieldGoalsAttempted: unknown shooting pair 'None'
+boxscore record=g2/1/steals: unknown numeric value 'None'
+boxscore record=g2/1/blocks: unknown numeric value 'None'
+boxscore record=g1/1/freeThrowsMade-freeThrowsAttempted: unknown shooting pair 'None'
+boxscore record=g2/1/turnovers: unknown numeric value 'None'
+boxscore record=g1/1/threePointFieldGoalsMade-threePointFieldGoalsAttempted: unknown shooting pair 'None'
+boxscore record=g2/1/fieldGoalsMade-fieldGoalsAttempted: unknown shooting pair 'None'
+boxscore record=g1/2: ESPN player stats incomplete; absent values unknown
+boxscore record=g2/1/freeThrowsMade-freeThrowsAttempted: unknown shooting pair 'None'
+boxscore record=g1/2: unknown minutes 'None'
+boxscore record=g2/1/threePointFieldGoalsMade-threePointFieldGoalsAttempted: unknown shooting pair 'None'
+boxscore record=g1/2/points: unknown numeric value 'None'
+boxscore record=g2/2: ESPN player stats incomplete; absent values unknown
+boxscore record=g1/2/totalRebounds: unknown numeric value 'None'
+boxscore record=g2/2: unknown minutes 'None'
+boxscore record=g1/2/assists: unknown numeric value 'None'
+boxscore record=g2/2/points: unknown numeric value 'None'
+boxscore record=g1/2/steals: unknown numeric value 'None'
+boxscore record=g2/2/totalRebounds: unknown numeric value 'None'
+boxscore record=g1/2/blocks: unknown numeric value 'None'
+boxscore record=g2/2/assists: unknown numeric value 'None'
+boxscore record=g1/2/turnovers: unknown numeric value 'None'
+boxscore record=g2/2/steals: unknown numeric value 'None'
+boxscore record=g1/2/fieldGoalsMade-fieldGoalsAttempted: unknown shooting pair 'None'
+boxscore record=g2/2/blocks: unknown numeric value 'None'
+boxscore record=g1/2/freeThrowsMade-freeThrowsAttempted: unknown shooting pair 'None'
+boxscore record=g2/2/turnovers: unknown numeric value 'None'
+boxscore record=g1/2/threePointFieldGoalsMade-threePointFieldGoalsAttempted: unknown shooting pair 'None'
+boxscore record=g2/2/fieldGoalsMade-fieldGoalsAttempted: unknown shooting pair 'None'
+summary record=g1: ESPN boxscore g1 globally broken: records=2; anomalous=2; usable=0; last issue=unknown shooting pair 'None'
+boxscore record=g2/2/freeThrowsMade-freeThrowsAttempted: unknown shooting pair 'None'
+boxscore record=g2/2/threePointFieldGoalsMade-threePointFieldGoalsAttempted: unknown shooting pair 'None'
+summary record=g2: ESPN boxscore g2 globally broken: records=2; anomalous=2; usable=0; last issue=unknown shooting pair 'None'
+.boxscore record=g1/1: unknown minutes 'None'
+boxscore record=g1/1: unknown minutes 'bad'
+boxscore record=g1/1: unknown minutes '1:60'
+boxscore record=g1/1: unknown minutes '1:-1'
+boxscore record=g1/1: unknown minutes '1:2:3'
+boxscore record=g1/1: unknown minutes 'nan'
+boxscore record=g1/1: unknown minutes 'inf'
+boxscore record=g1/1: unknown minutes '-1'
+.boxscore record=g1: 'athlete'
+boxscore record=g1: ESPN appearance flag missing
+.boxscore record=g1/1/points: unknown numeric value '--'
+boxscore record=g1/1: ESPN player stats incomplete; absent values unknown
+boxscore record=g1/1: unknown minutes 'None'
+boxscore record=g1/1/points: unknown numeric value 'None'
+boxscore record=g1/1/totalRebounds: unknown numeric value 'None'
+boxscore record=g1/1/assists: unknown numeric value 'None'
+boxscore record=g1/1/steals: unknown numeric value 'None'
+boxscore record=g1/1/blocks: unknown numeric value 'None'
+boxscore record=g1/1/turnovers: unknown numeric value 'None'
+boxscore record=g1/1/fieldGoalsMade-fieldGoalsAttempted: unknown shooting pair 'None'
+boxscore record=g1/1/freeThrowsMade-freeThrowsAttempted: unknown shooting pair 'None'
+boxscore record=g1/1/threePointFieldGoalsMade-threePointFieldGoalsAttempted: unknown shooting pair 'None'
+......boxscore record=g1/1: unknown minutes '--'
+boxscore record=g1/1: unknown minutes '-'
+boxscore record=g1/1: unknown minutes 'N/A'
+boxscore record=g1/1: unknown minutes ''
+boxscore record=g1/1: unknown minutes 'None'
+boxscore record=g1/1: unknown minutes 'DNP'
+boxscore record=g1/1: unknown minutes 'weird string'
+.summary record=g1: ESPN summary event/season/type mismatch: g1
+summary record=g1: ESPN summary is not the expected completed game: g1
+summary record=g1: ESPN summary is not the expected completed game: g1
+summary record=g2: ESPN summary event/season/type mismatch: g2
+...C:\Users\USER\AppData\Roaming\Claude\scratch-workspaces\152d47ff-1ca7-4e73-9486-e996059df0bf\ff8f66cd-b782-467e-b794-5a9097ecdae5\scratch-2026-10-26-bdeeaa\repo\generate_report.py:210: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
+  merged['Player'] = merged.apply(lambda x: f"<b>{escape(str(x['PLAYER_NAME']))}</b> <br><span style='color:var(--muted)'>{escape(str(x['TEAM_ABBREVIATION']))}</span>", axis=1)
+C:\Users\USER\AppData\Roaming\Claude\scratch-workspaces\152d47ff-1ca7-4e73-9486-e996059df0bf\ff8f66cd-b782-467e-b794-5a9097ecdae5\scratch-2026-10-26-bdeeaa\repo\generate_report.py:213: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
+  merged['FG%'] = (merged['FG_PCT'] * 100).map(lambda v: f'{v:.1f}%' if pd.notna(v) else pd.NA)
+C:\Users\USER\AppData\Roaming\Claude\scratch-workspaces\152d47ff-1ca7-4e73-9486-e996059df0bf\ff8f66cd-b782-467e-b794-5a9097ecdae5\scratch-2026-10-26-bdeeaa\repo\generate_report.py:214: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
+  merged['FT%'] = (merged['FT_PCT'] * 100).map(lambda v: f'{v:.1f}%' if pd.notna(v) else pd.NA)
+C:\Users\USER\AppData\Roaming\Claude\scratch-workspaces\152d47ff-1ca7-4e73-9486-e996059df0bf\ff8f66cd-b782-467e-b794-5a9097ecdae5\scratch-2026-10-26-bdeeaa\repo\generate_report.py:219: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
+  merged['FG%_L7'] = (merged['FG_PCT_L7'] * 100).map(lambda v: f'{v:.1f}%' if pd.notna(v) else pd.NA)
+C:\Users\USER\AppData\Roaming\Claude\scratch-workspaces\152d47ff-1ca7-4e73-9486-e996059df0bf\ff8f66cd-b782-467e-b794-5a9097ecdae5\scratch-2026-10-26-bdeeaa\repo\generate_report.py:220: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
+  merged['FT%_L7'] = (merged['FT_PCT_L7'] * 100).map(lambda v: f'{v:.1f}%' if pd.notna(v) else pd.NA)
+C:\Users\USER\AppData\Roaming\Claude\scratch-workspaces\152d47ff-1ca7-4e73-9486-e996059df0bf\ff8f66cd-b782-467e-b794-5a9097ecdae5\scratch-2026-10-26-bdeeaa\repo\generate_report.py:225: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
+  merged['FG%_L14'] = (merged['FG_PCT_L14'] * 100).map(lambda v: f'{v:.1f}%' if pd.notna(v) else pd.NA)
+C:\Users\USER\AppData\Roaming\Claude\scratch-workspaces\152d47ff-1ca7-4e73-9486-e996059df0bf\ff8f66cd-b782-467e-b794-5a9097ecdae5\scratch-2026-10-26-bdeeaa\repo\generate_report.py:226: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
+  merged['FT%_L14'] = (merged['FT_PCT_L14'] * 100).map(lambda v: f'{v:.1f}%' if pd.notna(v) else pd.NA)
+C:\Users\USER\AppData\Roaming\Claude\scratch-workspaces\152d47ff-1ca7-4e73-9486-e996059df0bf\ff8f66cd-b782-467e-b794-5a9097ecdae5\scratch-2026-10-26-bdeeaa\repo\generate_report.py:231: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
+  merged['FG%_LS'] = (merged['FG_PCT_LS'] * 100).map(lambda v: f'{v:.1f}%' if pd.notna(v) else pd.NA)
+C:\Users\USER\AppData\Roaming\Claude\scratch-workspaces\152d47ff-1ca7-4e73-9486-e996059df0bf\ff8f66cd-b782-467e-b794-5a9097ecdae5\scratch-2026-10-26-bdeeaa\repo\generate_report.py:232: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
+  merged['FT%_LS'] = (merged['FT_PCT_LS'] * 100).map(lambda v: f'{v:.1f}%' if pd.notna(v) else pd.NA)
+C:\Users\USER\AppData\Roaming\Claude\scratch-workspaces\152d47ff-1ca7-4e73-9486-e996059df0bf\ff8f66cd-b782-467e-b794-5a9097ecdae5\scratch-2026-10-26-bdeeaa\repo\generate_report.py:210: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
+  merged['Player'] = merged.apply(lambda x: f"<b>{escape(str(x['PLAYER_NAME']))}</b> <br><span style='color:var(--muted)'>{escape(str(x['TEAM_ABBREVIATION']))}</span>", axis=1)
+C:\Users\USER\AppData\Roaming\Claude\scratch-workspaces\152d47ff-1ca7-4e73-9486-e996059df0bf\ff8f66cd-b782-467e-b794-5a9097ecdae5\scratch-2026-10-26-bdeeaa\repo\generate_report.py:213: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
+  merged['FG%'] = (merged['FG_PCT'] * 100).map(lambda v: f'{v:.1f}%' if pd.notna(v) else pd.NA)
+C:\Users\USER\AppData\Roaming\Claude\scratch-workspaces\152d47ff-1ca7-4e73-9486-e996059df0bf\ff8f66cd-b782-467e-b794-5a9097ecdae5\scratch-2026-10-26-bdeeaa\repo\generate_report.py:214: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
+  merged['FT%'] = (merged['FT_PCT'] * 100).map(lambda v: f'{v:.1f}%' if pd.notna(v) else pd.NA)
+C:\Users\USER\AppData\Roaming\Claude\scratch-workspaces\152d47ff-1ca7-4e73-9486-e996059df0bf\ff8f66cd-b782-467e-b794-5a9097ecdae5\scratch-2026-10-26-bdeeaa\repo\generate_report.py:219: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
+  merged['FG%_L7'] = (merged['FG_PCT_L7'] * 100).map(lambda v: f'{v:.1f}%' if pd.notna(v) else pd.NA)
+C:\Users\USER\AppData\Roaming\Claude\scratch-workspaces\152d47ff-1ca7-4e73-9486-e996059df0bf\ff8f66cd-b782-467e-b794-5a9097ecdae5\scratch-2026-10-26-bdeeaa\repo\generate_report.py:220: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
+  merged['FT%_L7'] = (merged['FT_PCT_L7'] * 100).map(lambda v: f'{v:.1f}%' if pd.notna(v) else pd.NA)
+C:\Users\USER\AppData\Roaming\Claude\scratch-workspaces\152d47ff-1ca7-4e73-9486-e996059df0bf\ff8f66cd-b782-467e-b794-5a9097ecdae5\scratch-2026-10-26-bdeeaa\repo\generate_report.py:225: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
+  merged['FG%_L14'] = (merged['FG_PCT_L14'] * 100).map(lambda v: f'{v:.1f}%' if pd.notna(v) else pd.NA)
+C:\Users\USER\AppData\Roaming\Claude\scratch-workspaces\152d47ff-1ca7-4e73-9486-e996059df0bf\ff8f66cd-b782-467e-b794-5a9097ecdae5\scratch-2026-10-26-bdeeaa\repo\generate_report.py:226: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
+  merged['FT%_L14'] = (merged['FT_PCT_L14'] * 100).map(lambda v: f'{v:.1f}%' if pd.notna(v) else pd.NA)
+C:\Users\USER\AppData\Roaming\Claude\scratch-workspaces\152d47ff-1ca7-4e73-9486-e996059df0bf\ff8f66cd-b782-467e-b794-5a9097ecdae5\scratch-2026-10-26-bdeeaa\repo\generate_report.py:231: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
+  merged['FG%_LS'] = (merged['FG_PCT_LS'] * 100).map(lambda v: f'{v:.1f}%' if pd.notna(v) else pd.NA)
+C:\Users\USER\AppData\Roaming\Claude\scratch-workspaces\152d47ff-1ca7-4e73-9486-e996059df0bf\ff8f66cd-b782-467e-b794-5a9097ecdae5\scratch-2026-10-26-bdeeaa\repo\generate_report.py:232: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
+  merged['FT%_LS'] = (merged['FT_PCT_LS'] * 100).map(lambda v: f'{v:.1f}%' if pd.notna(v) else pd.NA)
+C:\Users\USER\AppData\Roaming\Claude\scratch-workspaces\152d47ff-1ca7-4e73-9486-e996059df0bf\ff8f66cd-b782-467e-b794-5a9097ecdae5\scratch-2026-10-26-bdeeaa\repo\generate_report.py:210: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
+  merged['Player'] = merged.apply(lambda x: f"<b>{escape(str(x['PLAYER_NAME']))}</b> <br><span style='color:var(--muted)'>{escape(str(x['TEAM_ABBREVIATION']))}</span>", axis=1)
+C:\Users\USER\AppData\Roaming\Claude\scratch-workspaces\152d47ff-1ca7-4e73-9486-e996059df0bf\ff8f66cd-b782-467e-b794-5a9097ecdae5\scratch-2026-10-26-bdeeaa\repo\generate_report.py:213: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
+  merged['FG%'] = (merged['FG_PCT'] * 100).map(lambda v: f'{v:.1f}%' if pd.notna(v) else pd.NA)
+C:\Users\USER\AppData\Roaming\Claude\scratch-workspaces\152d47ff-1ca7-4e73-9486-e996059df0bf\ff8f66cd-b782-467e-b794-5a9097ecdae5\scratch-2026-10-26-bdeeaa\repo\generate_report.py:214: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
+  merged['FT%'] = (merged['FT_PCT'] * 100).map(lambda v: f'{v:.1f}%' if pd.notna(v) else pd.NA)
+C:\Users\USER\AppData\Roaming\Claude\scratch-workspaces\152d47ff-1ca7-4e73-9486-e996059df0bf\ff8f66cd-b782-467e-b794-5a9097ecdae5\scratch-2026-10-26-bdeeaa\repo\generate_report.py:219: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
+  merged['FG%_L7'] = (merged['FG_PCT_L7'] * 100).map(lambda v: f'{v:.1f}%' if pd.notna(v) else pd.NA)
+C:\Users\USER\AppData\Roaming\Claude\scratch-workspaces\152d47ff-1ca7-4e73-9486-e996059df0bf\ff8f66cd-b782-467e-b794-5a9097ecdae5\scratch-2026-10-26-bdeeaa\repo\generate_report.py:220: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
+  merged['FT%_L7'] = (merged['FT_PCT_L7'] * 100).map(lambda v: f'{v:.1f}%' if pd.notna(v) else pd.NA)
+C:\Users\USER\AppData\Roaming\Claude\scratch-workspaces\152d47ff-1ca7-4e73-9486-e996059df0bf\ff8f66cd-b782-467e-b794-5a9097ecdae5\scratch-2026-10-26-bdeeaa\repo\generate_report.py:225: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
+  merged['FG%_L14'] = (merged['FG_PCT_L14'] * 100).map(lambda v: f'{v:.1f}%' if pd.notna(v) else pd.NA)
+C:\Users\USER\AppData\Roaming\Claude\scratch-workspaces\152d47ff-1ca7-4e73-9486-e996059df0bf\ff8f66cd-b782-467e-b794-5a9097ecdae5\scratch-2026-10-26-bdeeaa\repo\generate_report.py:226: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
+  merged['FT%_L14'] = (merged['FT_PCT_L14'] * 100).map(lambda v: f'{v:.1f}%' if pd.notna(v) else pd.NA)
+C:\Users\USER\AppData\Roaming\Claude\scratch-workspaces\152d47ff-1ca7-4e73-9486-e996059df0bf\ff8f66cd-b782-467e-b794-5a9097ecdae5\scratch-2026-10-26-bdeeaa\repo\generate_report.py:231: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
+  merged['FG%_LS'] = (merged['FG_PCT_LS'] * 100).map(lambda v: f'{v:.1f}%' if pd.notna(v) else pd.NA)
+C:\Users\USER\AppData\Roaming\Claude\scratch-workspaces\152d47ff-1ca7-4e73-9486-e996059df0bf\ff8f66cd-b782-467e-b794-5a9097ecdae5\scratch-2026-10-26-bdeeaa\repo\generate_report.py:232: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
+  merged['FT%_LS'] = (merged['FT_PCT_LS'] * 100).map(lambda v: f'{v:.1f}%' if pd.notna(v) else pd.NA)
+C:\Users\USER\AppData\Roaming\Claude\scratch-workspaces\152d47ff-1ca7-4e73-9486-e996059df0bf\ff8f66cd-b782-467e-b794-5a9097ecdae5\scratch-2026-10-26-bdeeaa\repo\generate_report.py:210: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
+  merged['Player'] = merged.apply(lambda x: f"<b>{escape(str(x['PLAYER_NAME']))}</b> <br><span style='color:var(--muted)'>{escape(str(x['TEAM_ABBREVIATION']))}</span>", axis=1)
+C:\Users\USER\AppData\Roaming\Claude\scratch-workspaces\152d47ff-1ca7-4e73-9486-e996059df0bf\ff8f66cd-b782-467e-b794-5a9097ecdae5\scratch-2026-10-26-bdeeaa\repo\generate_report.py:213: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
+  merged['FG%'] = (merged['FG_PCT'] * 100).map(lambda v: f'{v:.1f}%' if pd.notna(v) else pd.NA)
+C:\Users\USER\AppData\Roaming\Claude\scratch-workspaces\152d47ff-1ca7-4e73-9486-e996059df0bf\ff8f66cd-b782-467e-b794-5a9097ecdae5\scratch-2026-10-26-bdeeaa\repo\generate_report.py:214: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
+  merged['FT%'] = (merged['FT_PCT'] * 100).map(lambda v: f'{v:.1f}%' if pd.notna(v) else pd.NA)
+C:\Users\USER\AppData\Roaming\Claude\scratch-workspaces\152d47ff-1ca7-4e73-9486-e996059df0bf\ff8f66cd-b782-467e-b794-5a9097ecdae5\scratch-2026-10-26-bdeeaa\repo\generate_report.py:219: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
+  merged['FG%_L7'] = (merged['FG_PCT_L7'] * 100).map(lambda v: f'{v:.1f}%' if pd.notna(v) else pd.NA)
+C:\Users\USER\AppData\Roaming\Claude\scratch-workspaces\152d47ff-1ca7-4e73-9486-e996059df0bf\ff8f66cd-b782-467e-b794-5a9097ecdae5\scratch-2026-10-26-bdeeaa\repo\generate_report.py:220: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
+  merged['FT%_L7'] = (merged['FT_PCT_L7'] * 100).map(lambda v: f'{v:.1f}%' if pd.notna(v) else pd.NA)
+C:\Users\USER\AppData\Roaming\Claude\scratch-workspaces\152d47ff-1ca7-4e73-9486-e996059df0bf\ff8f66cd-b782-467e-b794-5a9097ecdae5\scratch-2026-10-26-bdeeaa\repo\generate_report.py:225: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
+  merged['FG%_L14'] = (merged['FG_PCT_L14'] * 100).map(lambda v: f'{v:.1f}%' if pd.notna(v) else pd.NA)
+C:\Users\USER\AppData\Roaming\Claude\scratch-workspaces\152d47ff-1ca7-4e73-9486-e996059df0bf\ff8f66cd-b782-467e-b794-5a9097ecdae5\scratch-2026-10-26-bdeeaa\repo\generate_report.py:226: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
+  merged['FT%_L14'] = (merged['FT_PCT_L14'] * 100).map(lambda v: f'{v:.1f}%' if pd.notna(v) else pd.NA)
+C:\Users\USER\AppData\Roaming\Claude\scratch-workspaces\152d47ff-1ca7-4e73-9486-e996059df0bf\ff8f66cd-b782-467e-b794-5a9097ecdae5\scratch-2026-10-26-bdeeaa\repo\generate_report.py:231: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
+  merged['FG%_LS'] = (merged['FG_PCT_LS'] * 100).map(lambda v: f'{v:.1f}%' if pd.notna(v) else pd.NA)
+C:\Users\USER\AppData\Roaming\Claude\scratch-workspaces\152d47ff-1ca7-4e73-9486-e996059df0bf\ff8f66cd-b782-467e-b794-5a9097ecdae5\scratch-2026-10-26-bdeeaa\repo\generate_report.py:232: PerformanceWarning: DataFrame is highly fragmented.  This is usually the result of calling `frame.insert` many times, which has poor performance.  Consider joining all columns at once using pd.concat(axis=1) instead. To get a de-fragmented frame, use `newframe = frame.copy()`
+  merged['FT%_LS'] = (merged['FT_PCT_LS'] * 100).map(lambda v: f'{v:.1f}%' if pd.notna(v) else pd.NA)
+..defense summary record=2027-0-0: Missing ESPN totalTurnovers or explicit player/team turnover pair
+...defense schedule record=1: ESPN unavailable
+...........schedule team record=1: ESPN schedule season mismatch
+schedule team record=2: ESPN schedule season mismatch
+schedule team record=1: ESPN schedule population missing
+schedule team record=2: ESPN schedule population missing
+schedule record=2: Conflicting schedule event dates; both omitted
+.schedule record=bad: Schedule timestamp requires a timezone
+.schedule record=bad: 'team'
+..................league record=1: Missing fields remain unknown: freeThrowsAttempted
+.......................
+----------------------------------------------------------------------
+Ran 88 tests in 4.835s
+
+OK
+ROTO static assets/CSP/provenance passed; complete nine-category release data passed

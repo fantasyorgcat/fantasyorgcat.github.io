@@ -1,1 +1,4 @@
 data/roto/*.csv -text
+
+# Keep pinned SRI asset bytes identical on Windows and Linux.
+assets/* -text

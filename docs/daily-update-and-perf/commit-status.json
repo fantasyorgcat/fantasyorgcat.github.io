@@ -1,0 +1,10 @@
+{
+  "branch": "fix/daily-update-and-perf",
+  "head": "7dbd0dad8a4d64e1eac0326d737267cb1202ab28",
+  "new_commits": [],
+  "status": "blocked",
+  "attempt": "git add -- .gitattributes",
+  "exit": 1,
+  "reason": "Unable to create .git/index.lock: Permission denied; environment config makes .git read-only",
+  "message_file": "commit-message.txt"
+}
