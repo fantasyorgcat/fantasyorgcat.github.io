@@ -15,45 +15,45 @@
       "anomalous": 0,
       "usable": 1200
     },
-    "ESPN boxscore 401909089": {
-      "records": 19,
+    "ESPN boxscore 401909088": {
+      "records": 22,
       "anomalous": 0,
-      "usable": 19
+      "usable": 22
     },
     "ESPN boxscore 401909091": {
       "records": 26,
       "anomalous": 0,
       "usable": 26
     },
-    "ESPN boxscore 401909088": {
-      "records": 22,
+    "ESPN boxscore 401909089": {
+      "records": 19,
       "anomalous": 0,
-      "usable": 22
+      "usable": 19
     },
     "ESPN boxscore 401909090": {
       "records": 27,
       "anomalous": 0,
       "usable": 27
     },
+    "ESPN boxscore 401909834": {
+      "records": 19,
+      "anomalous": 0,
+      "usable": 19
+    },
     "ESPN boxscore 401909092": {
       "records": 25,
       "anomalous": 0,
       "usable": 25
-    },
-    "ESPN boxscore 401909835": {
-      "records": 21,
-      "anomalous": 0,
-      "usable": 21
     },
     "ESPN boxscore 401909836": {
       "records": 20,
       "anomalous": 0,
       "usable": 20
     },
-    "ESPN boxscore 401909834": {
-      "records": 19,
+    "ESPN boxscore 401909835": {
+      "records": 21,
       "anomalous": 0,
-      "usable": 19
+      "usable": 21
     },
     "ESPN boxscore 401909837": {
       "records": 27,
@@ -80,10 +80,10 @@
       "anomalous": 0,
       "usable": 27
     },
-    "ESPN boxscore 401909095": {
-      "records": 23,
+    "ESPN boxscore 401909842": {
+      "records": 24,
       "anomalous": 0,
-      "usable": 23
+      "usable": 24
     },
     "ESPN boxscore 401909093": {
       "records": 19,
@@ -95,17 +95,17 @@
       "anomalous": 0,
       "usable": 26
     },
-    "ESPN boxscore 401909842": {
-      "records": 24,
+    "ESPN boxscore 401909095": {
+      "records": 23,
       "anomalous": 0,
-      "usable": 24
+      "usable": 23
+    },
+    "ESPN boxscore 401909096": {
+      "records": 19,
+      "anomalous": 0,
+      "usable": 19
     },
     "ESPN boxscore 401909843": {
-      "records": 26,
-      "anomalous": 0,
-      "usable": 26
-    },
-    "ESPN boxscore 401909845": {
       "records": 26,
       "anomalous": 0,
       "usable": 26
@@ -115,35 +115,30 @@
       "anomalous": 0,
       "usable": 26
     },
-    "ESPN boxscore 401909096": {
-      "records": 19,
+    "ESPN boxscore 401909845": {
+      "records": 26,
       "anomalous": 0,
-      "usable": 19
+      "usable": 26
     },
     "ESPN boxscore 401909847": {
       "records": 26,
       "anomalous": 0,
       "usable": 26
     },
-    "ESPN boxscore 401909846": {
-      "records": 28,
-      "anomalous": 0,
-      "usable": 28
-    },
     "ESPN boxscore 401909848": {
       "records": 20,
       "anomalous": 0,
       "usable": 20
     },
+    "ESPN boxscore 401909846": {
+      "records": 28,
+      "anomalous": 0,
+      "usable": 28
+    },
     "ESPN boxscore 401909849": {
       "records": 21,
       "anomalous": 0,
       "usable": 21
-    },
-    "ESPN boxscore 401909852": {
-      "records": 20,
-      "anomalous": 0,
-      "usable": 20
     },
     "ESPN boxscore 401909850": {
       "records": 23,
@@ -165,17 +160,27 @@
       "anomalous": 0,
       "usable": 21
     },
+    "ESPN boxscore 401909852": {
+      "records": 20,
+      "anomalous": 0,
+      "usable": 20
+    },
     "ESPN boxscore 401909855": {
       "records": 22,
       "anomalous": 0,
       "usable": 22
     },
-    "ESPN boxscore 401909856": {
+    "ESPN boxscore 401909857": {
       "records": 20,
       "anomalous": 0,
       "usable": 20
     },
-    "ESPN boxscore 401909857": {
+    "ESPN boxscore 401909859": {
+      "records": 21,
+      "anomalous": 0,
+      "usable": 21
+    },
+    "ESPN boxscore 401909856": {
       "records": 20,
       "anomalous": 0,
       "usable": 20
@@ -184,11 +189,6 @@
       "records": 25,
       "anomalous": 0,
       "usable": 25
-    },
-    "ESPN boxscore 401909859": {
-      "records": 21,
-      "anomalous": 0,
-      "usable": 21
     },
     "ESPN boxscore 401909860": {
       "records": 21,
@@ -200,10 +200,10 @@
       "anomalous": 0,
       "usable": 21
     },
-    "ESPN boxscore 401909865": {
-      "records": 22,
+    "ESPN boxscore 401909864": {
+      "records": 27,
       "anomalous": 0,
-      "usable": 22
+      "usable": 27
     },
     "ESPN boxscore 401909863": {
       "records": 21,
@@ -215,10 +215,15 @@
       "anomalous": 0,
       "usable": 26
     },
-    "ESPN boxscore 401909864": {
-      "records": 27,
+    "ESPN boxscore 401909865": {
+      "records": 22,
       "anomalous": 0,
-      "usable": 27
+      "usable": 22
+    },
+    "ESPN boxscore 401909866": {
+      "records": 19,
+      "anomalous": 0,
+      "usable": 19
     },
     "ESPN boxscore 401909869": {
       "records": 19,
@@ -230,20 +235,10 @@
       "anomalous": 0,
       "usable": 21
     },
-    "ESPN boxscore 401909866": {
-      "records": 19,
-      "anomalous": 0,
-      "usable": 19
-    },
     "ESPN boxscore 401909867": {
       "records": 21,
       "anomalous": 0,
       "usable": 21
-    },
-    "ESPN boxscore 401909871": {
-      "records": 19,
-      "anomalous": 0,
-      "usable": 19
     },
     "ESPN boxscore 401909872": {
       "records": 23,
@@ -260,40 +255,70 @@
       "anomalous": 0,
       "usable": 24
     },
-    "ESPN boxscore 401909874": {
-      "records": 25,
+    "ESPN boxscore 401909871": {
+      "records": 19,
       "anomalous": 0,
-      "usable": 25
+      "usable": 19
+    },
+    "ESPN boxscore 401909877": {
+      "records": 22,
+      "anomalous": 0,
+      "usable": 22
     },
     "ESPN boxscore 401909876": {
       "records": 28,
       "anomalous": 0,
       "usable": 28
     },
+    "ESPN boxscore 401909874": {
+      "records": 25,
+      "anomalous": 0,
+      "usable": 25
+    },
+    "ESPN boxscore 401909878": {
+      "records": 28,
+      "anomalous": 0,
+      "usable": 28
+    },
+    "ESPN boxscore 401909879": {
+      "records": 24,
+      "anomalous": 0,
+      "usable": 24
+    },
     "ESPN boxscore 401909875": {
       "records": 24,
       "anomalous": 0,
       "usable": 24
     },
-    "ESPN summaries": {
-      "records": 52,
+    "ESPN boxscore 401909880": {
+      "records": 20,
       "anomalous": 0,
-      "usable": 52
+      "usable": 20
+    },
+    "ESPN summaries": {
+      "records": 56,
+      "anomalous": 0,
+      "usable": 56
     },
     "ESPN player appearances": {
-      "records": 1182,
+      "records": 1276,
       "anomalous": 0,
-      "usable": 1182
+      "usable": 1276
     },
     "recent player logs": {
-      "records": 412,
+      "records": 417,
       "anomalous": 0,
-      "usable": 412
+      "usable": 417
     },
     "league statistics": {
       "records": 578,
       "anomalous": 0,
       "usable": 578
+    },
+    "roster 17": {
+      "records": 18,
+      "anomalous": 0,
+      "usable": 18
     },
     "roster 2": {
       "records": 17,
@@ -304,11 +329,6 @@
       "records": 17,
       "anomalous": 0,
       "usable": 17
-    },
-    "roster 17": {
-      "records": 18,
-      "anomalous": 0,
-      "usable": 18
     },
     "roster 1": {
       "records": 18,
@@ -340,7 +360,7 @@
       "anomalous": 0,
       "usable": 18
     },
-    "roster 11": {
+    "roster 10": {
       "records": 17,
       "anomalous": 0,
       "usable": 17
@@ -355,17 +375,32 @@
       "anomalous": 0,
       "usable": 18
     },
-    "roster 10": {
-      "records": 17,
+    "roster 29": {
+      "records": 18,
       "anomalous": 0,
-      "usable": 17
+      "usable": 18
     },
     "roster 12": {
       "records": 18,
       "anomalous": 0,
       "usable": 18
     },
-    "roster 29": {
+    "roster 11": {
+      "records": 17,
+      "anomalous": 0,
+      "usable": 17
+    },
+    "roster 15": {
+      "records": 18,
+      "anomalous": 0,
+      "usable": 18
+    },
+    "roster 16": {
+      "records": 17,
+      "anomalous": 0,
+      "usable": 17
+    },
+    "roster 3": {
       "records": 18,
       "anomalous": 0,
       "usable": 18
@@ -374,21 +409,6 @@
       "records": 17,
       "anomalous": 0,
       "usable": 17
-    },
-    "roster 16": {
-      "records": 16,
-      "anomalous": 0,
-      "usable": 16
-    },
-    "roster 3": {
-      "records": 18,
-      "anomalous": 0,
-      "usable": 18
-    },
-    "roster 15": {
-      "records": 18,
-      "anomalous": 0,
-      "usable": 18
     },
     "roster 18": {
       "records": 17,
@@ -400,22 +420,22 @@
       "anomalous": 0,
       "usable": 18
     },
-    "roster 20": {
-      "records": 17,
-      "anomalous": 0,
-      "usable": 17
-    },
-    "roster 22": {
-      "records": 17,
-      "anomalous": 0,
-      "usable": 17
-    },
     "roster 19": {
       "records": 17,
       "anomalous": 0,
       "usable": 17
     },
+    "roster 20": {
+      "records": 17,
+      "anomalous": 0,
+      "usable": 17
+    },
     "roster 21": {
+      "records": 17,
+      "anomalous": 0,
+      "usable": 17
+    },
+    "roster 22": {
       "records": 17,
       "anomalous": 0,
       "usable": 17
@@ -430,11 +450,6 @@
       "anomalous": 0,
       "usable": 17
     },
-    "roster 27": {
-      "records": 18,
-      "anomalous": 0,
-      "usable": 18
-    },
     "roster 28": {
       "records": 16,
       "anomalous": 0,
@@ -445,29 +460,34 @@
       "anomalous": 0,
       "usable": 18
     },
+    "roster 27": {
+      "records": 18,
+      "anomalous": 0,
+      "usable": 18
+    },
     "roster teams": {
       "records": 30,
       "anomalous": 0,
       "usable": 30
     },
     "roster records": {
-      "records": 518,
+      "records": 519,
       "anomalous": 0,
-      "usable": 518
+      "usable": 519
     }
   },
   "schedule": {
     "season": "2026-27",
     "timezone": "America/New_York",
-    "completed_events": 52,
+    "completed_events": 56,
     "published_events": 1200,
     "undated_events": 0,
     "first_game": "2026-10-20",
     "last_game": "2027-04-11",
     "coverage": "All dated regular-season events currently published by ESPN; excludes preseason/postseason",
-    "start": "2026-10-27",
+    "start": "2026-10-28",
     "end": "2026-11-22",
-    "events_in_window": 196
+    "events_in_window": 192
   },
   "source_warnings": [
     {
@@ -476,20 +496,20 @@
       "reason": "unknown minutes '--'"
     }
   ],
-  "current_stats_last_game": "2026-10-26",
+  "current_stats_last_game": "2026-10-27",
   "recent_windows": {
-    "start_7": "2026-10-20",
-    "start_14": "2026-10-13",
-    "end_exclusive": "2026-10-27",
+    "start_7": "2026-10-21",
+    "start_14": "2026-10-14",
+    "end_exclusive": "2026-10-28",
     "timezone": "America/New_York"
   },
   "players_2027": {
     "season": "2026-27",
-    "population": 412,
+    "population": 417,
     "season_type": "Regular Season",
     "source_period_start": "2026-10-20",
-    "source_period_end": "2026-10-26",
-    "shooting_complete": 412,
+    "source_period_end": "2026-10-27",
+    "shooting_complete": 417,
     "source": "ESPN completed game boxscores"
   },
   "current_stats_source": {
@@ -553,7 +573,11 @@
       "401909873",
       "401909874",
       "401909875",
-      "401909876"
+      "401909876",
+      "401909877",
+      "401909878",
+      "401909879",
+      "401909880"
     ],
     "included_events": [
       "401909088",
@@ -607,11 +631,15 @@
       "401909873",
       "401909874",
       "401909875",
-      "401909876"
+      "401909876",
+      "401909877",
+      "401909878",
+      "401909879",
+      "401909880"
     ],
     "skipped_events": [],
-    "player_game_rows": 1182,
-    "players": 412,
+    "player_game_rows": 1276,
+    "players": 417,
     "minutes_unknown_player_games": [
       {
         "event_id": "401909095",
@@ -620,7 +648,7 @@
         "date": "2026-10-23"
       }
     ],
-    "latest_completed_game": "2026-10-26"
+    "latest_completed_game": "2026-10-27"
   },
   "players_2026": {
     "season": "2025-26",
@@ -630,7 +658,7 @@
     "source_period_end": "2026-04-13T06:59:00.000+00:00",
     "shooting_complete": 578
   },
-  "roster_players": 518,
+  "roster_players": 519,
   "defense": {
     "source": "ESPN",
     "status": "available",
@@ -641,14 +669,14 @@
     "window": "last 10 completed regular-season games per team; previous season carryover",
     "eligible_teams": 30,
     "total_teams": 30,
-    "last_game": "2026-10-26",
+    "last_game": "2026-10-27",
     "teams": {
       "ATL": {
         "Estimated": true,
         "Complete": true,
         "Games": 10,
         "DefRtg": 108.90516576715498,
-        "Rank": 6,
+        "Rank": 8,
         "Population": 30,
         "Start": "2026-04-01",
         "End": "2026-10-26",
@@ -689,16 +717,17 @@
         "Estimated": true,
         "Complete": true,
         "Games": 10,
-        "DefRtg": 110.12683712502515,
-        "Rank": 9,
+        "DefRtg": 108.6826347305389,
+        "Rank": 6,
         "Population": 30,
-        "Start": "2026-04-01",
-        "End": "2026-10-26",
+        "Start": "2026-04-03",
+        "End": "2026-10-27",
         "Seasons": [
           "2026-27",
           "2025-26"
         ],
         "SelectedGameIds": [
+          "401909877",
           "401909870",
           "401909095",
           "401909088",
@@ -707,10 +736,10 @@
           "401811023",
           "401811004",
           "401810987",
-          "401810981",
-          "401810961"
+          "401810981"
         ],
         "GameIds": [
+          "401909877",
           "401909870",
           "401909095",
           "401909088",
@@ -719,28 +748,28 @@
           "401811023",
           "401811004",
           "401810987",
-          "401810981",
-          "401810961"
+          "401810981"
         ],
         "MissingGames": [],
-        "OpponentPoints": 1094.0,
-        "EstimatedOpponentPossessions": 993.4000000000002,
+        "OpponentPoints": 1089.0,
+        "EstimatedOpponentPossessions": 1002.0000000000002,
         "Issue": null
       },
       "BKN": {
         "Estimated": true,
         "Complete": true,
         "Games": 10,
-        "DefRtg": 119.85829561110016,
-        "Rank": 24,
+        "DefRtg": 118.98291925465837,
+        "Rank": 22,
         "Population": 30,
-        "Start": "2026-03-31",
-        "End": "2026-10-25",
+        "Start": "2026-04-03",
+        "End": "2026-10-27",
         "Seasons": [
           "2026-27",
           "2025-26"
         ],
         "SelectedGameIds": [
+          "401909877",
           "401909862",
           "401909854",
           "401909836",
@@ -749,10 +778,10 @@
           "401811022",
           "401811005",
           "401810988",
-          "401810977",
-          "401810955"
+          "401810977"
         ],
         "GameIds": [
+          "401909877",
           "401909862",
           "401909854",
           "401909836",
@@ -761,12 +790,11 @@
           "401811022",
           "401811005",
           "401810988",
-          "401810977",
-          "401810955"
+          "401810977"
         ],
         "MissingGames": [],
-        "OpponentPoints": 1218.0,
-        "EstimatedOpponentPossessions": 1016.2000000000002,
+        "OpponentPoints": 1226.0,
+        "EstimatedOpponentPossessions": 1030.4,
         "Issue": null
       },
       "CHA": {
@@ -774,7 +802,7 @@
         "Complete": true,
         "Games": 10,
         "DefRtg": 111.81520850367949,
-        "Rank": 12,
+        "Rank": 13,
         "Population": 30,
         "Start": "2026-04-02",
         "End": "2026-10-26",
@@ -942,7 +970,7 @@
         "Complete": true,
         "Games": 10,
         "DefRtg": 115.42957334891875,
-        "Rank": 19,
+        "Rank": 18,
         "Population": 30,
         "Start": "2026-03-29",
         "End": "2026-10-26",
@@ -983,16 +1011,17 @@
         "Estimated": true,
         "Complete": true,
         "Games": 10,
-        "DefRtg": 107.16394410549104,
-        "Rank": 5,
+        "DefRtg": 107.00888450148074,
+        "Rank": 4,
         "Population": 30,
-        "Start": "2026-03-31",
-        "End": "2026-10-25",
+        "Start": "2026-04-02",
+        "End": "2026-10-27",
         "Seasons": [
           "2026-27",
           "2025-26"
         ],
         "SelectedGameIds": [
+          "401909878",
           "401909866",
           "401909847",
           "401909088",
@@ -1001,10 +1030,10 @@
           "401811015",
           "401810999",
           "401810986",
-          "401810970",
-          "401810956"
+          "401810970"
         ],
         "GameIds": [
+          "401909878",
           "401909866",
           "401909847",
           "401909088",
@@ -1013,12 +1042,11 @@
           "401811015",
           "401810999",
           "401810986",
-          "401810970",
-          "401810956"
+          "401810970"
         ],
         "MissingGames": [],
-        "OpponentPoints": 1089.0,
-        "EstimatedOpponentPossessions": 1016.2,
+        "OpponentPoints": 1084.0,
+        "EstimatedOpponentPossessions": 1013.0000000000001,
         "Issue": null
       },
       "GSW": {
@@ -1068,7 +1096,7 @@
         "Complete": true,
         "Games": 10,
         "DefRtg": 109.27347903130537,
-        "Rank": 8,
+        "Rank": 10,
         "Population": 30,
         "Start": "2026-04-03",
         "End": "2026-10-26",
@@ -1193,16 +1221,17 @@
         "Estimated": true,
         "Complete": true,
         "Games": 10,
-        "DefRtg": 113.88221153846153,
-        "Rank": 18,
+        "DefRtg": 115.74536020754341,
+        "Rank": 19,
         "Population": 30,
-        "Start": "2026-03-31",
-        "End": "2026-10-25",
+        "Start": "2026-04-02",
+        "End": "2026-10-27",
         "Seasons": [
           "2026-27",
           "2025-26"
         ],
         "SelectedGameIds": [
+          "401909880",
           "401909861",
           "401909851",
           "401909092",
@@ -1211,10 +1240,10 @@
           "401811025",
           "401811010",
           "401810995",
-          "401810971",
-          "401810958"
+          "401810971"
         ],
         "GameIds": [
+          "401909880",
           "401909861",
           "401909851",
           "401909092",
@@ -1223,20 +1252,19 @@
           "401811025",
           "401811010",
           "401810995",
-          "401810971",
-          "401810958"
+          "401810971"
         ],
         "MissingGames": [],
-        "OpponentPoints": 1137.0,
-        "EstimatedOpponentPossessions": 998.4000000000001,
+        "OpponentPoints": 1160.0,
+        "EstimatedOpponentPossessions": 1002.1999999999999,
         "Issue": null
       },
       "MEM": {
         "Estimated": true,
         "Complete": true,
         "Games": 10,
-        "DefRtg": 120.3560371517028,
-        "Rank": 28,
+        "DefRtg": 120.23970616663446,
+        "Rank": 26,
         "Population": 30,
         "Start": "2026-04-03",
         "End": "2026-10-26",
@@ -1270,7 +1298,7 @@
         ],
         "MissingGames": [],
         "OpponentPoints": 1244.0,
-        "EstimatedOpponentPossessions": 1033.6,
+        "EstimatedOpponentPossessions": 1034.6,
         "Issue": null
       },
       "MIA": {
@@ -1278,7 +1306,7 @@
         "Complete": true,
         "Games": 10,
         "DefRtg": 120.64317350279221,
-        "Rank": 29,
+        "Rank": 28,
         "Population": 30,
         "Start": "2026-04-01",
         "End": "2026-10-26",
@@ -1320,7 +1348,7 @@
         "Complete": true,
         "Games": 10,
         "DefRtg": 119.3260654112983,
-        "Rank": 22,
+        "Rank": 23,
         "Population": 30,
         "Start": "2026-04-03",
         "End": "2026-10-26",
@@ -1362,7 +1390,7 @@
         "Complete": true,
         "Games": 10,
         "DefRtg": 111.44461657629742,
-        "Rank": 11,
+        "Rank": 12,
         "Population": 30,
         "Start": "2026-04-03",
         "End": "2026-10-26",
@@ -1445,16 +1473,17 @@
         "Estimated": true,
         "Complete": true,
         "Games": 10,
-        "DefRtg": 110.87996671520699,
-        "Rank": 10,
+        "DefRtg": 108.61036547594468,
+        "Rank": 5,
         "Population": 30,
-        "Start": "2026-03-31",
-        "End": "2026-10-25",
+        "Start": "2026-04-01",
+        "End": "2026-10-27",
         "Seasons": [
           "2026-27",
           "2025-26"
         ],
         "SelectedGameIds": [
+          "401909878",
           "401909863",
           "401909095",
           "401909089",
@@ -1463,10 +1492,10 @@
           "401811023",
           "401810998",
           "401810978",
-          "401810858",
-          "401810957"
+          "401810858"
         ],
         "GameIds": [
+          "401909878",
           "401909863",
           "401909095",
           "401909089",
@@ -1475,12 +1504,11 @@
           "401811023",
           "401810998",
           "401810978",
-          "401810858",
-          "401810957"
+          "401810858"
         ],
         "MissingGames": [],
-        "OpponentPoints": 1066.0,
-        "EstimatedOpponentPossessions": 961.4,
+        "OpponentPoints": 1052.0,
+        "EstimatedOpponentPossessions": 968.5999999999999,
         "Issue": null
       },
       "OKC": {
@@ -1530,7 +1558,7 @@
         "Complete": true,
         "Games": 10,
         "DefRtg": 109.15094339622641,
-        "Rank": 7,
+        "Rank": 9,
         "Population": 30,
         "Start": "2026-04-01",
         "End": "2026-10-25",
@@ -1655,16 +1683,17 @@
         "Estimated": true,
         "Complete": true,
         "Games": 10,
-        "DefRtg": 105.5944055944056,
-        "Rank": 4,
+        "DefRtg": 108.70870870870871,
+        "Rank": 7,
         "Population": 30,
-        "Start": "2026-03-27",
-        "End": "2026-10-23",
+        "Start": "2026-03-29",
+        "End": "2026-10-27",
         "Seasons": [
           "2026-27",
           "2025-26"
         ],
         "SelectedGameIds": [
+          "401909880",
           "401909852",
           "401909841",
           "401811055",
@@ -1673,10 +1702,10 @@
           "401811002",
           "401810973",
           "401810959",
-          "401810942",
-          "401810929"
+          "401810942"
         ],
         "GameIds": [
+          "401909880",
           "401909852",
           "401909841",
           "401811055",
@@ -1685,28 +1714,28 @@
           "401811002",
           "401810973",
           "401810959",
-          "401810942",
-          "401810929"
+          "401810942"
         ],
         "MissingGames": [],
-        "OpponentPoints": 1057.0,
-        "EstimatedOpponentPossessions": 1001.0,
+        "OpponentPoints": 1086.0,
+        "EstimatedOpponentPossessions": 999.0,
         "Issue": null
       },
       "SAC": {
         "Estimated": true,
         "Complete": true,
         "Games": 10,
-        "DefRtg": 120.2076677316294,
-        "Rank": 26,
+        "DefRtg": 120.80936322158303,
+        "Rank": 29,
         "Population": 30,
-        "Start": "2026-03-29",
-        "End": "2026-10-25",
+        "Start": "2026-04-01",
+        "End": "2026-10-27",
         "Seasons": [
           "2026-27",
           "2025-26"
         ],
         "SelectedGameIds": [
+          "401909879",
           "401909867",
           "401909852",
           "401909842",
@@ -1715,10 +1744,10 @@
           "401811009",
           "401810996",
           "401810983",
-          "401810963",
-          "401810939"
+          "401810963"
         ],
         "GameIds": [
+          "401909879",
           "401909867",
           "401909852",
           "401909842",
@@ -1727,28 +1756,28 @@
           "401811009",
           "401810996",
           "401810983",
-          "401810963",
-          "401810939"
+          "401810963"
         ],
         "MissingGames": [],
-        "OpponentPoints": 1204.0,
-        "EstimatedOpponentPossessions": 1001.5999999999999,
+        "OpponentPoints": 1218.0,
+        "EstimatedOpponentPossessions": 1008.1999999999999,
         "Issue": null
       },
       "SAS": {
         "Estimated": true,
         "Complete": true,
         "Games": 10,
-        "DefRtg": 111.84469846275127,
-        "Rank": 13,
+        "DefRtg": 110.96863286644307,
+        "Rank": 11,
         "Population": 30,
-        "Start": "2026-04-01",
-        "End": "2026-10-24",
+        "Start": "2026-04-02",
+        "End": "2026-10-27",
         "Seasons": [
           "2026-27",
           "2025-26"
         ],
         "SelectedGameIds": [
+          "401909879",
           "401909858",
           "401909096",
           "401909090",
@@ -1757,10 +1786,10 @@
           "401811016",
           "401811001",
           "401810985",
-          "401810974",
-          "401810968"
+          "401810974"
         ],
         "GameIds": [
+          "401909879",
           "401909858",
           "401909096",
           "401909090",
@@ -1769,12 +1798,11 @@
           "401811016",
           "401811001",
           "401810985",
-          "401810974",
-          "401810968"
+          "401810974"
         ],
         "MissingGames": [],
-        "OpponentPoints": 1135.0,
-        "EstimatedOpponentPossessions": 1014.8000000000001,
+        "OpponentPoints": 1125.0,
+        "EstimatedOpponentPossessions": 1013.8000000000001,
         "Issue": null
       },
       "TOR": {
@@ -1824,7 +1852,7 @@
         "Complete": true,
         "Games": 10,
         "DefRtg": 119.547057731576,
-        "Rank": 23,
+        "Rank": 24,
         "Population": 30,
         "Start": "2026-04-01",
         "End": "2026-10-26",
@@ -2057,13 +2085,13 @@
       "events": 57
     }
   ],
-  "generated_at": "2026-10-27 12:55 UTC",
+  "generated_at": "2026-10-28 13:43 UTC",
   "stats_source": "ESPN",
   "defense_source": "ESPN",
   "period_populations": {
-    "Season": 412,
-    "L7": 412,
-    "L14": 412,
+    "Season": 417,
+    "L7": 415,
+    "L14": 417,
     "LastSeason": 578
   },
   "roto_references": {
@@ -2241,40 +2269,40 @@
       },
       {
         "id": "3995",
-        "gp": 2.0,
+        "gp": 3.0,
         "totals": {
-          "PTS": 20.0,
-          "REB": 5.0,
-          "AST": 9.0,
-          "3PM": 3.0,
-          "STL": 3.0,
+          "PTS": 42.0,
+          "REB": 9.0,
+          "AST": 12.0,
+          "3PM": 5.0,
+          "STL": 4.0,
           "BLK": 1.0,
-          "TO": 0.0
+          "TO": 1.0
         },
         "shots": {
-          "FGM": 6.0,
-          "FGA": 16.0,
-          "FTM": 5.0,
-          "FTA": 6.0
+          "FGM": 14.0,
+          "FGA": 28.0,
+          "FTM": 9.0,
+          "FTA": 12.0
         }
       },
       {
         "id": "4251",
-        "gp": 3.0,
+        "gp": 4.0,
         "totals": {
-          "PTS": 69.0,
-          "REB": 17.0,
-          "AST": 7.0,
-          "3PM": 13.0,
-          "STL": 7.0,
+          "PTS": 89.0,
+          "REB": 24.0,
+          "AST": 14.0,
+          "3PM": 14.0,
+          "STL": 9.0,
           "BLK": 0.0,
-          "TO": 8.0
+          "TO": 11.0
         },
         "shots": {
-          "FGM": 23.0,
-          "FGA": 50.0,
-          "FTM": 10.0,
-          "FTA": 12.0
+          "FGM": 31.0,
+          "FGA": 66.0,
+          "FTM": 13.0,
+          "FTA": 15.0
         }
       },
       {
@@ -2355,9 +2383,9 @@
       },
       {
         "id": "6578",
-        "gp": 3.0,
+        "gp": 4.0,
         "totals": {
-          "PTS": 3.0,
+          "PTS": 6.0,
           "REB": 0.0,
           "AST": 0.0,
           "3PM": 1.0,
@@ -2366,10 +2394,10 @@
           "TO": 0.0
         },
         "shots": {
-          "FGM": 1.0,
-          "FGA": 4.0,
-          "FTM": 0.0,
-          "FTA": 0.0
+          "FGM": 2.0,
+          "FGA": 6.0,
+          "FTM": 1.0,
+          "FTA": 2.0
         }
       },
       {
@@ -2393,21 +2421,21 @@
       },
       {
         "id": "6585",
-        "gp": 3.0,
+        "gp": 4.0,
         "totals": {
-          "PTS": 18.0,
-          "REB": 19.0,
-          "AST": 6.0,
+          "PTS": 28.0,
+          "REB": 27.0,
+          "AST": 7.0,
           "3PM": 0.0,
           "STL": 1.0,
           "BLK": 2.0,
-          "TO": 0.0
+          "TO": 1.0
         },
         "shots": {
-          "FGM": 8.0,
-          "FGA": 18.0,
+          "FGM": 13.0,
+          "FGA": 25.0,
           "FTM": 2.0,
-          "FTA": 4.0
+          "FTA": 6.0
         }
       },
       {
@@ -2431,21 +2459,21 @@
       },
       {
         "id": "6606",
-        "gp": 2.0,
+        "gp": 3.0,
         "totals": {
-          "PTS": 44.0,
-          "REB": 8.0,
-          "AST": 8.0,
-          "3PM": 8.0,
+          "PTS": 65.0,
+          "REB": 13.0,
+          "AST": 12.0,
+          "3PM": 12.0,
           "STL": 3.0,
           "BLK": 0.0,
-          "TO": 3.0
+          "TO": 5.0
         },
         "shots": {
-          "FGM": 14.0,
-          "FGA": 30.0,
-          "FTM": 8.0,
-          "FTA": 8.0
+          "FGM": 19.0,
+          "FGA": 42.0,
+          "FTM": 15.0,
+          "FTA": 19.0
         }
       },
       {
@@ -2475,7 +2503,7 @@
           "REB": 6.0,
           "AST": 9.0,
           "3PM": 11.0,
-          "STL": 3.0,
+          "STL": 4.0,
           "BLK": 1.0,
           "TO": 5.0
         },
@@ -2640,21 +2668,40 @@
       },
       {
         "id": "2596112",
-        "gp": 3.0,
+        "gp": 4.0,
         "totals": {
-          "PTS": 26.0,
-          "REB": 10.0,
+          "PTS": 29.0,
+          "REB": 11.0,
           "AST": 0.0,
-          "3PM": 6.0,
+          "3PM": 7.0,
           "STL": 0.0,
-          "BLK": 2.0,
+          "BLK": 3.0,
           "TO": 0.0
         },
         "shots": {
-          "FGM": 7.0,
-          "FGA": 16.0,
+          "FGM": 8.0,
+          "FGA": 22.0,
           "FTM": 6.0,
           "FTA": 6.0
+        }
+      },
+      {
+        "id": "2990962",
+        "gp": 1.0,
+        "totals": {
+          "PTS": 3.0,
+          "REB": 0.0,
+          "AST": 0.0,
+          "3PM": 1.0,
+          "STL": 2.0,
+          "BLK": 0.0,
+          "TO": 0.0
+        },
+        "shots": {
+          "FGM": 1.0,
+          "FGA": 3.0,
+          "FTM": 0.0,
+          "FTA": 0.0
         }
       },
       {
@@ -2743,7 +2790,7 @@
           "3PM": 4.0,
           "STL": 10.0,
           "BLK": 4.0,
-          "TO": 6.0
+          "TO": 7.0
         },
         "shots": {
           "FGM": 11.0,
@@ -2963,19 +3010,19 @@
       },
       {
         "id": "3062679",
-        "gp": 3.0,
+        "gp": 4.0,
         "totals": {
-          "PTS": 37.0,
-          "REB": 27.0,
-          "AST": 10.0,
-          "3PM": 7.0,
-          "STL": 6.0,
+          "PTS": 43.0,
+          "REB": 31.0,
+          "AST": 14.0,
+          "3PM": 9.0,
+          "STL": 11.0,
           "BLK": 1.0,
-          "TO": 5.0
+          "TO": 8.0
         },
         "shots": {
-          "FGM": 14.0,
-          "FGA": 34.0,
+          "FGM": 16.0,
+          "FGA": 36.0,
           "FTM": 2.0,
           "FTA": 3.0
         }
@@ -3001,21 +3048,21 @@
       },
       {
         "id": "3064440",
-        "gp": 3.0,
+        "gp": 4.0,
         "totals": {
-          "PTS": 87.0,
-          "REB": 11.0,
-          "AST": 10.0,
-          "3PM": 9.0,
+          "PTS": 109.0,
+          "REB": 14.0,
+          "AST": 13.0,
+          "3PM": 12.0,
           "STL": 4.0,
           "BLK": 1.0,
-          "TO": 10.0
+          "TO": 13.0
         },
         "shots": {
-          "FGM": 29.0,
-          "FGA": 59.0,
-          "FTM": 20.0,
-          "FTA": 23.0
+          "FGM": 36.0,
+          "FGA": 69.0,
+          "FTM": 25.0,
+          "FTA": 30.0
         }
       },
       {
@@ -3039,59 +3086,59 @@
       },
       {
         "id": "3064514",
-        "gp": 3.0,
+        "gp": 4.0,
         "totals": {
-          "PTS": 66.0,
-          "REB": 21.0,
-          "AST": 19.0,
+          "PTS": 90.0,
+          "REB": 30.0,
+          "AST": 23.0,
           "3PM": 5.0,
-          "STL": 1.0,
+          "STL": 3.0,
           "BLK": 1.0,
-          "TO": 11.0
+          "TO": 16.0
         },
         "shots": {
-          "FGM": 20.0,
-          "FGA": 39.0,
-          "FTM": 21.0,
-          "FTA": 27.0
+          "FGM": 30.0,
+          "FGA": 62.0,
+          "FTM": 25.0,
+          "FTA": 32.0
         }
       },
       {
         "id": "3064560",
-        "gp": 3.0,
+        "gp": 4.0,
         "totals": {
           "PTS": 11.0,
-          "REB": 8.0,
-          "AST": 1.0,
+          "REB": 12.0,
+          "AST": 2.0,
           "3PM": 0.0,
           "STL": 0.0,
           "BLK": 2.0,
-          "TO": 2.0
+          "TO": 4.0
         },
         "shots": {
           "FGM": 4.0,
-          "FGA": 7.0,
+          "FGA": 9.0,
           "FTM": 3.0,
           "FTA": 5.0
         }
       },
       {
         "id": "3078576",
-        "gp": 3.0,
+        "gp": 4.0,
         "totals": {
-          "PTS": 34.0,
-          "REB": 11.0,
-          "AST": 18.0,
-          "3PM": 6.0,
+          "PTS": 50.0,
+          "REB": 16.0,
+          "AST": 25.0,
+          "3PM": 7.0,
           "STL": 5.0,
           "BLK": 1.0,
-          "TO": 11.0
+          "TO": 14.0
         },
         "shots": {
-          "FGM": 14.0,
-          "FGA": 28.0,
-          "FTM": 0.0,
-          "FTA": 0.0
+          "FGM": 19.0,
+          "FGA": 43.0,
+          "FTM": 5.0,
+          "FTA": 5.0
         }
       },
       {
@@ -3286,19 +3333,19 @@
       },
       {
         "id": "3134916",
-        "gp": 1.0,
+        "gp": 2.0,
         "totals": {
           "PTS": 0.0,
           "REB": 1.0,
-          "AST": 0.0,
+          "AST": 2.0,
           "3PM": 0.0,
-          "STL": 0.0,
+          "STL": 1.0,
           "BLK": 0.0,
           "TO": 0.0
         },
         "shots": {
           "FGM": 0.0,
-          "FGA": 2.0,
+          "FGA": 3.0,
           "FTM": 0.0,
           "FTA": 0.0
         }
@@ -3362,21 +3409,21 @@
       },
       {
         "id": "3136195",
-        "gp": 3.0,
+        "gp": 4.0,
         "totals": {
-          "PTS": 63.0,
-          "REB": 36.0,
-          "AST": 8.0,
-          "3PM": 5.0,
+          "PTS": 90.0,
+          "REB": 56.0,
+          "AST": 11.0,
+          "3PM": 6.0,
           "STL": 2.0,
           "BLK": 3.0,
-          "TO": 12.0
+          "TO": 19.0
         },
         "shots": {
-          "FGM": 23.0,
-          "FGA": 37.0,
-          "FTM": 12.0,
-          "FTA": 17.0
+          "FGM": 35.0,
+          "FGA": 58.0,
+          "FTM": 14.0,
+          "FTA": 19.0
         }
       },
       {
@@ -3457,19 +3504,19 @@
       },
       {
         "id": "3147657",
-        "gp": 3.0,
+        "gp": 4.0,
         "totals": {
-          "PTS": 10.0,
-          "REB": 9.0,
-          "AST": 6.0,
-          "3PM": 0.0,
-          "STL": 1.0,
+          "PTS": 22.0,
+          "REB": 12.0,
+          "AST": 10.0,
+          "3PM": 4.0,
+          "STL": 2.0,
           "BLK": 2.0,
-          "TO": 1.0
+          "TO": 3.0
         },
         "shots": {
-          "FGM": 5.0,
-          "FGA": 23.0,
+          "FGM": 9.0,
+          "FGA": 33.0,
           "FTM": 0.0,
           "FTA": 0.0
         }
@@ -3495,21 +3542,21 @@
       },
       {
         "id": "3150844",
-        "gp": 3.0,
+        "gp": 4.0,
         "totals": {
-          "PTS": 26.0,
-          "REB": 7.0,
-          "AST": 3.0,
-          "3PM": 4.0,
-          "STL": 1.0,
+          "PTS": 41.0,
+          "REB": 11.0,
+          "AST": 6.0,
+          "3PM": 6.0,
+          "STL": 3.0,
           "BLK": 0.0,
           "TO": 5.0
         },
         "shots": {
-          "FGM": 7.0,
-          "FGA": 17.0,
-          "FTM": 8.0,
-          "FTA": 10.0
+          "FGM": 13.0,
+          "FGA": 26.0,
+          "FTM": 9.0,
+          "FTA": 12.0
         }
       },
       {
@@ -3533,7 +3580,7 @@
       },
       {
         "id": "3155535",
-        "gp": 3.0,
+        "gp": 4.0,
         "totals": {
           "PTS": 8.0,
           "REB": 8.0,
@@ -3552,40 +3599,40 @@
       },
       {
         "id": "3155942",
-        "gp": 3.0,
+        "gp": 4.0,
         "totals": {
-          "PTS": 56.0,
-          "REB": 52.0,
-          "AST": 21.0,
+          "PTS": 76.0,
+          "REB": 66.0,
+          "AST": 29.0,
           "3PM": 1.0,
           "STL": 3.0,
           "BLK": 0.0,
-          "TO": 12.0
+          "TO": 14.0
         },
         "shots": {
-          "FGM": 21.0,
-          "FGA": 26.0,
+          "FGM": 31.0,
+          "FGA": 42.0,
           "FTM": 13.0,
           "FTA": 15.0
         }
       },
       {
         "id": "3157465",
-        "gp": 3.0,
+        "gp": 4.0,
         "totals": {
-          "PTS": 59.0,
+          "PTS": 71.0,
           "REB": 6.0,
-          "AST": 7.0,
-          "3PM": 15.0,
-          "STL": 3.0,
-          "BLK": 0.0,
-          "TO": 5.0
+          "AST": 9.0,
+          "3PM": 17.0,
+          "STL": 4.0,
+          "BLK": 1.0,
+          "TO": 6.0
         },
         "shots": {
-          "FGM": 16.0,
-          "FGA": 34.0,
-          "FTM": 12.0,
-          "FTA": 15.0
+          "FGM": 20.0,
+          "FGA": 48.0,
+          "FTM": 14.0,
+          "FTA": 17.0
         }
       },
       {
@@ -3628,19 +3675,19 @@
       },
       {
         "id": "3907498",
-        "gp": 3.0,
+        "gp": 4.0,
         "totals": {
-          "PTS": 27.0,
-          "REB": 5.0,
-          "AST": 4.0,
-          "3PM": 7.0,
+          "PTS": 32.0,
+          "REB": 7.0,
+          "AST": 5.0,
+          "3PM": 8.0,
           "STL": 6.0,
           "BLK": 3.0,
-          "TO": 1.0
+          "TO": 4.0
         },
         "shots": {
-          "FGM": 10.0,
-          "FGA": 20.0,
+          "FGM": 12.0,
+          "FGA": 25.0,
           "FTM": 0.0,
           "FTA": 0.0
         }
@@ -3666,19 +3713,19 @@
       },
       {
         "id": "3908845",
-        "gp": 3.0,
+        "gp": 4.0,
         "totals": {
-          "PTS": 45.0,
-          "REB": 23.0,
-          "AST": 2.0,
+          "PTS": 47.0,
+          "REB": 32.0,
+          "AST": 3.0,
           "3PM": 7.0,
           "STL": 1.0,
-          "BLK": 3.0,
-          "TO": 3.0
+          "BLK": 6.0,
+          "TO": 4.0
         },
         "shots": {
-          "FGM": 19.0,
-          "FGA": 37.0,
+          "FGM": 20.0,
+          "FGA": 41.0,
           "FTM": 0.0,
           "FTA": 1.0
         }
@@ -3723,21 +3770,21 @@
       },
       {
         "id": "3914044",
-        "gp": 3.0,
+        "gp": 4.0,
         "totals": {
-          "PTS": 19.0,
-          "REB": 6.0,
-          "AST": 5.0,
-          "3PM": 5.0,
+          "PTS": 32.0,
+          "REB": 8.0,
+          "AST": 8.0,
+          "3PM": 8.0,
           "STL": 1.0,
           "BLK": 0.0,
-          "TO": 5.0
+          "TO": 6.0
         },
         "shots": {
-          "FGM": 7.0,
-          "FGA": 19.0,
-          "FTM": 0.0,
-          "FTA": 2.0
+          "FGM": 10.0,
+          "FGA": 27.0,
+          "FTM": 4.0,
+          "FTA": 6.0
         }
       },
       {
@@ -3761,40 +3808,40 @@
       },
       {
         "id": "3934672",
-        "gp": 3.0,
+        "gp": 4.0,
         "totals": {
-          "PTS": 68.0,
-          "REB": 10.0,
-          "AST": 11.0,
+          "PTS": 91.0,
+          "REB": 11.0,
+          "AST": 18.0,
           "3PM": 4.0,
           "STL": 2.0,
           "BLK": 3.0,
-          "TO": 8.0
+          "TO": 9.0
         },
         "shots": {
-          "FGM": 25.0,
-          "FGA": 64.0,
-          "FTM": 14.0,
-          "FTA": 20.0
+          "FGM": 30.0,
+          "FGA": 82.0,
+          "FTM": 27.0,
+          "FTA": 36.0
         }
       },
       {
         "id": "3934719",
-        "gp": 3.0,
+        "gp": 4.0,
         "totals": {
-          "PTS": 52.0,
-          "REB": 18.0,
-          "AST": 10.0,
-          "3PM": 6.0,
-          "STL": 1.0,
-          "BLK": 1.0,
-          "TO": 7.0
+          "PTS": 65.0,
+          "REB": 25.0,
+          "AST": 12.0,
+          "3PM": 7.0,
+          "STL": 3.0,
+          "BLK": 3.0,
+          "TO": 9.0
         },
         "shots": {
-          "FGM": 14.0,
-          "FGA": 34.0,
-          "FTM": 18.0,
-          "FTA": 22.0
+          "FGM": 19.0,
+          "FGA": 49.0,
+          "FTM": 20.0,
+          "FTA": 24.0
         }
       },
       {
@@ -3837,21 +3884,21 @@
       },
       {
         "id": "3945274",
-        "gp": 3.0,
+        "gp": 4.0,
         "totals": {
-          "PTS": 103.0,
-          "REB": 22.0,
-          "AST": 24.0,
-          "3PM": 15.0,
+          "PTS": 144.0,
+          "REB": 27.0,
+          "AST": 33.0,
+          "3PM": 21.0,
           "STL": 5.0,
-          "BLK": 1.0,
-          "TO": 21.0
+          "BLK": 2.0,
+          "TO": 23.0
         },
         "shots": {
-          "FGM": 32.0,
-          "FGA": 69.0,
-          "FTM": 24.0,
-          "FTA": 27.0
+          "FGM": 44.0,
+          "FGA": 91.0,
+          "FTM": 35.0,
+          "FTA": 40.0
         }
       },
       {
@@ -3875,21 +3922,21 @@
       },
       {
         "id": "4065648",
-        "gp": 3.0,
+        "gp": 4.0,
         "totals": {
-          "PTS": 72.0,
-          "REB": 20.0,
-          "AST": 24.0,
-          "3PM": 5.0,
+          "PTS": 112.0,
+          "REB": 25.0,
+          "AST": 32.0,
+          "3PM": 7.0,
           "STL": 4.0,
-          "BLK": 0.0,
+          "BLK": 1.0,
           "TO": 7.0
         },
         "shots": {
-          "FGM": 27.0,
-          "FGA": 66.0,
-          "FTM": 13.0,
-          "FTA": 14.0
+          "FGM": 37.0,
+          "FGA": 86.0,
+          "FTM": 31.0,
+          "FTA": 36.0
         }
       },
       {
@@ -3951,21 +3998,21 @@
       },
       {
         "id": "4065732",
-        "gp": 3.0,
+        "gp": 4.0,
         "totals": {
-          "PTS": 17.0,
-          "REB": 16.0,
-          "AST": 3.0,
-          "3PM": 4.0,
-          "STL": 0.0,
-          "BLK": 0.0,
-          "TO": 2.0
+          "PTS": 41.0,
+          "REB": 22.0,
+          "AST": 5.0,
+          "3PM": 9.0,
+          "STL": 1.0,
+          "BLK": 1.0,
+          "TO": 4.0
         },
         "shots": {
-          "FGM": 6.0,
-          "FGA": 16.0,
-          "FTM": 1.0,
-          "FTA": 6.0
+          "FGM": 14.0,
+          "FGA": 29.0,
+          "FTM": 4.0,
+          "FTA": 10.0
         }
       },
       {
@@ -3974,7 +4021,7 @@
         "totals": {
           "PTS": 119.0,
           "REB": 14.0,
-          "AST": 25.0,
+          "AST": 26.0,
           "3PM": 10.0,
           "STL": 3.0,
           "BLK": 1.0,
@@ -3989,19 +4036,19 @@
       },
       {
         "id": "4065804",
-        "gp": 3.0,
+        "gp": 4.0,
         "totals": {
-          "PTS": 28.0,
-          "REB": 10.0,
+          "PTS": 39.0,
+          "REB": 14.0,
           "AST": 4.0,
-          "3PM": 8.0,
+          "3PM": 11.0,
           "STL": 0.0,
           "BLK": 0.0,
           "TO": 0.0
         },
         "shots": {
-          "FGM": 10.0,
-          "FGA": 19.0,
+          "FGM": 14.0,
+          "FGA": 28.0,
           "FTM": 0.0,
           "FTA": 0.0
         }
@@ -4027,40 +4074,40 @@
       },
       {
         "id": "4066211",
-        "gp": 2.0,
+        "gp": 3.0,
         "totals": {
-          "PTS": 15.0,
-          "REB": 16.0,
-          "AST": 1.0,
+          "PTS": 29.0,
+          "REB": 26.0,
+          "AST": 2.0,
           "3PM": 0.0,
-          "STL": 0.0,
-          "BLK": 2.0,
+          "STL": 2.0,
+          "BLK": 3.0,
           "TO": 2.0
         },
         "shots": {
-          "FGM": 7.0,
-          "FGA": 9.0,
-          "FTM": 1.0,
-          "FTA": 2.0
+          "FGM": 13.0,
+          "FGA": 17.0,
+          "FTM": 3.0,
+          "FTA": 4.0
         }
       },
       {
         "id": "4066259",
-        "gp": 3.0,
+        "gp": 4.0,
         "totals": {
-          "PTS": 52.0,
-          "REB": 14.0,
-          "AST": 25.0,
-          "3PM": 4.0,
+          "PTS": 63.0,
+          "REB": 18.0,
+          "AST": 31.0,
+          "3PM": 6.0,
           "STL": 6.0,
           "BLK": 1.0,
-          "TO": 9.0
+          "TO": 12.0
         },
         "shots": {
-          "FGM": 18.0,
-          "FGA": 31.0,
-          "FTM": 12.0,
-          "FTA": 15.0
+          "FGM": 21.0,
+          "FGA": 37.0,
+          "FTM": 15.0,
+          "FTA": 19.0
         }
       },
       {
@@ -4084,19 +4131,19 @@
       },
       {
         "id": "4066262",
-        "gp": 2.0,
+        "gp": 3.0,
         "totals": {
-          "PTS": 6.0,
-          "REB": 2.0,
-          "AST": 4.0,
-          "3PM": 0.0,
+          "PTS": 9.0,
+          "REB": 4.0,
+          "AST": 10.0,
+          "3PM": 1.0,
           "STL": 1.0,
           "BLK": 0.0,
           "TO": 3.0
         },
         "shots": {
-          "FGM": 3.0,
-          "FGA": 14.0,
+          "FGM": 4.0,
+          "FGA": 21.0,
           "FTM": 0.0,
           "FTA": 0.0
         }
@@ -4179,40 +4226,40 @@
       },
       {
         "id": "4066354",
-        "gp": 3.0,
+        "gp": 4.0,
         "totals": {
-          "PTS": 49.0,
-          "REB": 6.0,
-          "AST": 9.0,
+          "PTS": 53.0,
+          "REB": 8.0,
+          "AST": 15.0,
           "3PM": 10.0,
           "STL": 2.0,
-          "BLK": 0.0,
-          "TO": 3.0
+          "BLK": 1.0,
+          "TO": 6.0
         },
         "shots": {
-          "FGM": 15.0,
-          "FGA": 30.0,
+          "FGM": 17.0,
+          "FGA": 37.0,
           "FTM": 9.0,
           "FTA": 11.0
         }
       },
       {
         "id": "4066372",
-        "gp": 3.0,
+        "gp": 4.0,
         "totals": {
-          "PTS": 17.0,
-          "REB": 12.0,
+          "PTS": 24.0,
+          "REB": 13.0,
           "AST": 6.0,
-          "3PM": 3.0,
-          "STL": 2.0,
-          "BLK": 1.0,
+          "3PM": 4.0,
+          "STL": 3.0,
+          "BLK": 2.0,
           "TO": 4.0
         },
         "shots": {
-          "FGM": 7.0,
-          "FGA": 20.0,
+          "FGM": 10.0,
+          "FGA": 25.0,
           "FTM": 0.0,
-          "FTA": 0.0
+          "FTA": 2.0
         }
       },
       {
@@ -4274,21 +4321,21 @@
       },
       {
         "id": "4066457",
-        "gp": 3.0,
+        "gp": 4.0,
         "totals": {
-          "PTS": 80.0,
-          "REB": 7.0,
-          "AST": 19.0,
-          "3PM": 8.0,
+          "PTS": 106.0,
+          "REB": 11.0,
+          "AST": 26.0,
+          "3PM": 12.0,
           "STL": 5.0,
           "BLK": 3.0,
           "TO": 13.0
         },
         "shots": {
-          "FGM": 23.0,
-          "FGA": 36.0,
-          "FTM": 26.0,
-          "FTA": 29.0
+          "FGM": 31.0,
+          "FGA": 49.0,
+          "FTM": 32.0,
+          "FTA": 36.0
         }
       },
       {
@@ -4388,21 +4435,21 @@
       },
       {
         "id": "4277811",
-        "gp": 2.0,
+        "gp": 3.0,
         "totals": {
-          "PTS": 18.0,
-          "REB": 3.0,
-          "AST": 3.0,
+          "PTS": 27.0,
+          "REB": 4.0,
+          "AST": 7.0,
           "3PM": 2.0,
           "STL": 3.0,
           "BLK": 0.0,
-          "TO": 3.0
+          "TO": 6.0
         },
         "shots": {
-          "FGM": 7.0,
-          "FGA": 17.0,
-          "FTM": 2.0,
-          "FTA": 2.0
+          "FGM": 11.0,
+          "FGA": 28.0,
+          "FTM": 3.0,
+          "FTA": 4.0
         }
       },
       {
@@ -4540,19 +4587,19 @@
       },
       {
         "id": "4277951",
-        "gp": 3.0,
+        "gp": 4.0,
         "totals": {
-          "PTS": 16.0,
-          "REB": 6.0,
+          "PTS": 18.0,
+          "REB": 10.0,
           "AST": 2.0,
           "3PM": 2.0,
           "STL": 2.0,
           "BLK": 0.0,
-          "TO": 3.0
+          "TO": 4.0
         },
         "shots": {
-          "FGM": 5.0,
-          "FGA": 9.0,
+          "FGM": 6.0,
+          "FGA": 13.0,
           "FTM": 4.0,
           "FTA": 6.0
         }
@@ -4711,21 +4758,21 @@
       },
       {
         "id": "4278104",
-        "gp": 3.0,
+        "gp": 4.0,
         "totals": {
-          "PTS": 64.0,
-          "REB": 16.0,
-          "AST": 2.0,
-          "3PM": 9.0,
+          "PTS": 91.0,
+          "REB": 28.0,
+          "AST": 4.0,
+          "3PM": 15.0,
           "STL": 9.0,
-          "BLK": 0.0,
-          "TO": 6.0
+          "BLK": 2.0,
+          "TO": 9.0
         },
         "shots": {
-          "FGM": 24.0,
-          "FGA": 52.0,
-          "FTM": 7.0,
-          "FTA": 9.0
+          "FGM": 32.0,
+          "FGA": 68.0,
+          "FTM": 12.0,
+          "FTA": 15.0
         }
       },
       {
@@ -4787,21 +4834,21 @@
       },
       {
         "id": "4278562",
-        "gp": 3.0,
+        "gp": 4.0,
         "totals": {
-          "PTS": 33.0,
-          "REB": 25.0,
-          "AST": 7.0,
-          "3PM": 2.0,
-          "STL": 1.0,
+          "PTS": 55.0,
+          "REB": 34.0,
+          "AST": 10.0,
+          "3PM": 3.0,
+          "STL": 3.0,
           "BLK": 3.0,
-          "TO": 5.0
+          "TO": 7.0
         },
         "shots": {
-          "FGM": 14.0,
-          "FGA": 23.0,
-          "FTM": 3.0,
-          "FTA": 5.0
+          "FGM": 23.0,
+          "FGA": 35.0,
+          "FTM": 6.0,
+          "FTA": 9.0
         }
       },
       {
@@ -4825,21 +4872,21 @@
       },
       {
         "id": "4278580",
-        "gp": 3.0,
+        "gp": 4.0,
         "totals": {
-          "PTS": 21.0,
-          "REB": 12.0,
-          "AST": 4.0,
-          "3PM": 2.0,
+          "PTS": 38.0,
+          "REB": 16.0,
+          "AST": 6.0,
+          "3PM": 5.0,
           "STL": 2.0,
-          "BLK": 1.0,
-          "TO": 0.0
+          "BLK": 2.0,
+          "TO": 1.0
         },
         "shots": {
-          "FGM": 7.0,
-          "FGA": 13.0,
-          "FTM": 5.0,
-          "FTA": 8.0
+          "FGM": 13.0,
+          "FGA": 22.0,
+          "FTM": 7.0,
+          "FTA": 10.0
         }
       },
       {
@@ -4882,40 +4929,40 @@
       },
       {
         "id": "4279318",
-        "gp": 3.0,
+        "gp": 4.0,
         "totals": {
           "PTS": 10.0,
-          "REB": 5.0,
+          "REB": 7.0,
           "AST": 2.0,
           "3PM": 2.0,
-          "STL": 1.0,
+          "STL": 2.0,
           "BLK": 1.0,
-          "TO": 0.0
+          "TO": 1.0
         },
         "shots": {
           "FGM": 4.0,
-          "FGA": 8.0,
+          "FGA": 9.0,
           "FTM": 0.0,
           "FTA": 0.0
         }
       },
       {
         "id": "4279888",
-        "gp": 2.0,
+        "gp": 3.0,
         "totals": {
-          "PTS": 26.0,
+          "PTS": 49.0,
           "REB": 8.0,
-          "AST": 15.0,
-          "3PM": 3.0,
+          "AST": 19.0,
+          "3PM": 4.0,
           "STL": 4.0,
           "BLK": 0.0,
-          "TO": 3.0
+          "TO": 4.0
         },
         "shots": {
-          "FGM": 11.0,
-          "FGA": 21.0,
-          "FTM": 1.0,
-          "FTA": 2.0
+          "FGM": 20.0,
+          "FGA": 34.0,
+          "FTM": 5.0,
+          "FTA": 6.0
         }
       },
       {
@@ -4996,21 +5043,21 @@
       },
       {
         "id": "4351852",
-        "gp": 3.0,
+        "gp": 4.0,
         "totals": {
-          "PTS": 15.0,
-          "REB": 14.0,
+          "PTS": 22.0,
+          "REB": 19.0,
           "AST": 3.0,
           "3PM": 0.0,
-          "STL": 1.0,
+          "STL": 2.0,
           "BLK": 3.0,
-          "TO": 3.0
+          "TO": 4.0
         },
         "shots": {
-          "FGM": 7.0,
-          "FGA": 9.0,
-          "FTM": 1.0,
-          "FTA": 4.0
+          "FGM": 10.0,
+          "FGA": 13.0,
+          "FTM": 2.0,
+          "FTA": 8.0
         }
       },
       {
@@ -5072,38 +5119,38 @@
       },
       {
         "id": "4395630",
-        "gp": 3.0,
+        "gp": 4.0,
         "totals": {
-          "PTS": 28.0,
-          "REB": 11.0,
-          "AST": 9.0,
-          "3PM": 4.0,
-          "STL": 5.0,
+          "PTS": 42.0,
+          "REB": 15.0,
+          "AST": 17.0,
+          "3PM": 8.0,
+          "STL": 6.0,
           "BLK": 0.0,
-          "TO": 5.0
+          "TO": 6.0
         },
         "shots": {
-          "FGM": 10.0,
-          "FGA": 26.0,
+          "FGM": 15.0,
+          "FGA": 37.0,
           "FTM": 4.0,
           "FTA": 4.0
         }
       },
       {
         "id": "4395650",
-        "gp": 1.0,
+        "gp": 2.0,
         "totals": {
-          "PTS": 0.0,
-          "REB": 0.0,
-          "AST": 0.0,
+          "PTS": 2.0,
+          "REB": 1.0,
+          "AST": 1.0,
           "3PM": 0.0,
-          "STL": 0.0,
-          "BLK": 0.0,
+          "STL": 1.0,
+          "BLK": 1.0,
           "TO": 0.0
         },
         "shots": {
-          "FGM": 0.0,
-          "FGA": 0.0,
+          "FGM": 1.0,
+          "FGA": 3.0,
           "FTM": 0.0,
           "FTA": 0.0
         }
@@ -5148,10 +5195,10 @@
       },
       {
         "id": "4395723",
-        "gp": 3.0,
+        "gp": 4.0,
         "totals": {
-          "PTS": 25.0,
-          "REB": 16.0,
+          "PTS": 39.0,
+          "REB": 20.0,
           "AST": 5.0,
           "3PM": 1.0,
           "STL": 3.0,
@@ -5159,10 +5206,10 @@
           "TO": 3.0
         },
         "shots": {
-          "FGM": 11.0,
-          "FGA": 20.0,
-          "FTM": 2.0,
-          "FTA": 3.0
+          "FGM": 16.0,
+          "FGA": 31.0,
+          "FTM": 6.0,
+          "FTA": 8.0
         }
       },
       {
@@ -5300,19 +5347,19 @@
       },
       {
         "id": "4397014",
-        "gp": 3.0,
+        "gp": 4.0,
         "totals": {
-          "PTS": 26.0,
-          "REB": 11.0,
+          "PTS": 28.0,
+          "REB": 15.0,
           "AST": 9.0,
           "3PM": 3.0,
           "STL": 2.0,
           "BLK": 1.0,
-          "TO": 2.0
+          "TO": 3.0
         },
         "shots": {
-          "FGM": 8.0,
-          "FGA": 15.0,
+          "FGM": 9.0,
+          "FGA": 19.0,
           "FTM": 7.0,
           "FTA": 8.0
         }
@@ -5471,21 +5518,40 @@
       },
       {
         "id": "4397424",
-        "gp": 3.0,
+        "gp": 4.0,
         "totals": {
-          "PTS": 25.0,
-          "REB": 15.0,
-          "AST": 4.0,
+          "PTS": 32.0,
+          "REB": 18.0,
+          "AST": 6.0,
           "3PM": 1.0,
           "STL": 1.0,
           "BLK": 7.0,
-          "TO": 3.0
+          "TO": 5.0
         },
         "shots": {
-          "FGM": 8.0,
-          "FGA": 16.0,
-          "FTM": 8.0,
-          "FTA": 13.0
+          "FGM": 11.0,
+          "FGA": 19.0,
+          "FTM": 9.0,
+          "FTA": 15.0
+        }
+      },
+      {
+        "id": "4397449",
+        "gp": 1.0,
+        "totals": {
+          "PTS": 0.0,
+          "REB": 0.0,
+          "AST": 0.0,
+          "3PM": 0.0,
+          "STL": 0.0,
+          "BLK": 0.0,
+          "TO": 0.0
+        },
+        "shots": {
+          "FGM": 0.0,
+          "FGA": 0.0,
+          "FTM": 0.0,
+          "FTA": 0.0
         }
       },
       {
@@ -5528,21 +5594,21 @@
       },
       {
         "id": "4397882",
-        "gp": 2.0,
+        "gp": 3.0,
         "totals": {
-          "PTS": 0.0,
-          "REB": 2.0,
+          "PTS": 1.0,
+          "REB": 6.0,
           "AST": 0.0,
           "3PM": 0.0,
           "STL": 0.0,
           "BLK": 0.0,
-          "TO": 1.0
+          "TO": 2.0
         },
         "shots": {
           "FGM": 0.0,
-          "FGA": 1.0,
-          "FTM": 0.0,
-          "FTA": 0.0
+          "FGA": 2.0,
+          "FTM": 1.0,
+          "FTA": 4.0
         }
       },
       {
@@ -5642,10 +5708,10 @@
       },
       {
         "id": "4431679",
-        "gp": 3.0,
+        "gp": 4.0,
         "totals": {
-          "PTS": 41.0,
-          "REB": 21.0,
+          "PTS": 45.0,
+          "REB": 22.0,
           "AST": 3.0,
           "3PM": 1.0,
           "STL": 6.0,
@@ -5653,8 +5719,8 @@
           "TO": 2.0
         },
         "shots": {
-          "FGM": 18.0,
-          "FGA": 32.0,
+          "FGM": 20.0,
+          "FGA": 38.0,
           "FTM": 4.0,
           "FTA": 11.0
         }
@@ -5718,19 +5784,19 @@
       },
       {
         "id": "4431736",
-        "gp": 2.0,
+        "gp": 3.0,
         "totals": {
-          "PTS": 37.0,
-          "REB": 5.0,
-          "AST": 4.0,
-          "3PM": 9.0,
-          "STL": 2.0,
+          "PTS": 49.0,
+          "REB": 6.0,
+          "AST": 5.0,
+          "3PM": 13.0,
+          "STL": 3.0,
           "BLK": 0.0,
           "TO": 1.0
         },
         "shots": {
-          "FGM": 13.0,
-          "FGA": 21.0,
+          "FGM": 17.0,
+          "FGA": 26.0,
           "FTM": 2.0,
           "FTA": 2.0
         }
@@ -5813,19 +5879,19 @@
       },
       {
         "id": "4431823",
-        "gp": 3.0,
+        "gp": 4.0,
         "totals": {
-          "PTS": 24.0,
-          "REB": 4.0,
-          "AST": 3.0,
-          "3PM": 7.0,
+          "PTS": 29.0,
+          "REB": 5.0,
+          "AST": 4.0,
+          "3PM": 8.0,
           "STL": 2.0,
           "BLK": 1.0,
           "TO": 1.0
         },
         "shots": {
-          "FGM": 7.0,
-          "FGA": 15.0,
+          "FGM": 9.0,
+          "FGA": 19.0,
           "FTM": 3.0,
           "FTA": 4.0
         }
@@ -5908,21 +5974,21 @@
       },
       {
         "id": "4432166",
-        "gp": 3.0,
+        "gp": 4.0,
         "totals": {
-          "PTS": 64.0,
-          "REB": 14.0,
-          "AST": 24.0,
-          "3PM": 6.0,
+          "PTS": 83.0,
+          "REB": 23.0,
+          "AST": 32.0,
+          "3PM": 8.0,
           "STL": 4.0,
-          "BLK": 6.0,
-          "TO": 16.0
+          "BLK": 7.0,
+          "TO": 19.0
         },
         "shots": {
-          "FGM": 22.0,
-          "FGA": 45.0,
-          "FTM": 14.0,
-          "FTA": 19.0
+          "FGM": 29.0,
+          "FGA": 63.0,
+          "FTM": 17.0,
+          "FTA": 24.0
         }
       },
       {
@@ -5935,7 +6001,7 @@
           "3PM": 0.0,
           "STL": 6.0,
           "BLK": 2.0,
-          "TO": 8.0
+          "TO": 7.0
         },
         "shots": {
           "FGM": 14.0,
@@ -5965,19 +6031,19 @@
       },
       {
         "id": "4432194",
-        "gp": 3.0,
+        "gp": 4.0,
         "totals": {
-          "PTS": 26.0,
-          "REB": 20.0,
+          "PTS": 30.0,
+          "REB": 26.0,
           "AST": 5.0,
           "3PM": 2.0,
-          "STL": 2.0,
-          "BLK": 3.0,
-          "TO": 7.0
+          "STL": 3.0,
+          "BLK": 4.0,
+          "TO": 8.0
         },
         "shots": {
-          "FGM": 10.0,
-          "FGA": 19.0,
+          "FGM": 12.0,
+          "FGA": 23.0,
           "FTM": 4.0,
           "FTA": 8.0
         }
@@ -6117,15 +6183,15 @@
       },
       {
         "id": "4432808",
-        "gp": 2.0,
+        "gp": 3.0,
         "totals": {
           "PTS": 0.0,
-          "REB": 2.0,
+          "REB": 3.0,
           "AST": 0.0,
           "3PM": 0.0,
           "STL": 0.0,
           "BLK": 1.0,
-          "TO": 1.0
+          "TO": 2.0
         },
         "shots": {
           "FGM": 0.0,
@@ -6364,40 +6430,40 @@
       },
       {
         "id": "4433136",
-        "gp": 3.0,
+        "gp": 4.0,
         "totals": {
-          "PTS": 50.0,
-          "REB": 24.0,
+          "PTS": 63.0,
+          "REB": 32.0,
           "AST": 4.0,
           "3PM": 0.0,
-          "STL": 3.0,
-          "BLK": 9.0,
-          "TO": 4.0
+          "STL": 4.0,
+          "BLK": 11.0,
+          "TO": 8.0
         },
         "shots": {
-          "FGM": 23.0,
-          "FGA": 28.0,
-          "FTM": 4.0,
-          "FTA": 9.0
+          "FGM": 29.0,
+          "FGA": 37.0,
+          "FTM": 5.0,
+          "FTA": 13.0
         }
       },
       {
         "id": "4433137",
-        "gp": 3.0,
+        "gp": 4.0,
         "totals": {
-          "PTS": 34.0,
-          "REB": 10.0,
-          "AST": 5.0,
-          "3PM": 5.0,
-          "STL": 4.0,
+          "PTS": 45.0,
+          "REB": 12.0,
+          "AST": 9.0,
+          "3PM": 7.0,
+          "STL": 6.0,
           "BLK": 1.0,
-          "TO": 2.0
+          "TO": 3.0
         },
         "shots": {
-          "FGM": 12.0,
-          "FGA": 23.0,
-          "FTM": 5.0,
-          "FTA": 5.0
+          "FGM": 16.0,
+          "FGA": 28.0,
+          "FTM": 6.0,
+          "FTA": 7.0
         }
       },
       {
@@ -6459,21 +6525,21 @@
       },
       {
         "id": "4433225",
-        "gp": 1.0,
+        "gp": 2.0,
         "totals": {
-          "PTS": 0.0,
-          "REB": 3.0,
-          "AST": 9.0,
+          "PTS": 2.0,
+          "REB": 4.0,
+          "AST": 12.0,
           "3PM": 0.0,
-          "STL": 1.0,
+          "STL": 3.0,
           "BLK": 0.0,
           "TO": 0.0
         },
         "shots": {
           "FGM": 0.0,
-          "FGA": 4.0,
-          "FTM": 0.0,
-          "FTA": 0.0
+          "FGA": 7.0,
+          "FTM": 2.0,
+          "FTA": 2.0
         }
       },
       {
@@ -6725,21 +6791,21 @@
       },
       {
         "id": "4578893",
-        "gp": 2.0,
+        "gp": 3.0,
         "totals": {
-          "PTS": 1.0,
+          "PTS": 5.0,
           "REB": 4.0,
           "AST": 3.0,
-          "3PM": 0.0,
+          "3PM": 1.0,
           "STL": 2.0,
           "BLK": 0.0,
           "TO": 2.0
         },
         "shots": {
-          "FGM": 0.0,
-          "FGA": 4.0,
-          "FTM": 1.0,
-          "FTA": 1.0
+          "FGM": 1.0,
+          "FGA": 6.0,
+          "FTM": 2.0,
+          "FTA": 4.0
         }
       },
       {
@@ -6763,19 +6829,19 @@
       },
       {
         "id": "4592479",
-        "gp": 3.0,
+        "gp": 4.0,
         "totals": {
-          "PTS": 26.0,
-          "REB": 8.0,
-          "AST": 4.0,
-          "3PM": 7.0,
+          "PTS": 52.0,
+          "REB": 11.0,
+          "AST": 7.0,
+          "3PM": 15.0,
           "STL": 6.0,
           "BLK": 6.0,
-          "TO": 1.0
+          "TO": 2.0
         },
         "shots": {
-          "FGM": 9.0,
-          "FGA": 21.0,
+          "FGM": 18.0,
+          "FGA": 35.0,
           "FTM": 1.0,
           "FTA": 1.0
         }
@@ -6801,19 +6867,19 @@
       },
       {
         "id": "4592691",
-        "gp": 2.0,
+        "gp": 3.0,
         "totals": {
-          "PTS": 10.0,
-          "REB": 6.0,
-          "AST": 3.0,
-          "3PM": 2.0,
-          "STL": 3.0,
+          "PTS": 15.0,
+          "REB": 7.0,
+          "AST": 4.0,
+          "3PM": 3.0,
+          "STL": 6.0,
           "BLK": 1.0,
           "TO": 1.0
         },
         "shots": {
-          "FGM": 4.0,
-          "FGA": 8.0,
+          "FGM": 6.0,
+          "FGA": 10.0,
           "FTM": 0.0,
           "FTA": 0.0
         }
@@ -6953,19 +7019,19 @@
       },
       {
         "id": "4593841",
-        "gp": 3.0,
+        "gp": 4.0,
         "totals": {
-          "PTS": 12.0,
-          "REB": 9.0,
-          "AST": 2.0,
-          "3PM": 2.0,
-          "STL": 2.0,
+          "PTS": 15.0,
+          "REB": 13.0,
+          "AST": 3.0,
+          "3PM": 3.0,
+          "STL": 3.0,
           "BLK": 0.0,
           "TO": 5.0
         },
         "shots": {
-          "FGM": 5.0,
-          "FGA": 13.0,
+          "FGM": 6.0,
+          "FGA": 18.0,
           "FTM": 0.0,
           "FTA": 0.0
         }
@@ -7105,21 +7171,21 @@
       },
       {
         "id": "4683021",
-        "gp": 2.0,
+        "gp": 3.0,
         "totals": {
-          "PTS": 44.0,
-          "REB": 17.0,
-          "AST": 10.0,
-          "3PM": 3.0,
-          "STL": 3.0,
+          "PTS": 67.0,
+          "REB": 21.0,
+          "AST": 19.0,
+          "3PM": 7.0,
+          "STL": 4.0,
           "BLK": 0.0,
-          "TO": 5.0
+          "TO": 8.0
         },
         "shots": {
-          "FGM": 15.0,
-          "FGA": 32.0,
-          "FTM": 11.0,
-          "FTA": 16.0
+          "FGM": 23.0,
+          "FGA": 47.0,
+          "FTM": 14.0,
+          "FTA": 23.0
         }
       },
       {
@@ -7143,40 +7209,40 @@
       },
       {
         "id": "4683678",
-        "gp": 2.0,
+        "gp": 3.0,
         "totals": {
-          "PTS": 19.0,
-          "REB": 3.0,
-          "AST": 3.0,
+          "PTS": 21.0,
+          "REB": 5.0,
+          "AST": 6.0,
           "3PM": 1.0,
           "STL": 1.0,
           "BLK": 0.0,
-          "TO": 4.0
+          "TO": 9.0
         },
         "shots": {
           "FGM": 8.0,
-          "FGA": 21.0,
-          "FTM": 2.0,
-          "FTA": 2.0
+          "FGA": 24.0,
+          "FTM": 4.0,
+          "FTA": 4.0
         }
       },
       {
         "id": "4683689",
-        "gp": 3.0,
+        "gp": 4.0,
         "totals": {
-          "PTS": 9.0,
-          "REB": 12.0,
-          "AST": 3.0,
-          "3PM": 1.0,
-          "STL": 4.0,
+          "PTS": 24.0,
+          "REB": 18.0,
+          "AST": 4.0,
+          "3PM": 4.0,
+          "STL": 5.0,
           "BLK": 1.0,
           "TO": 4.0
         },
         "shots": {
-          "FGM": 4.0,
-          "FGA": 12.0,
-          "FTM": 0.0,
-          "FTA": 0.0
+          "FGM": 9.0,
+          "FGA": 20.0,
+          "FTM": 2.0,
+          "FTA": 2.0
         }
       },
       {
@@ -7200,7 +7266,7 @@
       },
       {
         "id": "4683730",
-        "gp": 1.0,
+        "gp": 2.0,
         "totals": {
           "PTS": 0.0,
           "REB": 0.0,
@@ -7276,19 +7342,19 @@
       },
       {
         "id": "4683771",
-        "gp": 3.0,
+        "gp": 4.0,
         "totals": {
-          "PTS": 10.0,
-          "REB": 15.0,
-          "AST": 9.0,
+          "PTS": 14.0,
+          "REB": 18.0,
+          "AST": 11.0,
           "3PM": 0.0,
           "STL": 2.0,
-          "BLK": 3.0,
+          "BLK": 5.0,
           "TO": 1.0
         },
         "shots": {
-          "FGM": 4.0,
-          "FGA": 15.0,
+          "FGM": 6.0,
+          "FGA": 19.0,
           "FTM": 2.0,
           "FTA": 2.0
         }
@@ -7390,21 +7456,21 @@
       },
       {
         "id": "4684742",
-        "gp": 2.0,
+        "gp": 3.0,
         "totals": {
-          "PTS": 15.0,
-          "REB": 14.0,
-          "AST": 10.0,
+          "PTS": 26.0,
+          "REB": 20.0,
+          "AST": 12.0,
           "3PM": 0.0,
-          "STL": 2.0,
-          "BLK": 1.0,
-          "TO": 6.0
+          "STL": 4.0,
+          "BLK": 2.0,
+          "TO": 10.0
         },
         "shots": {
-          "FGM": 6.0,
-          "FGA": 13.0,
-          "FTM": 3.0,
-          "FTA": 3.0
+          "FGM": 11.0,
+          "FGA": 22.0,
+          "FTM": 4.0,
+          "FTA": 6.0
         }
       },
       {
@@ -7447,7 +7513,7 @@
       },
       {
         "id": "4687718",
-        "gp": 2.0,
+        "gp": 3.0,
         "totals": {
           "PTS": 19.0,
           "REB": 10.0,
@@ -7481,6 +7547,25 @@
           "FGA": 19.0,
           "FTM": 5.0,
           "FTA": 7.0
+        }
+      },
+      {
+        "id": "4700852",
+        "gp": 1.0,
+        "totals": {
+          "PTS": 2.0,
+          "REB": 0.0,
+          "AST": 0.0,
+          "3PM": 0.0,
+          "STL": 0.0,
+          "BLK": 0.0,
+          "TO": 0.0
+        },
+        "shots": {
+          "FGM": 1.0,
+          "FGA": 1.0,
+          "FTM": 0.0,
+          "FTA": 0.0
         }
       },
       {
@@ -7527,9 +7612,9 @@
         "totals": {
           "PTS": 86.0,
           "REB": 39.0,
-          "AST": 34.0,
+          "AST": 33.0,
           "3PM": 3.0,
-          "STL": 7.0,
+          "STL": 6.0,
           "BLK": 3.0,
           "TO": 11.0
         },
@@ -7561,19 +7646,19 @@
       },
       {
         "id": "4702177",
-        "gp": 3.0,
+        "gp": 4.0,
         "totals": {
-          "PTS": 22.0,
-          "REB": 5.0,
-          "AST": 8.0,
+          "PTS": 24.0,
+          "REB": 8.0,
+          "AST": 12.0,
           "3PM": 4.0,
           "STL": 7.0,
-          "BLK": 2.0,
+          "BLK": 4.0,
           "TO": 3.0
         },
         "shots": {
-          "FGM": 9.0,
-          "FGA": 18.0,
+          "FGM": 10.0,
+          "FGA": 24.0,
           "FTM": 0.0,
           "FTA": 0.0
         }
@@ -7618,9 +7703,9 @@
       },
       {
         "id": "4702384",
-        "gp": 2.0,
+        "gp": 3.0,
         "totals": {
-          "PTS": 6.0,
+          "PTS": 8.0,
           "REB": 1.0,
           "AST": 3.0,
           "3PM": 0.0,
@@ -7629,8 +7714,8 @@
           "TO": 3.0
         },
         "shots": {
-          "FGM": 3.0,
-          "FGA": 7.0,
+          "FGM": 4.0,
+          "FGA": 10.0,
           "FTM": 0.0,
           "FTA": 0.0
         }
@@ -7808,19 +7893,19 @@
       },
       {
         "id": "4712896",
-        "gp": 3.0,
+        "gp": 4.0,
         "totals": {
-          "PTS": 22.0,
-          "REB": 12.0,
-          "AST": 2.0,
-          "3PM": 3.0,
+          "PTS": 25.0,
+          "REB": 16.0,
+          "AST": 3.0,
+          "3PM": 4.0,
           "STL": 1.0,
-          "BLK": 1.0,
+          "BLK": 3.0,
           "TO": 2.0
         },
         "shots": {
-          "FGM": 5.0,
-          "FGA": 15.0,
+          "FGM": 6.0,
+          "FGA": 16.0,
           "FTM": 9.0,
           "FTA": 12.0
         }
@@ -7865,21 +7950,21 @@
       },
       {
         "id": "4845367",
-        "gp": 3.0,
+        "gp": 4.0,
         "totals": {
-          "PTS": 58.0,
-          "REB": 18.0,
-          "AST": 14.0,
-          "3PM": 11.0,
-          "STL": 4.0,
+          "PTS": 73.0,
+          "REB": 23.0,
+          "AST": 19.0,
+          "3PM": 14.0,
+          "STL": 5.0,
           "BLK": 0.0,
-          "TO": 7.0
+          "TO": 10.0
         },
         "shots": {
-          "FGM": 23.0,
-          "FGA": 54.0,
-          "FTM": 1.0,
-          "FTA": 2.0
+          "FGM": 27.0,
+          "FGA": 65.0,
+          "FTM": 5.0,
+          "FTA": 6.0
         }
       },
       {
@@ -8247,36 +8332,36 @@
         "id": "4903027",
         "gp": 3.0,
         "totals": {
-          "PTS": 38.0,
+          "PTS": 40.0,
           "REB": 29.0,
-          "AST": 7.0,
+          "AST": 6.0,
           "3PM": 8.0,
           "STL": 2.0,
           "BLK": 1.0,
           "TO": 4.0
         },
         "shots": {
-          "FGM": 15.0,
-          "FGA": 29.0,
+          "FGM": 16.0,
+          "FGA": 30.0,
           "FTM": 0.0,
           "FTA": 0.0
         }
       },
       {
         "id": "4917149",
-        "gp": 1.0,
+        "gp": 2.0,
         "totals": {
           "PTS": 1.0,
-          "REB": 1.0,
-          "AST": 0.0,
+          "REB": 2.0,
+          "AST": 1.0,
           "3PM": 0.0,
           "STL": 0.0,
           "BLK": 0.0,
-          "TO": 0.0
+          "TO": 1.0
         },
         "shots": {
           "FGM": 0.0,
-          "FGA": 0.0,
+          "FGA": 1.0,
           "FTM": 1.0,
           "FTA": 2.0
         }
@@ -8378,21 +8463,21 @@
       },
       {
         "id": "5037871",
-        "gp": 3.0,
+        "gp": 4.0,
         "totals": {
-          "PTS": 60.0,
-          "REB": 15.0,
-          "AST": 9.0,
+          "PTS": 73.0,
+          "REB": 21.0,
+          "AST": 15.0,
           "3PM": 4.0,
-          "STL": 2.0,
+          "STL": 4.0,
           "BLK": 0.0,
-          "TO": 4.0
+          "TO": 5.0
         },
         "shots": {
-          "FGM": 24.0,
-          "FGA": 50.0,
-          "FTM": 8.0,
-          "FTA": 9.0
+          "FGM": 30.0,
+          "FGA": 57.0,
+          "FTM": 9.0,
+          "FTA": 10.0
         }
       },
       {
@@ -8418,7 +8503,7 @@
         "id": "5041935",
         "gp": 4.0,
         "totals": {
-          "PTS": 61.0,
+          "PTS": 59.0,
           "REB": 42.0,
           "AST": 19.0,
           "3PM": 7.0,
@@ -8427,8 +8512,8 @@
           "TO": 9.0
         },
         "shots": {
-          "FGM": 18.0,
-          "FGA": 61.0,
+          "FGM": 17.0,
+          "FGA": 60.0,
           "FTM": 18.0,
           "FTA": 19.0
         }
@@ -8549,21 +8634,21 @@
       },
       {
         "id": "5061568",
-        "gp": 3.0,
+        "gp": 4.0,
         "totals": {
-          "PTS": 4.0,
-          "REB": 1.0,
-          "AST": 1.0,
+          "PTS": 5.0,
+          "REB": 2.0,
+          "AST": 3.0,
           "3PM": 0.0,
           "STL": 0.0,
-          "BLK": 0.0,
+          "BLK": 1.0,
           "TO": 0.0
         },
         "shots": {
           "FGM": 2.0,
-          "FGA": 7.0,
-          "FTM": 0.0,
-          "FTA": 0.0
+          "FGA": 9.0,
+          "FTM": 1.0,
+          "FTA": 2.0
         }
       },
       {
@@ -8625,21 +8710,21 @@
       },
       {
         "id": "5081727",
-        "gp": 2.0,
+        "gp": 3.0,
         "totals": {
-          "PTS": 18.0,
-          "REB": 11.0,
-          "AST": 4.0,
+          "PTS": 24.0,
+          "REB": 13.0,
+          "AST": 8.0,
           "3PM": 3.0,
           "STL": 1.0,
           "BLK": 0.0,
-          "TO": 0.0
+          "TO": 1.0
         },
         "shots": {
-          "FGM": 6.0,
-          "FGA": 11.0,
-          "FTM": 3.0,
-          "FTA": 5.0
+          "FGM": 8.0,
+          "FGA": 15.0,
+          "FTM": 5.0,
+          "FTA": 7.0
         }
       },
       {
@@ -8701,21 +8786,21 @@
       },
       {
         "id": "5101761",
-        "gp": 2.0,
+        "gp": 3.0,
         "totals": {
-          "PTS": 14.0,
-          "REB": 5.0,
-          "AST": 8.0,
-          "3PM": 3.0,
+          "PTS": 31.0,
+          "REB": 10.0,
+          "AST": 13.0,
+          "3PM": 7.0,
           "STL": 2.0,
           "BLK": 0.0,
-          "TO": 3.0
+          "TO": 5.0
         },
         "shots": {
-          "FGM": 5.0,
-          "FGA": 18.0,
-          "FTM": 1.0,
-          "FTA": 1.0
+          "FGM": 10.0,
+          "FGA": 35.0,
+          "FTM": 4.0,
+          "FTA": 4.0
         }
       },
       {
@@ -8739,21 +8824,21 @@
       },
       {
         "id": "5104157",
-        "gp": 3.0,
+        "gp": 4.0,
         "totals": {
-          "PTS": 60.0,
-          "REB": 33.0,
-          "AST": 7.0,
+          "PTS": 89.0,
+          "REB": 43.0,
+          "AST": 9.0,
           "3PM": 4.0,
-          "STL": 2.0,
-          "BLK": 12.0,
+          "STL": 4.0,
+          "BLK": 17.0,
           "TO": 8.0
         },
         "shots": {
-          "FGM": 19.0,
-          "FGA": 52.0,
-          "FTM": 18.0,
-          "FTA": 25.0
+          "FGM": 33.0,
+          "FGA": 73.0,
+          "FTM": 19.0,
+          "FTA": 26.0
         }
       },
       {
@@ -8815,21 +8900,21 @@
       },
       {
         "id": "5105565",
-        "gp": 2.0,
+        "gp": 3.0,
         "totals": {
-          "PTS": 19.0,
-          "REB": 17.0,
-          "AST": 5.0,
-          "3PM": 2.0,
+          "PTS": 28.0,
+          "REB": 27.0,
+          "AST": 6.0,
+          "3PM": 4.0,
           "STL": 0.0,
-          "BLK": 3.0,
-          "TO": 1.0
+          "BLK": 4.0,
+          "TO": 2.0
         },
         "shots": {
-          "FGM": 7.0,
-          "FGA": 14.0,
-          "FTM": 3.0,
-          "FTA": 4.0
+          "FGM": 10.0,
+          "FGA": 18.0,
+          "FTM": 4.0,
+          "FTA": 8.0
         }
       },
       {
@@ -8929,19 +9014,19 @@
       },
       {
         "id": "5105809",
-        "gp": 2.0,
+        "gp": 3.0,
         "totals": {
-          "PTS": 2.0,
-          "REB": 3.0,
+          "PTS": 6.0,
+          "REB": 8.0,
           "AST": 0.0,
           "3PM": 0.0,
           "STL": 0.0,
           "BLK": 0.0,
-          "TO": 1.0
+          "TO": 3.0
         },
         "shots": {
-          "FGM": 1.0,
-          "FGA": 2.0,
+          "FGM": 3.0,
+          "FGA": 4.0,
           "FTM": 0.0,
           "FTA": 0.0
         }
@@ -9081,21 +9166,21 @@
       },
       {
         "id": "5106058",
-        "gp": 3.0,
+        "gp": 4.0,
         "totals": {
-          "PTS": 16.0,
+          "PTS": 21.0,
           "REB": 2.0,
-          "AST": 1.0,
-          "3PM": 4.0,
+          "AST": 3.0,
+          "3PM": 5.0,
           "STL": 1.0,
           "BLK": 1.0,
-          "TO": 2.0
+          "TO": 3.0
         },
         "shots": {
-          "FGM": 6.0,
-          "FGA": 14.0,
-          "FTM": 0.0,
-          "FTA": 0.0
+          "FGM": 7.0,
+          "FGA": 18.0,
+          "FTM": 2.0,
+          "FTA": 2.0
         }
       },
       {
@@ -9195,38 +9280,57 @@
       },
       {
         "id": "5107199",
-        "gp": 3.0,
+        "gp": 4.0,
         "totals": {
-          "PTS": 36.0,
-          "REB": 15.0,
-          "AST": 14.0,
-          "3PM": 5.0,
+          "PTS": 47.0,
+          "REB": 18.0,
+          "AST": 16.0,
+          "3PM": 6.0,
           "STL": 1.0,
           "BLK": 1.0,
-          "TO": 6.0
+          "TO": 7.0
         },
         "shots": {
-          "FGM": 12.0,
-          "FGA": 22.0,
-          "FTM": 7.0,
-          "FTA": 9.0
+          "FGM": 15.0,
+          "FGA": 32.0,
+          "FTM": 11.0,
+          "FTA": 13.0
+        }
+      },
+      {
+        "id": "5107818",
+        "gp": 1.0,
+        "totals": {
+          "PTS": 0.0,
+          "REB": 0.0,
+          "AST": 1.0,
+          "3PM": 0.0,
+          "STL": 0.0,
+          "BLK": 0.0,
+          "TO": 0.0
+        },
+        "shots": {
+          "FGM": 0.0,
+          "FGA": 0.0,
+          "FTM": 0.0,
+          "FTA": 0.0
         }
       },
       {
         "id": "5107897",
-        "gp": 2.0,
+        "gp": 3.0,
         "totals": {
-          "PTS": 7.0,
-          "REB": 3.0,
+          "PTS": 9.0,
+          "REB": 8.0,
           "AST": 1.0,
           "3PM": 1.0,
-          "STL": 1.0,
-          "BLK": 0.0,
-          "TO": 2.0
+          "STL": 2.0,
+          "BLK": 1.0,
+          "TO": 3.0
         },
         "shots": {
-          "FGM": 3.0,
-          "FGA": 4.0,
+          "FGM": 4.0,
+          "FGA": 13.0,
           "FTM": 0.0,
           "FTA": 0.0
         }
@@ -9290,19 +9394,19 @@
       },
       {
         "id": "5142620",
-        "gp": 3.0,
+        "gp": 4.0,
         "totals": {
-          "PTS": 67.0,
-          "REB": 8.0,
-          "AST": 14.0,
-          "3PM": 4.0,
+          "PTS": 86.0,
+          "REB": 11.0,
+          "AST": 19.0,
+          "3PM": 7.0,
           "STL": 3.0,
           "BLK": 1.0,
-          "TO": 8.0
+          "TO": 11.0
         },
         "shots": {
-          "FGM": 24.0,
-          "FGA": 73.0,
+          "FGM": 32.0,
+          "FGA": 93.0,
           "FTM": 15.0,
           "FTA": 19.0
         }
@@ -9370,7 +9474,7 @@
         "totals": {
           "PTS": 13.0,
           "REB": 12.0,
-          "AST": 16.0,
+          "AST": 17.0,
           "3PM": 1.0,
           "STL": 1.0,
           "BLK": 1.0,
@@ -9461,21 +9565,21 @@
       },
       {
         "id": "5174655",
-        "gp": 3.0,
+        "gp": 4.0,
         "totals": {
-          "PTS": 14.0,
-          "REB": 11.0,
-          "AST": 3.0,
-          "3PM": 2.0,
-          "STL": 2.0,
+          "PTS": 29.0,
+          "REB": 14.0,
+          "AST": 5.0,
+          "3PM": 5.0,
+          "STL": 3.0,
           "BLK": 0.0,
-          "TO": 4.0
+          "TO": 5.0
         },
         "shots": {
-          "FGM": 6.0,
-          "FGA": 18.0,
-          "FTM": 0.0,
-          "FTA": 0.0
+          "FGM": 11.0,
+          "FGA": 27.0,
+          "FTM": 2.0,
+          "FTA": 2.0
         }
       },
       {
@@ -9499,38 +9603,38 @@
       },
       {
         "id": "5175643",
-        "gp": 3.0,
+        "gp": 4.0,
         "totals": {
-          "PTS": 29.0,
-          "REB": 8.0,
-          "AST": 9.0,
+          "PTS": 31.0,
+          "REB": 9.0,
+          "AST": 11.0,
           "3PM": 6.0,
-          "STL": 3.0,
+          "STL": 4.0,
           "BLK": 0.0,
-          "TO": 7.0
+          "TO": 8.0
         },
         "shots": {
-          "FGM": 8.0,
-          "FGA": 26.0,
+          "FGM": 9.0,
+          "FGA": 29.0,
           "FTM": 7.0,
           "FTA": 7.0
         }
       },
       {
         "id": "5175647",
-        "gp": 3.0,
+        "gp": 4.0,
         "totals": {
           "PTS": 13.0,
-          "REB": 8.0,
+          "REB": 10.0,
           "AST": 3.0,
           "3PM": 1.0,
           "STL": 0.0,
           "BLK": 1.0,
-          "TO": 0.0
+          "TO": 1.0
         },
         "shots": {
           "FGM": 4.0,
-          "FGA": 8.0,
+          "FGA": 10.0,
           "FTM": 4.0,
           "FTA": 6.0
         }
@@ -9613,10 +9717,10 @@
       },
       {
         "id": "5211983",
-        "gp": 1.0,
+        "gp": 2.0,
         "totals": {
           "PTS": 0.0,
-          "REB": 0.0,
+          "REB": 1.0,
           "AST": 0.0,
           "3PM": 0.0,
           "STL": 0.0,
@@ -9803,15 +9907,15 @@
       },
       {
         "id": "5258459",
-        "gp": 1.0,
+        "gp": 2.0,
         "totals": {
           "PTS": 2.0,
           "REB": 0.0,
-          "AST": 0.0,
+          "AST": 2.0,
           "3PM": 0.0,
           "STL": 0.0,
           "BLK": 0.0,
-          "TO": 0.0
+          "TO": 1.0
         },
         "shots": {
           "FGM": 0.0,
@@ -9841,21 +9945,21 @@
       },
       {
         "id": "5279130",
-        "gp": 3.0,
+        "gp": 4.0,
         "totals": {
-          "PTS": 23.0,
-          "REB": 6.0,
-          "AST": 5.0,
-          "3PM": 2.0,
-          "STL": 1.0,
+          "PTS": 38.0,
+          "REB": 7.0,
+          "AST": 8.0,
+          "3PM": 3.0,
+          "STL": 3.0,
           "BLK": 2.0,
-          "TO": 5.0
+          "TO": 7.0
         },
         "shots": {
-          "FGM": 7.0,
-          "FGA": 17.0,
-          "FTM": 7.0,
-          "FTA": 9.0
+          "FGM": 13.0,
+          "FGA": 26.0,
+          "FTM": 9.0,
+          "FTA": 13.0
         }
       },
       {
@@ -9894,6 +9998,25 @@
           "FGA": 5.0,
           "FTM": 0.0,
           "FTA": 1.0
+        }
+      },
+      {
+        "id": "5289900",
+        "gp": 1.0,
+        "totals": {
+          "PTS": 0.0,
+          "REB": 0.0,
+          "AST": 0.0,
+          "3PM": 0.0,
+          "STL": 0.0,
+          "BLK": 0.0,
+          "TO": 0.0
+        },
+        "shots": {
+          "FGM": 0.0,
+          "FGA": 0.0,
+          "FTM": 0.0,
+          "FTA": 0.0
         }
       }
     ],
@@ -21717,7 +21840,7 @@
       "id": "401909877",
       "date_et": "2026-10-27",
       "tipoff_utc": "2026-10-27T23:30:00Z",
-      "status": "scheduled",
+      "status": "final",
       "season_type": 2,
       "time_confirmed": true,
       "home": "BOS",
@@ -26497,7 +26620,7 @@
       "id": "401909878",
       "date_et": "2026-10-27",
       "tipoff_utc": "2026-10-28T00:00:00Z",
-      "status": "scheduled",
+      "status": "final",
       "season_type": 2,
       "time_confirmed": true,
       "home": "NYK",
@@ -29137,7 +29260,7 @@
       "id": "401909880",
       "date_et": "2026-10-27",
       "tipoff_utc": "2026-10-28T03:00:00Z",
-      "status": "scheduled",
+      "status": "final",
       "season_type": 2,
       "time_confirmed": true,
       "home": "LAL",
@@ -32627,7 +32750,7 @@
       "id": "401909879",
       "date_et": "2026-10-27",
       "tipoff_utc": "2026-10-28T00:00:00Z",
-      "status": "scheduled",
+      "status": "final",
       "season_type": 2,
       "time_confirmed": true,
       "home": "SAS",
@@ -32888,9 +33011,9 @@
     "timezone": "America/New_York",
     "quick_periods": {
       "W1": {
-        "start": "2026-10-27",
+        "start": "2026-10-28",
         "end": "2026-11-01",
-        "label": "近1週 (10/27 - 11/01)"
+        "label": "近1週 (10/28 - 11/01)"
       },
       "W2": {
         "start": "2026-11-02",
