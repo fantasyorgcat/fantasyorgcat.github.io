@@ -1,4 +1,5 @@
 """Audited user-provided CC BY 4.0 season CSV; never fetches rejected source URLs."""
+import copy
 import csv
 import hashlib
 import io
@@ -72,9 +73,12 @@ def build_boxscore_data(catalog,snapshot,source=None,manifest=None,allow_histori
     if source is None:source,manifest=load_source()
     expected_season=f"{int(snapshot['schedule']['season'][:4])-1}-{snapshot['schedule']['season'][2:4]}"
     if not allow_historical and manifest['season']!=expected_season:raise ValueError('Archived ROTO season does not match last season; supply a new audited source')
+    source=copy.deepcopy(source)
+    # The catalog's ESPN last season is only comparable when it is the archived season itself.
+    espn_same_season=manifest['season']==expected_season and snapshot.get('period_populations',{}).get('LastSeason',0)>0
     source_names={normalized_name(r['source_name']):r for r in source};catalog_names={}
     for p in catalog.values():catalog_names.setdefault(normalized_name(p['name']),[]).append(p)
-    players={};mapping=[];matched_source=set();disagreements=[]
+    players={};mapping=[];matched_source=set();disagreements=[];resolutions=[]
     for pid,p in catalog.items():
         key=normalized_name(p['name']);record=source_names.get(key);method='unique_normalized_full_name'
         status='matched'
@@ -89,17 +93,27 @@ def build_boxscore_data(catalog,snapshot,source=None,manifest=None,allow_histori
         if record is not None:
             if record['id'] in matched_source:raise ValueError('One source row mapped to multiple ESPN IDs')
             matched_source.add(record['id']);diff=old_differences(p,record)
+            for field,issue in list(record['uncertainties'].items()):
+                espn=p['periods']['ls']['shooting'].get(field) if espn_same_season else None
+                if espn is None:continue
+                # ESPN is the primary reference whenever secondary sources disagree.
+                record['shots'][field]=int(espn);del record['uncertainties'][field]
+                resolutions.append(dict(issue,resolution='ESPN primary reference selected',selected_source='ESPN',selected_value=int(espn)))
             comparison='unavailable' if p['periods']['ls']['gp'] is None else 'different' if diff else 'same_GP_and_seven_totals'
             item.update(gp=record['gp'],minutes=record['minutes'],totals=dict(record['totals']),shots=dict(record['shots']),
                         uncertainties=dict(record['uncertainties']),source_name=record['source_name'],last_season_team=record['team'],status='matched')
             if diff:disagreements.append(dict(id=pid,name=p['name'],differences=diff))
             mapping.append(dict(id=pid,name=p['name'],source_name=record['source_name'],status='matched',method=method,old_comparison=comparison))
-        else:mapping.append(dict(id=pid,name=p['name'],source_name=None,status=status,old_GP=p['periods']['ls']['gp']))
+        else:
+            if status=='not_in_source' and espn_same_season and p['periods']['ls']['gp'] is None:
+                # Absent from both complete same-season populations: a confirmed non-appearance, excluded rather than unknown.
+                status='no_appearance';item.update(gp=0,totals={k:0 for k in COUNTING},shots={k:0 for k in SHOTS},status=status)
+            mapping.append(dict(id=pid,name=p['name'],source_name=None,status=status,old_GP=p['periods']['ls']['gp']))
         players[pid]=item
     reference=[dict(id=r['id'],source_name=r['source_name'],gp=r['gp'],totals=dict(r['totals']),shots=dict(r['shots']),uncertainties=dict(r['uncertainties'])) for r in source]
     reference.sort(key=lambda r:r['id']);ref_hash=hashlib.sha256(json.dumps(reference,sort_keys=True).encode()).hexdigest()[:12]
     summary=dict(catalog=len(catalog),matched=sum(m['status']=='matched' for m in mapping),
-                 not_in_source=sum(m['status']=='not_in_source' for m in mapping),ambiguous=sum(m['status']=='ambiguous_name' for m in mapping),
+                 not_in_source=sum(m['status']=='not_in_source' for m in mapping),no_appearance=sum(m['status']=='no_appearance' for m in mapping),ambiguous=sum(m['status']=='ambiguous_name' for m in mapping),
                  source_unmapped=len(source)-len(matched_source),declared_conflicts=len(manifest['uncertainties']),old_totals_disagreements=len(disagreements),
                  old_comparable=sum(m.get('old_comparison')=='same_GP_and_seven_totals' for m in mapping))
     return dict(version=1,season=manifest['season'],fixture=False,generated_at=snapshot['generated_at'],source='BoxScore Lab',
@@ -108,7 +122,8 @@ def build_boxscore_data(catalog,snapshot,source=None,manifest=None,allow_histori
         reference=dict(size=len(reference),expected=len(reference),shooting_complete=sum(all(r['shots'][k] is not None for k in SHOTS) for r in reference),
                        declared_conflicts=manifest['uncertainties'],id='boxscore-lab-v1:'+manifest['season']+':'+ref_hash,records=reference,
                        scale=RADAR_SCALE),
-        benchmark=benchmark(reference),players=players,mapping=dict(summary=summary,records=mapping,old_disagreements=disagreements))
+        benchmark=benchmark(reference),players=players,mapping=dict(summary=summary,records=mapping,old_disagreements=disagreements),
+        source_resolutions=resolutions)
 
 
 if __name__=='__main__':

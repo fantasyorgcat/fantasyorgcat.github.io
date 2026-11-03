@@ -26,14 +26,20 @@ class BoxScore(unittest.TestCase):
         source_names={p['source_name'] for p in matched}
         self.assertEqual(len(source_names),len(matched),'A source player must not map to multiple active players')
         self.assertTrue(source_names.issubset({r['source_name'] for r in self.rows}))
-        self.assertEqual((s['matched'],s['not_in_source'],s['ambiguous'],s['source_unmapped']),
-                         (len(matched),len(self.catalog)-len(matched),0,len(self.rows)-len(source_names)))
+        espn_absent=sum(p['periods']['ls']['gp'] is None for pid,p in self.catalog.items() if self.data['players'][pid]['status']!='matched')
+        self.assertEqual((s['matched'],s['no_appearance'],s['not_in_source'],s['ambiguous'],s['source_unmapped']),
+                         (len(matched),espn_absent,len(self.catalog)-len(matched)-espn_absent,0,len(self.rows)-len(source_names)))
         expected_comparable=sum(p['periods']['ls']['gp'] is not None for pid,p in self.catalog.items() if self.data['players'][pid]['status']=='matched')
         self.assertEqual(s['old_comparable'],expected_comparable);self.assertEqual(s['old_totals_disagreements'],0)
         byname={r['source_name']:r for r in self.rows}
         for p in self.data['players'].values():
             if p['status']=='matched':
-                r=byname[p['source_name']];self.assertEqual(p['totals'],r['totals']);self.assertEqual(p['gp'],r['gp']);self.assertEqual(p['shots'],r['shots'])
+                r=byname[p['source_name']];self.assertEqual(p['totals'],r['totals']);self.assertEqual(p['gp'],r['gp'])
+                resolved={x['field']:x['selected_value'] for x in self.data['source_resolutions'] if x['name']==p['source_name']}
+                self.assertEqual(p['shots'],{**r['shots'],**resolved})
+            elif p['status']=='no_appearance':
+                # Missing from both BoxScore Lab and ESPN's complete same-season population.
+                self.assertIsNone(self.catalog[p['id']]['periods']['ls']['gp']);self.assertEqual(p['gp'],0);self.assertTrue(all(v==0 for v in p['totals'].values()))
             else:self.assertIsNone(p['gp']);self.assertTrue(all(v is None for v in p['totals'].values()))
     def test_new_unknown_candidate_does_not_change_archived_reference(self):
         catalog=copy.deepcopy(self.catalog);p=copy.deepcopy(catalog['1966']);p.update(id='99999999',name='New rookie outside archived source');catalog[p['id']]=p
@@ -53,10 +59,13 @@ class BoxScore(unittest.TestCase):
         self.assertEqual(changed['mapping']['summary']['ambiguous'],2)
         self.assertIsNone(changed['players']['1966']['gp']);self.assertIsNone(changed['players']['99999999']['gp'])
         self.assertTrue(changed['data_ready'])
-    def test_conflicting_fga_not_selected_and_reference_is_fixed(self):
-        p=self.data['players']['4432639'];self.assertIsNone(p['shots']['FGA']);self.assertEqual(p['shots']['FGM'],438)
-        self.assertEqual(p['uncertainties']['FGA']['publisher_value'],975);self.assertEqual(p['uncertainties']['FGA']['cross_check_value'],974)
-        self.assertEqual(self.data['reference']['size'],582);self.assertEqual(self.data['reference']['shooting_complete'],581)
+    def test_conflicting_fga_uses_espn_and_reference_is_fixed(self):
+        p=self.data['players']['4432639'];self.assertEqual(p['shots']['FGA'],975);self.assertEqual(p['shots']['FGM'],438);self.assertEqual(p['uncertainties'],{})
+        r=self.data['source_resolutions'][0];self.assertEqual((r['name'],r['field'],r['selected_source'],r['selected_value'],r['cross_check_value']),('Jabari Smith Jr.','FGA','ESPN',975,974))
+        self.assertEqual(self.data['reference']['size'],582);self.assertEqual(self.data['reference']['shooting_complete'],582)
+        catalog=copy.deepcopy(self.catalog);catalog['4432639']['periods']['ls']['shooting']['FGA']=None
+        unresolved=build_boxscore_data(catalog,self.snapshot)['players']['4432639']
+        self.assertIsNone(unresolved['shots']['FGA']);self.assertEqual(unresolved['uncertainties']['FGA']['cross_check_value'],974)
         changed=build_boxscore_data({k:p for k,p in self.catalog.items() if k!='1966'},self.snapshot)
         self.assertEqual(changed['benchmark'],self.data['benchmark']);self.assertEqual(changed['reference']['id'],self.data['reference']['id'])
     def test_new_season_does_not_relabel_old_data(self):

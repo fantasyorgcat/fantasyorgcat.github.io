@@ -51,6 +51,15 @@ class RotoPackage(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'season/type'):live_period(c,s,'season','2026-27')
         c,s=self.sample();s['roto_references']['Season'][0]['shots']['FGA']+=1
         with self.assertRaisesRegex(ValueError,'reference/catalog'):live_period(c,s,'season','2026-27')
+    def test_rostered_player_absent_from_complete_ledger_did_not_play(self):
+        c,s=self.sample();bench=copy.deepcopy(c['1']);bench.update(id='3',name='Bench');bench['periods']['season']['gp']=None;c['3']=bench
+        s['current_stats_source']=dict(completed_events=['e1'],skipped_events=[])
+        d=live_period(c,s,'season','2026-27');p=d['players']['3']
+        self.assertEqual(p['gp'],0);self.assertTrue(all(v==0 for v in [*p['totals'].values(),*p['shots'].values()]));self.assertEqual(d['reference']['size'],2)
+        for ledger in [None,dict(completed_events=['e1'],skipped_events=['e1'])]:
+            if ledger is None:del s['current_stats_source']
+            else:s['current_stats_source']=ledger
+            self.assertIsNone(live_period(c,s,'season','2026-27')['players']['3']['gp'])
     def test_missing_attempts_never_inferred_from_percentage(self):
         c,s=self.sample();c['1']['periods']['season']['shooting']['FGA']=None;s['roto_references']['Season'][0]['shots']['FGA']=None
         d=live_period(c,s,'season','2026-27');self.assertFalse(d['data_ready']);self.assertIsNone(d['players']['1']['shots']['FGA'])
