@@ -31,6 +31,11 @@ def live_period(catalog,snapshot,period,season):
         if p and (p['gp']!=r['gp'] or p['totals']!=r['totals'] or p['shots']!=r['shots']):raise ValueError('Live reference/catalog mismatch')
     reference.sort(key=lambda r:int(r['id']))
     complete=len(reference)==expected and expected>0
+    # A complete game ledger means a rostered player without a row truly has not played; exclude instead of unknown.
+    ledger=snapshot.get('current_stats_source',{})
+    if complete and (period!='season' or (ledger.get('completed_events') and ledger.get('skipped_events')==[])):
+        for p in players.values():
+            if p['gp'] is None:p.update(gp=0,totals={k:0 for k in COUNTING},shots={k:0 for k in SHOTS})
     shooting_complete=sum(all(r['shots'].get(k) is not None for k in SHOTS) for r in reference)
     scales=benchmark(reference if complete else [])
     return dict(version=1,season=season,source='ESPN',fixture=bool(snapshot.get('fixture')),generated_at=snapshot['generated_at'],

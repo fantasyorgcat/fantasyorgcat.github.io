@@ -40,3 +40,14 @@ const mixed=C.aggregate(['1','2','999'],data,'totals'),preview=C.knownView(mixed
 assert.equal(mixed.cells.PTS.value,null);assert.equal(preview.cells.PTS.value,300);assert.equal(preview.cells.PTS.partial,true);assert.equal(preview.cells['FG%'].value,100*10/12);assert.equal(preview.size,3);assert.equal(preview.cells.PTS.known,2);assert.equal(preview.scores.PTS,C.aggregate(['1','2'],data,'totals').scores.PTS);
 assert.equal(C.differences(preview,C.knownView(C.aggregate(['1'],data,'totals'),data,'totals')).PTS,null);assert.equal(C.knownView(C.aggregate(['999'],data,'totals'),data,'totals').cells.PTS.value,null);
 console.log('Known subtotal remains usable with unknown members; weighted known denominators and incomplete deltas are explicit.');
+
+const benched={...data,players:{...data.players,'0':p('0',0,0,0)}};
+for(const mode of ['perGame','totals']){const withOut=C.knownView(C.aggregate(['1','2','0'],benched,mode),benched,mode),played=C.aggregate(['1','2'],benched,mode);
+ assert.equal(withOut.partial,false);assert.equal(withOut.cells.PTS.value,played.cells.PTS.value);assert.equal(withOut.cells.PTS.known,3);assert.equal(withOut.cells.PTS.counted,2);assert.equal(withOut.cells.PTS.absent,1);
+ assert.deepEqual(withOut.scores,played.scores);assert.equal(withOut.cells['FG%'].value,played.cells['FG%'].value);
+ assert.equal(C.differences(withOut,C.knownView(C.aggregate(['1','2'],benched,mode),benched,mode),benched,mode).PTS,0);}
+assert.equal(C.aggregate(['0'],benched,'totals').cells.PTS.value,null);assert.equal(C.aggregate(['0'],benched,'totals').cells.PTS.reason,'名單球員皆未出賽');
+const keepUnknown=C.differences(preview,C.knownView(C.aggregate(['2','999'],data,'totals'),data,'totals'),data,'totals');
+assert.equal(keepUnknown.PTS,-100);assert.equal(keepUnknown.TO,-10);assert.equal(keepUnknown['FG%'],null);
+assert.equal(C.differences(C.knownView(C.aggregate(['1'],data,'totals'),data,'totals'),C.knownView(C.aggregate(['1','999'],data,'totals'),data,'totals'),data,'totals').PTS,null);
+console.log('Confirmed non-appearances are excluded, and counting deltas cancel unknown players kept on both rosters.');
